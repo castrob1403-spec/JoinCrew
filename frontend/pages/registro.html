@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crear cuenta | StudyCircle</title>
+    <link rel="stylesheet" href="../css/RegistroStyle.css">
+</head>
+<body>
+    <main class="registration-container">
+        <a class="back-link" href="../index.html">← Volver a StudyCircle</a>
+        <section class="registration-card">
+            <h1>Crea tu perfil</h1>
+            <p>Cuéntanos un poco sobre ti para encontrar compañeros compatibles.</p>
+
+            <form id="registration-form">
+                <div class="form-grid">
+                    <div class="form-field full-width">
+                        <label for="full-name">Nombre completo</label>
+                        <input id="full-name" name="fullName" type="text" placeholder="Tu nombre" autocomplete="name" required>
+                    </div>
+
+                    <div class="form-field">
+                        <label for="email">Correo electrónico</label>
+                        <input id="email" name="email" type="email" placeholder="correo@gmail.com" autocomplete="email" required>
+                    </div>
+
+                    <div class="form-field">
+                        <label for="password">Contraseña</label>
+                        <input id="password" name="password" type="password" placeholder="Mínimo 6 caracteres" autocomplete="new-password" minlength="6" required>
+                    </div>
+
+                    <div class="form-field">
+                        <label for="university">Universidad o institución</label>
+                        <input id="university" name="university" type="text" placeholder="Ej. Universidad Central" required>
+                    </div>
+
+                    <div class="form-field">
+                        <label for="career">Carrera</label>
+                        <input id="career" name="career" type="text" placeholder="Ej. Ingeniería de Software" required>
+                    </div>
+
+                    <div class="form-field full-width">
+                        <label for="subjects">Materias que estudias</label>
+                        <input id="subjects" name="subjects" type="text" placeholder="Ej. Cálculo, Programación, Física" required>
+                        <small>Sepáralas con comas.</small>
+                    </div>
+
+                    <div class="form-field">
+                        <label for="availability">Disponibilidad</label>
+                        <select id="availability" name="availability" required>
+                            <option value="" selected disabled>Selecciona una opción</option>
+                            <option>Mañana</option>
+                            <option>Tarde</option>
+                            <option>Noche</option>
+                            <option>Fines de semana</option>
+                            <option>Horario flexible</option>
+                        </select>
+                    </div>
+
+                    <div class="form-field">
+                        <label for="study-preference">Preferencia de estudio</label>
+                        <select id="study-preference" name="studyPreference" required>
+                            <option value="" selected disabled>Selecciona una opción</option>
+                            <option>En línea</option>
+                            <option>Presencial</option>
+                            <option>Ambas</option>
+                        </select>
+                    </div>
+                </div>
+
+                <button id="registration-button" type="submit">Crear mi cuenta</button>
+                <p id="registration-message" class="registration-message" role="alert" aria-live="polite"></p>
+            </form>
+
+            <p class="login-prompt">¿Ya tienes cuenta? <a href="login.html">Iniciar sesión</a></p>
+        </section>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../js/supabase-client.js"></script>
+    <script src="../js/registro.js"></script>
+</body>
+</html>
