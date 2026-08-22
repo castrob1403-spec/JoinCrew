@@ -17,13 +17,22 @@ form.addEventListener("submit", async (event) => {
     showMessage("");
 
     try {
-        const { error } = await window.studyCircleSupabase.auth.signInWithPassword({
+        const { data, error } = await window.studyCircleSupabase.auth.signInWithPassword({
             email,
             password: userPassword,
         });
 
         if (error) throw error;
-        window.location.href = "app.html";
+
+        const { data: profile, error: profileError } = await window.studyCircleSupabase
+            .from("profiles")
+            .select("role")
+            .eq("id", data.user.id)
+            .single();
+
+        if (profileError) throw profileError;
+
+        window.location.href = profile.role === "admin" ? "admin.html" : "app.html";
     } catch (error) {
         showMessage(error.message || "Ocurrió un error. Inténtalo nuevamente.");
     } finally {

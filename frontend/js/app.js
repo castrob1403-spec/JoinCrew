@@ -24,9 +24,14 @@ async function loadApp() {
 
     const { data: profile, error } = await window.studyCircleSupabase
         .from("profiles")
-        .select("full_name, university, career, availability, study_preference")
+        .select("full_name, university, career, availability, study_preference, role")
         .eq("id", user.id)
         .single();
+
+    if (!error && profile?.role === "admin") {
+        window.location.href = "admin.html";
+        return;
+    }
 
     if (!error && profile) fillProfile(profile);
 }
