@@ -74,6 +74,15 @@
             </form>
 
             <p class="login-prompt">¿Ya tienes cuenta? <a href="login.html">Iniciar sesión</a></p>
+
+            <section id="verification-state" class="verification-state" hidden aria-live="polite">
+                <div class="verification-icon">✉</div>
+                <h2>Verifica tu correo</h2>
+                <p>Enviamos un enlace de confirmación a <strong id="verification-email"></strong>. Ábrelo para activar tu cuenta.</p>
+                <p class="verification-hint">Esta página detectará la confirmación y te llevará a tu espacio de StudyCircle.</p>
+                <button id="check-verification-button" type="button">Ya confirmé mi correo</button>
+                <a href="login.html">Volver a iniciar sesión</a>
+            </section>
         </section>
     </main>
 

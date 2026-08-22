@@ -94,6 +94,54 @@ button:disabled { cursor: wait; opacity: .7; transform: none; }
 .registration-message[data-type="success"] { color: #16803c; }
 .login-prompt { margin-top: 22px; color: var(--text-secondary); font-size: 13px; text-align: center; }
 
+/* ================= VERIFICACIÓN DE CORREO ================= */
+
+.verification-state {
+    padding: 18px 0 4px;
+    text-align: center;
+}
+
+.verification-icon {
+    display: grid;
+    width: 54px;
+    height: 54px;
+    margin: 0 auto 16px;
+    place-items: center;
+    border-radius: 50%;
+    background: var(--primary-light);
+    color: var(--primary);
+    font-size: 25px;
+}
+
+.verification-state h2 {
+    margin: 0;
+    font-size: 22px;
+}
+
+.verification-state p {
+    margin: 12px auto;
+    color: var(--text-secondary);
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.verification-state strong { color: var(--text-main); }
+.verification-hint { max-width: 440px; font-size: 12px !important; }
+
+.verification-state button { margin: 12px 0 16px; }
+
+.verification-state > a {
+    color: var(--primary);
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.verification-state > a:hover {
+    color: var(--primary-dark);
+    text-decoration: underline;
+}
+
 @media (max-width: 600px) {
     body { padding: 20px; }
     .registration-card { padding: 32px 24px; }

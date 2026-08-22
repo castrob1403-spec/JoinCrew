@@ -1,10 +1,32 @@
 const form = document.querySelector("#registration-form");
 const button = document.querySelector("#registration-button");
 const message = document.querySelector("#registration-message");
+const verificationState = document.querySelector("#verification-state");
+const verificationEmail = document.querySelector("#verification-email");
+const checkVerificationButton = document.querySelector("#check-verification-button");
 
 function showMessage(text, type = "error") {
     message.textContent = text;
     message.dataset.type = type;
+}
+
+function showVerificationState(email) {
+    form.hidden = true;
+    message.hidden = true;
+    document.querySelector(".login-prompt").hidden = true;
+    verificationEmail.textContent = email;
+    verificationState.hidden = false;
+}
+
+async function redirectIfVerified() {
+    const { data: { user } } = await window.studyCircleSupabase.auth.getUser();
+
+    if (user?.email_confirmed_at) {
+        window.location.href = "app.html";
+        return true;
+    }
+
+    return false;
 }
 
 form.addEventListener("submit", async (event) => {
@@ -20,8 +42,9 @@ form.addEventListener("submit", async (event) => {
     showMessage("");
 
     try {
+        const email = data.get("email").trim();
         const { error } = await window.studyCircleSupabase.auth.signUp({
-            email: data.get("email").trim(),
+            email,
             password: data.get("password"),
             options: {
                 data: {
@@ -32,13 +55,12 @@ form.addEventListener("submit", async (event) => {
                     availability: data.get("availability"),
                     study_preference: data.get("studyPreference"),
                 },
-                emailRedirectTo: new URL("app.html", window.location.href).href,
+                emailRedirectTo: new URL("registro.html", window.location.href).href,
             },
         });
 
         if (error) throw error;
-        showMessage("Revisa tu correo para confirmar tu cuenta. Después podrás iniciar sesión.", "success");
-        form.reset();
+        showVerificationState(email);
     } catch (error) {
         showMessage(error.message || "No pudimos crear la cuenta. Inténtalo nuevamente.");
     } finally {
@@ -46,3 +68,23 @@ form.addEventListener("submit", async (event) => {
         button.textContent = "Crear mi cuenta";
     }
 });
+
+checkVerificationButton.addEventListener("click", async () => {
+    checkVerificationButton.disabled = true;
+    checkVerificationButton.textContent = "Verificando…";
+
+    const verified = await redirectIfVerified();
+    if (!verified) {
+        checkVerificationButton.disabled = false;
+        checkVerificationButton.textContent = "Ya confirmé mi correo";
+        alert("Aún no detectamos la confirmación. Abre el enlace recibido en tu correo y vuelve a intentarlo.");
+    }
+});
+
+window.studyCircleSupabase.auth.onAuthStateChange((_event, session) => {
+    if (session?.user?.email_confirmed_at) {
+        window.location.href = "app.html";
+    }
+});
+
+redirectIfVerified();
