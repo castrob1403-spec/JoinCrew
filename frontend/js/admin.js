@@ -6,6 +6,7 @@ const tableMessage = document.querySelector("#table-message");
 const searchInput = document.querySelector("#user-search");
 
 let profiles = [];
+let adminCount = 0;
 
 function showDashboard() {
     loadingState.classList.add("hidden");
@@ -51,27 +52,33 @@ function renderProfiles(items) {
 function updateStats() {
     const universities = new Set(profiles.map((profile) => profile.university).filter(Boolean));
     const subjects = new Set(profiles.flatMap((profile) => profile.subjects || []));
-    const admins = profiles.filter((profile) => profile.role === "admin");
-
     document.querySelector("#total-users").textContent = profiles.length;
     document.querySelector("#total-universities").textContent = universities.size;
     document.querySelector("#total-subjects").textContent = subjects.size;
-    document.querySelector("#total-admins").textContent = admins.length;
+    document.querySelector("#total-admins").textContent = adminCount;
 }
 
 async function loadProfiles() {
     tableMessage.textContent = "Cargando estudiantes…";
-    const { data, error } = await window.studyCircleSupabase
-        .from("profiles")
-        .select("full_name, university, career, subjects, availability, role")
-        .order("created_at", { ascending: false });
+    const [studentsResult, adminsResult] = await Promise.all([
+        window.studyCircleSupabase
+            .from("profiles")
+            .select("full_name, university, career, subjects, availability, role")
+            .eq("role", "user")
+            .order("created_at", { ascending: false }),
+        window.studyCircleSupabase
+            .from("profiles")
+            .select("id", { count: "exact", head: true })
+            .eq("role", "admin"),
+    ]);
 
-    if (error) {
+    if (studentsResult.error || adminsResult.error) {
         tableMessage.textContent = "No se pudieron cargar los perfiles. Revisa las políticas de Supabase.";
         return;
     }
 
-    profiles = data || [];
+    profiles = studentsResult.data || [];
+    adminCount = adminsResult.count || 0;
     tableMessage.textContent = `${profiles.length} estudiante(s) cargado(s).`;
     updateStats();
     renderProfiles(profiles);
