@@ -1,0 +1,357 @@
+/* =========================================================
+   STUDYCIRCLE - PANEL DE ADMINISTRACIÓN
+   ========================================================= */
+
+:root {
+    --bg-main: #f7f9fc;
+    --bg-white: #ffffff;
+    --primary: #536dfe;
+    --primary-dark: #4055d6;
+    --primary-light: #eef1ff;
+    --text-main: #172033;
+    --text-secondary: #667085;
+    --border: #e7eaf0;
+    --success-bg: #eafaf1;
+    --success: #167344;
+    --radius: 16px;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    background: var(--bg-main);
+    color: var(--text-main);
+    font-family: "Segoe UI", Arial, sans-serif;
+}
+
+button,
+input {
+    font: inherit;
+}
+
+.hidden {
+    display: none !important;
+}
+
+.admin-page {
+    min-height: 100vh;
+}
+
+.status-card {
+    width: min(520px, calc(100% - 40px));
+    margin: 15vh auto;
+    padding: 38px;
+    border: 1px solid var(--border);
+    border-radius: 22px;
+    background: var(--bg-white);
+    text-align: center;
+}
+
+.status-card h1,
+.dashboard-intro h1 {
+    margin: 0;
+    letter-spacing: -0.7px;
+}
+
+.status-card p:last-of-type,
+.dashboard-intro > div > p:last-child {
+    color: var(--text-secondary);
+}
+
+.eyebrow {
+    margin: 0 0 7px;
+    color: var(--primary);
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.9px;
+}
+
+.primary-button {
+    display: inline-block;
+    margin-top: 18px;
+    padding: 11px 16px;
+    border: 0;
+    border-radius: 9px;
+    background: var(--primary);
+    color: var(--bg-white);
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.primary-button:hover {
+    background: var(--primary-dark);
+}
+
+.admin-header {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    padding: 20px max(24px, calc((100vw - 1320px) / 2));
+    border-bottom: 1px solid var(--border);
+    background: var(--bg-white);
+}
+
+.brand {
+    color: var(--text-main);
+    font-size: 22px;
+    font-weight: 800;
+    letter-spacing: -1px;
+    text-decoration: none;
+}
+
+.brand span {
+    color: var(--primary);
+}
+
+.admin-actions {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-left: auto;
+    color: var(--text-secondary);
+    font-size: 13px;
+}
+
+.admin-actions a,
+.admin-actions button {
+    border: 0;
+    background: transparent;
+    color: var(--primary);
+    cursor: pointer;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.dashboard-intro,
+.stats-grid,
+.admin-section,
+.future-grid {
+    width: min(1320px, calc(100% - 48px));
+    margin-right: auto;
+    margin-left: auto;
+}
+
+.dashboard-intro {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    margin-top: 40px;
+    margin-bottom: 26px;
+}
+
+.dashboard-intro > div > p:last-child {
+    margin-bottom: 0;
+}
+
+.dashboard-intro .primary-button {
+    margin: 0;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
+}
+
+.stat-card,
+.admin-section,
+.future-grid article {
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--bg-white);
+}
+
+.stat-card {
+    padding: 20px;
+}
+
+.stat-card span {
+    font-size: 20px;
+}
+
+.stat-card p {
+    margin: 12px 0 4px;
+    color: var(--text-secondary);
+    font-size: 13px;
+}
+
+.stat-card strong {
+    font-size: 28px;
+}
+
+.admin-section {
+    margin-top: 28px;
+    padding: 25px;
+}
+
+.section-heading {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+.section-heading h2,
+.future-grid h2 {
+    margin: 0;
+    font-size: 20px;
+}
+
+.search-label {
+    color: var(--text-secondary);
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.search-label input {
+    display: block;
+    width: 240px;
+    margin-top: 6px;
+    padding: 10px 12px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    outline: none;
+}
+
+.search-label input:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px var(--primary-light);
+}
+
+.table-message {
+    min-height: 18px;
+    margin: 18px 0 8px;
+    color: var(--text-secondary);
+    font-size: 12px;
+}
+
+.table-wrapper {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+}
+
+th,
+td {
+    padding: 13px 10px;
+    border-bottom: 1px solid var(--border);
+    text-align: left;
+    vertical-align: top;
+}
+
+th {
+    color: var(--text-secondary);
+    font-size: 11px;
+    letter-spacing: 0.4px;
+    text-transform: uppercase;
+}
+
+td {
+    color: #4d5870;
+}
+
+td strong {
+    color: var(--text-main);
+}
+
+.empty-cell {
+    padding: 30px;
+    color: var(--text-secondary);
+    text-align: center;
+}
+
+.role-badge {
+    display: inline-block;
+    padding: 5px 8px;
+    border-radius: 99px;
+    font-size: 11px;
+    font-weight: 800;
+}
+
+.role-user {
+    background: #edf1f6;
+    color: #536176;
+}
+
+.role-admin {
+    background: var(--success-bg);
+    color: var(--success);
+}
+
+.future-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+    margin-top: 28px;
+    margin-bottom: 60px;
+}
+
+.future-grid article {
+    padding: 22px;
+}
+
+.future-grid article > span {
+    font-size: 23px;
+}
+
+.future-grid h2 {
+    margin: 10px 0 6px;
+}
+
+.future-grid p {
+    margin: 0;
+    color: var(--text-secondary);
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+@media (max-width: 800px) {
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 560px) {
+    .admin-header,
+    .dashboard-intro,
+    .section-heading {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .admin-actions {
+        flex-wrap: wrap;
+        margin-left: 0;
+    }
+
+    .dashboard-intro,
+    .stats-grid,
+    .admin-section,
+    .future-grid {
+        width: min(100% - 32px, 1320px);
+    }
+
+    .stats-grid,
+    .future-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .search-label,
+    .search-label input {
+        width: 100%;
+    }
+
+    .admin-section {
+        padding: 18px;
+    }
+}

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administración | StudyCircle</title>
+    <link rel="stylesheet" href="../css/AdminStyle.css">
+</head>
+<body>
+    <main class="admin-page">
+        <section id="loading-state" class="status-card">
+            <p class="eyebrow">STUDYCIRCLE</p>
+            <h1>Verificando acceso…</h1>
+            <p>Un momento, estamos cargando el panel administrativo.</p>
+        </section>
+
+        <section id="access-denied" class="status-card hidden">
+            <p class="eyebrow">ACCESO RESTRINGIDO</p>
+            <h1>No tienes permisos de administrador.</h1>
+            <p>Este panel está reservado para la administración de StudyCircle.</p>
+            <a href="app.html" class="primary-button">Ir a mi espacio</a>
+        </section>
+
+        <section id="admin-dashboard" class="hidden">
+            <header class="admin-header">
+                <a class="brand" href="../index.html">Study<span>Circle</span></a>
+                <div class="admin-actions">
+                    <span id="admin-name">Administradora</span>
+                    <a href="app.html">Ver mi espacio</a>
+                    <button id="logout-button" type="button">Cerrar sesión</button>
+                </div>
+            </header>
+
+            <div class="dashboard-intro">
+                <div>
+                    <p class="eyebrow">PANEL DE ADMINISTRACIÓN</p>
+                    <h1>Resumen de StudyCircle</h1>
+                    <p>Gestiona y consulta la actividad de la comunidad.</p>
+                </div>
+                <button id="refresh-button" class="primary-button" type="button">Actualizar datos</button>
+            </div>
+
+            <section class="stats-grid" aria-label="Resumen de datos">
+                <article class="stat-card"><span>👥</span><p>Estudiantes registrados</p><strong id="total-users">—</strong></article>
+                <article class="stat-card"><span>🎓</span><p>Universidades registradas</p><strong id="total-universities">—</strong></article>
+                <article class="stat-card"><span>📚</span><p>Materias indicadas</p><strong id="total-subjects">—</strong></article>
+                <article class="stat-card"><span>⭐</span><p>Administradores</p><strong id="total-admins">—</strong></article>
+            </section>
+
+            <section class="admin-section">
+                <div class="section-heading">
+                    <div><p class="eyebrow">COMUNIDAD</p><h2>Estudiantes registrados</h2></div>
+                    <label class="search-label" for="user-search">Buscar estudiante
+                        <input id="user-search" type="search" placeholder="Nombre, carrera o universidad">
+                    </label>
+                </div>
+                <p id="table-message" class="table-message" aria-live="polite"></p>
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr><th>Estudiante</th><th>Universidad</th><th>Carrera</th><th>Materias</th><th>Disponibilidad</th><th>Rol</th></tr>
+                        </thead>
+                        <tbody id="users-table-body"></tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section class="future-grid">
+                <article>
+                    <span>💬</span><h2>Mensajes de contacto</h2><p>Se mostrarán aquí cuando conectemos el formulario de contacto real.</p>
+                </article>
+                <article>
+                    <span>👥</span><h2>Grupos y salas</h2><p>Esta sección se activará al crear las tablas de grupos y sesiones de estudio.</p>
+                </article>
+            </section>
+        </section>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../js/supabase-client.js"></script>
+    <script src="../js/admin.js"></script>
+</body>
+</html>
