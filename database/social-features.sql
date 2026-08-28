@@ -130,7 +130,7 @@ begin
   returning * into new_group;
 
   insert into public.group_members (group_id, user_id, member_role)
-  values (new_group.id, auth.uid(), 'owner');
+  values (new_group.id, auth.uid(), 'leader');
 
   return new_group;
 end;

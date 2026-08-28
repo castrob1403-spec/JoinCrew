@@ -1,0 +1,9 @@
+<!DOCTYPE html>
+<html lang="es">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Chat de grupo | StudyCircle</title><link rel="stylesheet" href="../css/MemberPages.css"></head>
+<body>
+    <header class="header"><a class="brand" href="app.html">Study<span>Circle</span></a><nav><a href="app.html">Explorar</a><a class="active" href="grupos.html">Grupos</a><a href="chat.html">Chat</a><a href="calendario.html">Calendario</a></nav><div class="header-right"><span data-user-name>Estudiante</span><button id="logout-button" class="logout">Cerrar sesión</button></div></header>
+    <main class="page"><a id="group-detail-link" class="back-to-list" href="grupos.html">← Ver información del grupo</a><p class="eyebrow">CHAT DE GRUPO</p><h1 id="group-chat-title" class="page-title">Cargando…</h1><p class="subtitle">Coordinen sesiones, compartan recursos y estudien juntos.</p><div class="call-actions"><a id="audio-call" class="secondary" target="_blank" rel="noopener">Iniciar llamada</a><a id="video-call" class="primary" target="_blank" rel="noopener">Iniciar videollamada</a></div><section class="card group-chat-window"><div id="group-chat-messages" class="chat-messages"></div><form id="group-chat-form" class="group-chat-form"><input id="group-message-input" maxlength="1000" placeholder="Escribe un mensaje"><label class="media-upload" for="group-media-input">Adjuntar imagen o video</label><input id="group-media-input" type="file" accept="image/*,video/*" hidden><button class="primary" type="submit">Enviar</button></form><p id="group-chat-message" class="message" aria-live="polite"></p></section></main>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="../js/supabase-client.js"></script><script src="../js/member-page.js"></script><script src="../js/grupo-chat.js"></script>
+</body>
+</html>

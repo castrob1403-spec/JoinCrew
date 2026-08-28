@@ -10,14 +10,7 @@ async function loadGroups() {
     const { data: groups, error } = await window.studyCircleSupabase.from("study_groups").select("id, name, description, subject, modality, max_members, group_members(user_id)").eq("is_public", true).order("created_at", { ascending: false });
     if (error) { groupsMessage.textContent = "No se pudieron cargar los grupos."; return; }
     groupsMessage.textContent = groups?.length ? `${groups.length} grupo(s) disponible(s).` : "Sé la primera persona en crear un grupo.";
-    groupsList.innerHTML = (groups || []).map((group, index) => { const members = group.group_members?.length || 0; return `<article class="group"><div class="avatar ${index % 2 ? "amber" : ""}">👥</div><div class="group-content"><span class="score">${members}/${group.max_members} miembros</span><h2>${safeText(group.name)}</h2><p>${safeText(group.subject)} · ${safeText(group.modality)}</p><div class="tags"><span>${safeText(group.description || "Sin descripción")}</span></div></div><button class="primary" type="button" data-group-id="${group.id}">Unirme</button></article>`; }).join("");
-    groupsList.querySelectorAll("button[data-group-id]").forEach((button) => button.addEventListener("click", () => joinGroup(button.dataset.groupId)));
-}
-
-async function joinGroup(groupId) {
-    const { error } = await window.studyCircleSupabase.rpc("join_study_group", { target_group_id: groupId });
-    groupsMessage.textContent = error ? error.message : "Te uniste al grupo correctamente.";
-    await loadGroups();
+    groupsList.innerHTML = (groups || []).map((group, index) => { const members = group.group_members?.length || 0; return `<article class="group"><div class="avatar ${index % 2 ? "amber" : ""}">👥</div><div class="group-content"><span class="score">${members}/${group.max_members} miembros</span><h2>${safeText(group.name)}</h2><p>${safeText(group.subject)} · ${safeText(group.modality)}</p><div class="tags"><span>${safeText(group.description || "Sin descripción")}</span></div></div><a class="primary" href="grupo.html?id=${group.id}">Ver grupo</a></article>`; }).join("");
 }
 
 groupForm.addEventListener("submit", async (event) => {
