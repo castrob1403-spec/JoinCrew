@@ -6,8 +6,18 @@ const roomForm = document.querySelector("#room-form");
 const roomsList = document.querySelector("#rooms-list");
 const roomsMessage = document.querySelector("#rooms-message");
 const roomMessage = document.querySelector("#room-message");
+const premiumModal = document.querySelector("#premium-modal");
+let currentPlan = "free";
 
 function safeText(value) { const element = document.createElement("span"); element.textContent = value || ""; return element.innerHTML; }
+
+function showPremiumModal() { if (!premiumModal.open) premiumModal.showModal(); }
+function protectFreeCapacity(input) {
+    if (currentPlan === "free" && Number(input.value) > 5) {
+        input.value = 5;
+        showPremiumModal();
+    }
+}
 
 async function loadGroups() {
     groupsMessage.textContent = "Cargando grupos…";
@@ -30,14 +40,16 @@ async function loadRooms() {
 
 groupForm.addEventListener("submit", async (event) => {
     event.preventDefault();
+    if (currentPlan === "free" && Number(document.querySelector("#group-capacity").value) > 5) { showPremiumModal(); return; }
     const button = groupForm.querySelector("button"); button.disabled = true; button.textContent = "Creando…";
     const { error } = await window.studyCircleSupabase.rpc("create_study_group", { group_name: document.querySelector("#group-name").value.trim(), group_description: document.querySelector("#group-description").value.trim(), group_subject: document.querySelector("#group-subject").value.trim(), group_modality: document.querySelector("#group-modality").value, group_max_members: Number(document.querySelector("#group-capacity").value) });
-    button.disabled = false; button.textContent = "Crear grupo"; groupMessage.textContent = error ? error.message : "Grupo creado correctamente."; groupMessage.classList.toggle("success", !error);
+    button.disabled = false; button.textContent = "Crear grupo"; if (error?.message?.includes("Premium")) showPremiumModal(); groupMessage.textContent = error ? error.message : "Grupo creado correctamente."; groupMessage.classList.toggle("success", !error);
     if (!error) { groupForm.reset(); await loadGroups(); }
 });
 
 roomForm.addEventListener("submit", async (event) => {
     event.preventDefault();
+    if (currentPlan === "free" && Number(document.querySelector("#room-capacity").value) > 5) { showPremiumModal(); return; }
     const button = roomForm.querySelector("button"); button.disabled = true; button.textContent = "Abriendo…";
     const { data, error } = await window.studyCircleSupabase.rpc("create_study_room", {
         room_name: document.querySelector("#room-name").value.trim(),
@@ -46,10 +58,22 @@ roomForm.addEventListener("submit", async (event) => {
         room_max_participants: Number(document.querySelector("#room-capacity").value),
     });
     button.disabled = false; button.textContent = "Abrir sala pública";
+    if (error?.message?.includes("Premium")) { showPremiumModal(); }
     roomMessage.textContent = error ? error.message : "Sala abierta. Ya puedes entrar a la videollamada.";
     roomMessage.classList.toggle("success", !error);
     if (!error) { roomForm.reset(); await loadRooms(); window.open(`https://meet.jit.si/StudyCircle-room-${encodeURIComponent(data.id)}`, "_blank", "noopener"); }
 });
 
-async function startGroups() { if (await protectMemberPage()) await Promise.all([loadGroups(), loadRooms()]); }
+document.querySelector("#group-capacity").addEventListener("input", (event) => protectFreeCapacity(event.target));
+document.querySelector("#room-capacity").addEventListener("input", (event) => protectFreeCapacity(event.target));
+document.querySelector("#close-premium-modal").addEventListener("click", () => premiumModal.close());
+document.querySelector("#keep-free-button").addEventListener("click", () => premiumModal.close());
+
+async function startGroups() {
+    const member = await protectMemberPage();
+    if (!member) return;
+    const { data: profile } = await window.studyCircleSupabase.from("profiles").select("plan").eq("id", member.user.id).single();
+    currentPlan = profile?.plan || "free";
+    await Promise.all([loadGroups(), loadRooms()]);
+}
 startGroups();
