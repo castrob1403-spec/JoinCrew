@@ -388,6 +388,26 @@ nav a.active, nav a:hover {
     display:grid;
     gap:12px;
 }
+.preview-status {
+    margin:0 0 10px;
+    color:var(--muted);
+    font-size:12px;
+}
+.room-preview-section {
+    margin-top:28px;
+}
+.admin-notice {
+    display:grid;
+    gap:4px;
+    margin:0 0 24px;
+    padding:13px 16px;
+    border:1px solid #d9dfff;
+    border-radius:11px;
+    background:#f7f8ff;
+    color:#465274;
+    font-size:13px;
+}
+.admin-notice strong { color:var(--primary); }
 .group-card {
     display:flex;
     align-items:center;
@@ -415,6 +435,9 @@ nav a.active, nav a:hover {
 }
 .official-label.neutral {
     color:#718096;
+}
+.official-label.live-label {
+    color:#d04444;
 }
 .group-card h3 {
     margin:4px 0;

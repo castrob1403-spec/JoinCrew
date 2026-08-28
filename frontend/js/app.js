@@ -4,6 +4,11 @@ const headerName = document.querySelector("#header-name");
 const profileInitial = document.querySelector("#profile-initial");
 const matchPreview = document.querySelector("#match-preview");
 const matchStatus = document.querySelector("#match-status");
+const groupPreview = document.querySelector("#group-preview");
+const groupPreviewStatus = document.querySelector("#group-preview-status");
+const roomPreview = document.querySelector("#room-preview");
+const roomPreviewStatus = document.querySelector("#room-preview-status");
+const adminNotice = document.querySelector("#admin-notice");
 
 function fillProfile(profile) {
     const name = profile.full_name || "Estudiante";
@@ -91,6 +96,56 @@ async function loadMatchPreview(user, currentProfile) {
     });
 }
 
+function renderSpaceCard({ icon, label, name, detail, count, href, buttonText }) {
+    return `<article class="group-card"><span class="group-icon ${icon === "📹" ? "blue" : ""}">${icon}</span><div><span class="official-label ${label === "SALA EN VIVO" ? "live-label" : "neutral"}">${label}</span><h3>${escapeHtml(name)}</h3><p>${escapeHtml(detail || "Sin descripción")}</p><small>👥 ${count}</small></div><a href="${href}" class="outline-button">${buttonText}</a></article>`;
+}
+
+async function loadSpacePreviews() {
+    const [groupsResult, roomsResult] = await Promise.all([
+        window.studyCircleSupabase.from("study_groups").select("id, name, description, subject, modality, max_members, group_members(user_id)").eq("is_public", true).order("created_at", { ascending: false }).limit(2),
+        window.studyCircleSupabase.from("study_rooms").select("id, name, description, max_participants, group_id").eq("status", "live").eq("is_public", true).order("created_at", { ascending: false }).limit(2),
+    ]);
+
+    if (groupsResult.error) {
+        groupPreviewStatus.textContent = "No se pudieron cargar los grupos.";
+    } else if (!groupsResult.data?.length) {
+        groupPreviewStatus.textContent = "Aún no hay grupos públicos. Crea el primero.";
+        groupPreview.innerHTML = "";
+    } else {
+        groupPreviewStatus.textContent = "Mostrando los 2 grupos más recientes.";
+        groupPreview.innerHTML = groupsResult.data.map((group) => renderSpaceCard({
+            icon: "👥", label: "GRUPO PÚBLICO", name: group.name,
+            detail: `${group.subject} · ${group.modality}`,
+            count: `${group.group_members?.length || 0}/${group.max_members}`,
+            href: `grupo.html?id=${encodeURIComponent(group.id)}`, buttonText: "Ver grupo",
+        })).join("");
+    }
+
+    if (roomsResult.error) {
+        roomPreviewStatus.textContent = "No se pudieron cargar las salas.";
+    } else if (!roomsResult.data?.length) {
+        roomPreviewStatus.textContent = "No hay salas en vivo en este momento.";
+        roomPreview.innerHTML = "";
+    } else {
+        roomPreviewStatus.textContent = "Mostrando hasta 2 salas activas.";
+        roomPreview.innerHTML = roomsResult.data.map((room) => renderSpaceCard({
+            icon: "📹", label: "SALA EN VIVO", name: room.name, detail: room.description,
+            count: `máx. ${room.max_participants}`,
+            href: `https://meet.jit.si/StudyCircle-room-${encodeURIComponent(room.id)}`,
+            buttonText: "Entrar",
+        })).join("");
+    }
+}
+
+async function loadAdminNotice(user) {
+    const { data } = await window.studyCircleSupabase.from("admin_notifications")
+        .select("content, created_at").eq("recipient_id", user.id).order("created_at", { ascending: false }).limit(1);
+    const notice = data?.[0];
+    if (!notice) return;
+    adminNotice.hidden = false;
+    adminNotice.innerHTML = `<strong>Mensaje de StudyCircle</strong><span>${escapeHtml(notice.content)}</span>`;
+}
+
 async function loadApp() {
     const { data: { user } } = await window.studyCircleSupabase.auth.getUser();
     if (!user) {
@@ -100,7 +155,7 @@ async function loadApp() {
 
     const { data: profile, error } = await window.studyCircleSupabase
         .from("profiles")
-        .select("full_name, university, career, subjects, availability, study_preference, role")
+        .select("full_name, university, career, subjects, availability, study_preference, role, plan, account_status")
         .eq("id", user.id)
         .single();
 
@@ -109,9 +164,16 @@ async function loadApp() {
         return;
     }
 
+    if (!error && profile?.account_status === "banned") {
+        await window.studyCircleSupabase.auth.signOut();
+        alert("Tu cuenta fue suspendida. Contacta a StudyCircle si crees que es un error.");
+        window.location.href = "login.html";
+        return;
+    }
+
     if (!error && profile) {
         fillProfile(profile);
-        await loadMatchPreview(user, profile);
+        await Promise.all([loadMatchPreview(user, profile), loadSpacePreviews(), loadAdminNotice(user)]);
     }
 }
 

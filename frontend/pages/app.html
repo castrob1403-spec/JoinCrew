@@ -54,6 +54,7 @@
                     <button type="button">Iniciar pomodoro</button>
                 </div>
             </section>
+            <aside id="admin-notice" class="admin-notice" hidden></aside>
 
             <section class="filter-section" aria-labelledby="filter-title">
                 <div class="section-heading">
@@ -103,11 +104,15 @@
             </section>
 
             <section id="groups" class="groups-section">
-                <div class="section-heading compact"><div><p class="eyebrow">SALAS Y GRUPOS</p><h2>Encuentra un espacio para enfocarte</h2></div><a class="text-button" href="grupos.html">Ver todos →</a></div>
-                <div class="group-grid">
-                    <article class="group-card"><span class="group-icon">📚</span><div><span class="official-label">SALA OFICIAL</span><h3>Sala de estudio ESPOL</h3><p>Preparación para exámenes</p><small>👥 128 estudiantes</small></div><a href="grupos.html" class="outline-button">Entrar</a></article>
-                    <article class="group-card"><span class="group-icon blue">⌨</span><div><span class="official-label neutral">GRUPO PÚBLICO</span><h3>Programación nocturna</h3><p>Pomodoro y resolución de ejercicios</p><small>👥 24 estudiantes</small></div><a href="grupos.html" class="outline-button">Entrar</a></article>
-                </div>
+                <div class="section-heading compact"><div><p class="eyebrow">GRUPOS</p><h2>Grupos activos en StudyCircle</h2></div><a class="text-button" href="grupos.html">Ver todos →</a></div>
+                <p id="group-preview-status" class="preview-status">Cargando grupos…</p>
+                <div id="group-preview" class="group-grid"></div>
+            </section>
+
+            <section class="groups-section room-preview-section">
+                <div class="section-heading compact"><div><p class="eyebrow">SALAS EN VIVO</p><h2>Únete a una sesión en curso</h2></div><a class="text-button" href="grupos.html#salas">Explorar salas →</a></div>
+                <p id="room-preview-status" class="preview-status">Cargando salas…</p>
+                <div id="room-preview" class="group-grid"></div>
             </section>
 
             <section class="tools-grid">

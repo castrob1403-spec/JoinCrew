@@ -26,7 +26,7 @@
                 <a class="brand" href="../index.html">Study<span>Circle</span></a>
                 <div class="admin-actions">
                     <span id="admin-name">Administradora</span>
-                    <a href="app.html">Ver mi espacio</a>
+                    <a href="admin.html" aria-current="page">Mi panel</a>
                     <button id="logout-button" type="button">Cerrar sesión</button>
                 </div>
             </header>
@@ -44,7 +44,7 @@
                 <article class="stat-card"><span>👥</span><p>Estudiantes registrados</p><strong id="total-users">—</strong></article>
                 <article class="stat-card"><span>🎓</span><p>Universidades registradas</p><strong id="total-universities">—</strong></article>
                 <article class="stat-card"><span>📚</span><p>Materias indicadas</p><strong id="total-subjects">—</strong></article>
-                <article class="stat-card"><span>⭐</span><p>Administradores</p><strong id="total-admins">—</strong></article>
+                <article class="stat-card"><span>⭐</span><p>Estudiantes Premium</p><strong id="total-premium">—</strong></article>
             </section>
 
             <section class="admin-section">
@@ -58,20 +58,23 @@
                 <div class="table-wrapper">
                     <table>
                         <thead>
-                            <tr><th>Estudiante</th><th>Universidad</th><th>Carrera</th><th>Materias</th><th>Disponibilidad</th><th>Rol</th></tr>
+                            <tr><th>Estudiante</th><th>Universidad</th><th>Carrera</th><th>Materias</th><th>Disponibilidad</th><th>Plan</th><th>Estado</th><th>Acciones</th></tr>
                         </thead>
                         <tbody id="users-table-body"></tbody>
                     </table>
                 </div>
             </section>
 
-            <section class="future-grid">
-                <article>
-                    <span>💬</span><h2>Mensajes de contacto</h2><p>Se mostrarán aquí cuando conectemos el formulario de contacto real.</p>
-                </article>
-                <article>
-                    <span>👥</span><h2>Grupos y salas</h2><p>Esta sección se activará al crear las tablas de grupos y sesiones de estudio.</p>
-                </article>
+            <section id="student-detail" class="admin-section hidden" aria-live="polite"></section>
+
+            <section class="admin-section activity-section">
+                <div class="section-heading"><div><p class="eyebrow">ACTIVIDAD EN TIEMPO REAL</p><h2>Grupos creados</h2></div></div>
+                <p id="groups-admin-message" class="table-message"></p><div id="admin-groups-list" class="admin-activity-list"></div>
+            </section>
+
+            <section class="admin-section activity-section">
+                <div class="section-heading"><div><p class="eyebrow">SALAS</p><h2>Salas en curso</h2></div></div>
+                <p id="rooms-admin-message" class="table-message"></p><div id="admin-rooms-list" class="admin-activity-list"></div>
             </section>
         </section>
     </main>

@@ -23,11 +23,22 @@
                 <label class="field">Materia<input id="group-subject" required placeholder="Cálculo"></label>
                 <label class="field full">Descripción<textarea id="group-description" maxlength="500" placeholder="Objetivo y dinámica del grupo"></textarea></label>
                 <label class="field">Modalidad<select id="group-modality"><option>En línea</option><option>Presencial</option><option>Ambas</option></select></label>
-                <label class="field">Máximo de miembros<input id="group-capacity" type="number" min="2" max="30" value="6" required></label>
+                <label class="field">Máximo de miembros<input id="group-capacity" type="number" min="2" max="5" value="5" required><small>Free: hasta 5. Premium: hasta 999.</small></label>
                 <div class="full"><button class="primary" type="submit">Crear grupo</button><p id="group-message" class="message" aria-live="polite"></p></div>
             </form>
         </section>
+        <section id="salas" class="card">
+            <p class="eyebrow">SALAS EN VIVO</p><h2>Crear sala pública</h2>
+            <p class="subtitle">Crea una videollamada abierta para tu grupo o la comunidad. Las salas privadas y de más de 5 personas son Premium.</p>
+            <form id="room-form" class="grid">
+                <label class="field">Nombre de la sala<input id="room-name" required maxlength="80" placeholder="Repaso de Cálculo en vivo"></label>
+                <label class="field">Máximo de participantes<input id="room-capacity" type="number" min="2" max="5" value="5" required></label>
+                <label class="field full">Descripción<textarea id="room-description" maxlength="500" placeholder="Qué se estudiará en esta sala"></textarea></label>
+                <div class="full"><button class="primary" type="submit">Abrir sala pública</button><p id="room-message" class="message" aria-live="polite"></p></div>
+            </form>
+        </section>
         <section class="list-section"><h2>Grupos disponibles</h2><p id="groups-message" class="message" aria-live="polite"></p><div id="groups-list" class="group-list"></div></section>
+        <section class="list-section"><h2>Salas públicas en vivo</h2><p id="rooms-message" class="message" aria-live="polite"></p><div id="rooms-list" class="group-list"></div></section>
     </main>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="../js/supabase-client.js"></script>

@@ -26,11 +26,16 @@ form.addEventListener("submit", async (event) => {
 
         const { data: profile, error: profileError } = await window.studyCircleSupabase
             .from("profiles")
-            .select("role")
+            .select("role, account_status")
             .eq("id", data.user.id)
             .single();
 
         if (profileError) throw profileError;
+
+        if (profile.account_status === "banned") {
+            await window.studyCircleSupabase.auth.signOut();
+            throw new Error("Tu cuenta fue suspendida. Contacta a StudyCircle si crees que es un error.");
+        }
 
         window.location.href = profile.role === "admin" ? "admin.html" : "app.html";
     } catch (error) {

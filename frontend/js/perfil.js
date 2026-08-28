@@ -29,9 +29,9 @@ profileForm.addEventListener("submit", async (event) => {
     event.preventDefault();
     const button = profileForm.querySelector("button");
     button.disabled = true; button.textContent = "Guardando…"; setMessage("");
-    const { error } = await window.studyCircleSupabase.from("profiles").update({
-        full_name: document.querySelector("#full-name").value.trim(), university: document.querySelector("#university").value.trim(), career: document.querySelector("#career").value.trim(), subjects: document.querySelector("#subjects").value.split(",").map((item) => item.trim()).filter(Boolean), availability: document.querySelector("#availability").value, study_preference: document.querySelector("#study-preference").value,
-    }).eq("id", profileId);
+    const { error } = await window.studyCircleSupabase.rpc("update_my_profile", {
+        p_full_name: document.querySelector("#full-name").value.trim(), p_university: document.querySelector("#university").value.trim(), p_career: document.querySelector("#career").value.trim(), p_subjects: document.querySelector("#subjects").value.split(",").map((item) => item.trim()).filter(Boolean), p_availability: document.querySelector("#availability").value, p_study_preference: document.querySelector("#study-preference").value,
+    });
     button.disabled = false; button.textContent = "Guardar cambios";
     setMessage(error ? "No se pudieron guardar los cambios." : "Perfil actualizado correctamente.", !error);
 });

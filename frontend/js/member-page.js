@@ -7,12 +7,19 @@ async function protectMemberPage() {
 
     const { data: profile } = await window.studyCircleSupabase
         .from("profiles")
-        .select("full_name, role")
+        .select("full_name, role, account_status")
         .eq("id", user.id)
         .single();
 
     if (profile?.role === "admin") {
         window.location.href = "admin.html";
+        return null;
+    }
+
+    if (profile?.account_status === "banned") {
+        await window.studyCircleSupabase.auth.signOut();
+        alert("Tu cuenta fue suspendida. Contacta a StudyCircle si crees que es un error.");
+        window.location.href = "login.html";
         return null;
     }
 
