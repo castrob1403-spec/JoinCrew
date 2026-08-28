@@ -42,8 +42,7 @@ document.querySelector("#logout-button").addEventListener("click", async () => {
 });
 
 document.querySelector("#filter-button").addEventListener("click", () => {
-    document.querySelector("#match-status").textContent = "2 coincidencias actualizadas";
-    document.querySelector("#matches").scrollIntoView({ behavior: "smooth" });
+    window.location.href = "matches.html";
 });
 
 loadApp();

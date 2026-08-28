@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Matches | StudyCircle</title>
+    <link rel="stylesheet" href="../css/MemberPages.css">
+</head>
+<body>
+    <header class="header">
+        <a class="brand" href="app.html">Study<span>Circle</span></a>
+        <nav><a class="active" href="app.html">Explorar</a><a href="grupos.html">Grupos</a><a href="chat.html">Chat</a><a href="calendario.html">Calendario</a></nav>
+        <div class="header-right"><span data-user-name>Estudiante</span><button id="logout-button" class="logout">Cerrar sesión</button></div>
+    </header>
+    <main class="page">
+        <p class="eyebrow">COINCIDENCIAS REALES</p>
+        <h1 class="page-title">Personas compatibles contigo</h1>
+        <p class="subtitle">Comparamos tus materias, disponibilidad y modalidad con estudiantes registrados.</p>
+        <p id="matches-message" class="message" aria-live="polite"></p>
+        <section id="matches-list" class="match-list"></section>
+    </main>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../js/supabase-client.js"></script>
+    <script src="../js/member-page.js"></script>
+    <script src="../js/matches.js"></script>
+</body>
+</html>

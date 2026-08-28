@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grupos | StudyCircle</title>
+    <link rel="stylesheet" href="../css/MemberPages.css">
+</head>
+<body>
+    <header class="header">
+        <a class="brand" href="app.html">Study<span>Circle</span></a>
+        <nav><a href="app.html">Explorar</a><a class="active" href="grupos.html">Grupos</a><a href="chat.html">Chat</a><a href="calendario.html">Calendario</a></nav>
+        <div class="header-right"><span data-user-name>Estudiante</span><button id="logout-button" class="logout">Cerrar sesión</button></div>
+    </header>
+    <main class="page">
+        <p class="eyebrow">SALAS Y GRUPOS</p>
+        <h1 class="page-title">Encuentra tu espacio</h1>
+        <p class="subtitle">Crea un grupo o únete a uno que ya exista.</p>
+        <section class="card">
+            <h2>Crear un grupo</h2>
+            <form id="group-form" class="grid">
+                <label class="field">Nombre del grupo<input id="group-name" required maxlength="80" placeholder="Cálculo para el parcial"></label>
+                <label class="field">Materia<input id="group-subject" required placeholder="Cálculo"></label>
+                <label class="field full">Descripción<textarea id="group-description" maxlength="500" placeholder="Objetivo y dinámica del grupo"></textarea></label>
+                <label class="field">Modalidad<select id="group-modality"><option>En línea</option><option>Presencial</option><option>Ambas</option></select></label>
+                <label class="field">Máximo de miembros<input id="group-capacity" type="number" min="2" max="30" value="6" required></label>
+                <div class="full"><button class="primary" type="submit">Crear grupo</button><p id="group-message" class="message" aria-live="polite"></p></div>
+            </form>
+        </section>
+        <section class="list-section"><h2>Grupos disponibles</h2><p id="groups-message" class="message" aria-live="polite"></p><div id="groups-list" class="group-list"></div></section>
+    </main>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../js/supabase-client.js"></script>
+    <script src="../js/member-page.js"></script>
+    <script src="../js/grupos.js"></script>
+</body>
+</html>
