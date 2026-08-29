@@ -1,4 +1,7 @@
 const crypto = require("node:crypto");
+// Esta clave es pública (la misma que utiliza el frontend). Solo se usa para
+// validar el access token actual contra Auth; los datos sensibles usan service role.
+const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_KDsAg-Zv6RrgRrK0teSc1w_2bqXONJQ";
 
 function base64Url(value) {
     return Buffer.from(typeof value === "string" ? value : JSON.stringify(value))
@@ -35,12 +38,13 @@ exports.handler = async (event) => {
         const appId = process.env.JAAS_APP_ID;
         const keyId = process.env.JAAS_KEY_ID;
         const privateKey = process.env.JAAS_PRIVATE_KEY?.replace(/\\n/g, "\n");
-        const accessToken = event.headers.authorization?.replace(/^Bearer\s+/i, "");
+        const authorization = event.headers.authorization || event.headers.Authorization;
+        const accessToken = authorization?.replace(/^Bearer\s+/i, "");
         const { roomId } = JSON.parse(event.body || "{}");
         if (!serviceKey || !appId || !keyId || !privateKey) throw new Error("La videollamada aún no está configurada.");
         if (!accessToken || !roomId) throw new Error("Debes iniciar sesión para entrar a una sala.");
 
-        const user = await supabaseRequest("/auth/v1/user", accessToken, serviceKey, "auth user");
+        const user = await supabaseRequest("/auth/v1/user", accessToken, SUPABASE_PUBLISHABLE_KEY, "auth user");
         const profiles = await supabaseRequest(`/rest/v1/profiles?id=eq.${encodeURIComponent(user.id)}&select=full_name,account_status`, serviceKey, serviceKey, "profile");
         const profile = profiles[0];
         if (!profile || profile.account_status === "banned") throw new Error("Tu cuenta no tiene acceso a esta sala.");
