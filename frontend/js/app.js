@@ -131,7 +131,7 @@ async function loadSpacePreviews() {
         roomPreview.innerHTML = roomsResult.data.map((room) => renderSpaceCard({
             icon: "📹", label: "SALA EN VIVO", name: room.name, detail: room.description,
             count: `máx. ${room.max_participants}`,
-            href: `https://meet.jit.si/StudyCircle-room-${encodeURIComponent(room.id)}`,
+            href: `sala.html?room=${encodeURIComponent(room.id)}`,
             buttonText: "Entrar",
         })).join("");
     }

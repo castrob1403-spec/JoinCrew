@@ -35,7 +35,7 @@ async function loadRooms() {
         .eq("is_public", true).eq("status", "live").order("created_at", { ascending: false });
     if (error) { roomsMessage.textContent = "No se pudieron cargar las salas."; return; }
     roomsMessage.textContent = rooms?.length ? `${rooms.length} sala(s) en vivo.` : "No hay salas en vivo. Abre la primera.";
-    roomsList.innerHTML = (rooms || []).map((room, index) => `<article class="group"><div class="avatar ${index % 2 ? "amber" : ""}">📹</div><div class="group-content"><span class="score">EN VIVO · máximo ${room.max_participants}</span><h2>${safeText(room.name)}</h2><p>${safeText(room.description || "Sala pública de estudio")}</p></div><a class="primary" target="_blank" rel="noopener" href="https://meet.jit.si/StudyCircle-room-${encodeURIComponent(room.id)}">Entrar</a></article>`).join("");
+    roomsList.innerHTML = (rooms || []).map((room, index) => `<article class="group"><div class="avatar ${index % 2 ? "amber" : ""}">📹</div><div class="group-content"><span class="score">EN VIVO · máximo ${room.max_participants}</span><h2>${safeText(room.name)}</h2><p>${safeText(room.description || "Sala pública de estudio")}</p></div><a class="primary" href="sala.html?room=${encodeURIComponent(room.id)}">Entrar</a></article>`).join("");
 }
 
 groupForm.addEventListener("submit", async (event) => {
@@ -61,7 +61,7 @@ roomForm.addEventListener("submit", async (event) => {
     if (error?.message?.includes("Premium")) { showPremiumModal(); }
     roomMessage.textContent = error ? error.message : "Sala abierta. Ya puedes entrar a la videollamada.";
     roomMessage.classList.toggle("success", !error);
-    if (!error) { roomForm.reset(); await loadRooms(); window.open(`https://meet.jit.si/StudyCircle-room-${encodeURIComponent(data.id)}`, "_blank", "noopener"); }
+    if (!error) { roomForm.reset(); await loadRooms(); window.location.href = `sala.html?room=${encodeURIComponent(data.id)}`; }
 });
 
 document.querySelector("#group-capacity").addEventListener("input", (event) => protectFreeCapacity(event.target));
