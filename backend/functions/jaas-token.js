@@ -13,11 +13,18 @@ function signJwt(header, payload, privateKey) {
     return `${unsignedToken}.${signer.sign(privateKey, "base64url")}`;
 }
 
-async function supabaseRequest(path, accessToken, serviceKey) {
+async function supabaseRequest(path, accessToken, serviceKey, purpose) {
     const response = await fetch(`${process.env.SUPABASE_URL}${path}`, {
         headers: { apikey: serviceKey, Authorization: `Bearer ${accessToken}` },
     });
-    if (!response.ok) throw new Error("No se pudo validar tu sesión.");
+    if (!response.ok) {
+        const detail = await response.text();
+        console.error(`Supabase ${purpose || path} failed:`, response.status, detail);
+        if (response.status === 401 || response.status === 403) {
+            throw new Error("Tu sesión ya no es válida. Cierra sesión e ingresa nuevamente para continuar.");
+        }
+        throw new Error("No se pudo conectar con la base de datos para abrir la sala.");
+    }
     return response.json();
 }
 
@@ -33,18 +40,18 @@ exports.handler = async (event) => {
         if (!serviceKey || !appId || !keyId || !privateKey) throw new Error("La videollamada aún no está configurada.");
         if (!accessToken || !roomId) throw new Error("Debes iniciar sesión para entrar a una sala.");
 
-        const user = await supabaseRequest("/auth/v1/user", accessToken, serviceKey);
-        const profiles = await supabaseRequest(`/rest/v1/profiles?id=eq.${encodeURIComponent(user.id)}&select=full_name,account_status`, serviceKey, serviceKey);
+        const user = await supabaseRequest("/auth/v1/user", accessToken, serviceKey, "auth user");
+        const profiles = await supabaseRequest(`/rest/v1/profiles?id=eq.${encodeURIComponent(user.id)}&select=full_name,account_status`, serviceKey, serviceKey, "profile");
         const profile = profiles[0];
         if (!profile || profile.account_status === "banned") throw new Error("Tu cuenta no tiene acceso a esta sala.");
 
-        const rooms = await supabaseRequest(`/rest/v1/study_rooms?id=eq.${encodeURIComponent(roomId)}&select=id,group_id,created_by,status,is_public`, serviceKey, serviceKey);
+        const rooms = await supabaseRequest(`/rest/v1/study_rooms?id=eq.${encodeURIComponent(roomId)}&select=id,group_id,created_by,status,is_public`, serviceKey, serviceKey, "room");
         const room = rooms[0];
         if (!room || room.status !== "live") throw new Error("Esta sala ya no está disponible.");
 
         let membership;
         if (room.group_id) {
-            const members = await supabaseRequest(`/rest/v1/group_members?group_id=eq.${encodeURIComponent(room.group_id)}&user_id=eq.${encodeURIComponent(user.id)}&select=member_role`, serviceKey, serviceKey);
+            const members = await supabaseRequest(`/rest/v1/group_members?group_id=eq.${encodeURIComponent(room.group_id)}&user_id=eq.${encodeURIComponent(user.id)}&select=member_role`, serviceKey, serviceKey, "membership");
             membership = members[0];
             if (!room.is_public && !membership) throw new Error("Esta es una sala privada del grupo.");
         }
