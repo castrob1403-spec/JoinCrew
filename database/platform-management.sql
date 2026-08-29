@@ -150,3 +150,8 @@ create policy "Admins can see all group members" on public.group_members for sel
 
 alter publication supabase_realtime add table public.study_groups;
 alter publication supabase_realtime add table public.study_rooms;
+
+-- La Netlify Function usa service_role para verificar de forma segura al usuario
+-- y la sala, sin exponer esta clave al navegador.
+grant usage on schema public to service_role;
+grant select on public.profiles, public.study_rooms, public.group_members to service_role;

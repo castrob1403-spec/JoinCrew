@@ -16,6 +16,15 @@ function signJwt(header, payload, privateKey) {
     return `${unsignedToken}.${signer.sign(privateKey, "base64url")}`;
 }
 
+function normalizePrivateKey(value) {
+    const input = value?.replace(/\\n/g, "\n").replace(/\r/g, "").trim();
+    const match = input?.match(/-----BEGIN ([A-Z ]*PRIVATE KEY)-----([\s\S]*?)-----END \1-----/);
+    if (!match) throw new Error("La clave privada de JaaS no tiene un formato válido.");
+    const body = match[2].replace(/\s/g, "");
+    const lines = body.match(/.{1,64}/g)?.join("\n");
+    return `-----BEGIN ${match[1]}-----\n${lines}\n-----END ${match[1]}-----`;
+}
+
 async function supabaseRequest(path, accessToken, serviceKey, purpose) {
     const response = await fetch(`${process.env.SUPABASE_URL}${path}`, {
         headers: { apikey: serviceKey, Authorization: `Bearer ${accessToken}` },
@@ -37,7 +46,7 @@ exports.handler = async (event) => {
         const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
         const appId = process.env.JAAS_APP_ID;
         const keyId = process.env.JAAS_KEY_ID;
-        const privateKey = process.env.JAAS_PRIVATE_KEY?.replace(/\\n/g, "\n");
+        const privateKey = normalizePrivateKey(process.env.JAAS_PRIVATE_KEY);
         const authorization = event.headers.authorization || event.headers.Authorization;
         const accessToken = authorization?.replace(/^Bearer\s+/i, "");
         const { roomId } = JSON.parse(event.body || "{}");
