@@ -1,4 +1,64 @@
-<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Mi perfil | StudyCircle</title><link rel="stylesheet" href="../css/MemberPages.css"></head><body>
-<header class="header"><a class="brand" href="app.html">Study<span>Circle</span></a><nav><a href="app.html">Explorar</a><a href="grupos.html">Grupos</a><a href="chat.html">Chat</a><a href="calendario.html">Calendario</a></nav><div class="header-right"><span data-user-name>Estudiante</span><button id="logout-button" class="logout">Cerrar sesión</button></div></header>
-<main class="page"><p class="eyebrow">PERFIL ACADÉMICO</p><h1 class="page-title">Edita tu perfil</h1><p class="subtitle">Estos datos ayudan a encontrar compañeros de estudio compatibles.</p><form id="profile-form" class="card grid"><label class="field full">Nombre completo<input id="full-name" required></label><label class="field">Universidad o institución<input id="university" required></label><label class="field">Carrera<input id="career" required></label><label class="field full">Materias<input id="subjects" placeholder="Cálculo, Programación, Física" required></label><label class="field">Disponibilidad<select id="availability" required><option>Mañana</option><option>Tarde</option><option>Noche</option><option>Fines de semana</option><option>Horario flexible</option></select></label><label class="field">Modalidad<select id="study-preference" required><option>En línea</option><option>Presencial</option><option>Ambas</option></select></label><div class="full"><button class="primary" type="submit">Guardar cambios</button><p id="profile-message" class="message" aria-live="polite"></p></div></form></main>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="../js/supabase-client.js"></script><script src="../js/member-page.js"></script><script src="../js/perfil.js"></script></body></html>
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mi perfil | StudyCircle</title>
+    <link rel="stylesheet" href="../css/MemberPages.css" />
+  </head>
+  <body>
+    <header class="header">
+      <a class="brand" href="app.html">Study<span>Circle</span></a>
+      <nav>
+        <a href="app.html">Explorar</a><a href="grupos.html">Grupos</a
+        ><a href="chat.html">Chat</a><a href="calendario.html">Calendario</a>
+      </nav>
+      <div class="header-right">
+        <span data-user-name>Estudiante</span
+        ><button id="logout-button" class="logout">Cerrar sesión</button>
+      </div>
+    </header>
+    <main class="page">
+      <p class="eyebrow">PERFIL ACADÉMICO</p>
+      <h1 class="page-title">Edita tu perfil</h1>
+      <p class="subtitle">
+        Estos datos ayudan a encontrar compañeros de estudio compatibles.
+      </p>
+      <form id="profile-form" class="card grid">
+        <label class="field full"
+          >Nombre completo<input id="full-name" required /></label
+        ><label class="field"
+          >Universidad o institución<input id="university" required /></label
+        ><label class="field">Carrera<input id="career" required /></label
+        ><label class="field full"
+          >Materias<input
+            id="subjects"
+            placeholder="Cálculo, Programación, Física"
+            required /></label
+        ><label class="field"
+          >Disponibilidad<select id="availability" required>
+            <option>Mañana</option>
+            <option>Tarde</option>
+            <option>Noche</option>
+            <option>Fines de semana</option>
+            <option>Horario flexible</option>
+          </select></label
+        ><label class="field"
+          >Modalidad<select id="study-preference" required>
+            <option>En línea</option>
+            <option>Presencial</option>
+            <option>Ambas</option>
+          </select></label
+        >
+        <div class="full">
+          <button class="primary" type="submit">Guardar cambios</button>
+          <p id="profile-message" class="message" aria-live="polite"></p>
+        </div>
+      </form>
+    </main>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../js/supabase-client.js"></script>
+    <script src="../js/member-page.js"></script>
+    <script src="../js/perfil.js"></script>
+  </body>
+</html>

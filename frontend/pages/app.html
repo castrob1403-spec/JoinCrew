@@ -1,129 +1,207 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>StudyCircle | Tu espacio de estudio</title>
-    <link rel="stylesheet" href="../css/AppStyle.css">
-</head>
-<body>
+    <link rel="stylesheet" href="../css/AppStyle.css" />
+  </head>
+  <body>
     <header class="app-header">
-        <a class="brand" href="../index.html">Study<span>Circle</span></a>
-        <nav aria-label="Navegación principal">
-            <a class="active" href="app.html">Explorar</a>
-            <a href="grupos.html">Grupos</a>
-            <a href="chat.html">Chat</a>
-            <a href="calendario.html">Calendario</a>
-        </nav>
-        <div class="header-user">
-            <span id="header-name">Mi perfil</span>
-            <button id="logout-button" type="button">Cerrar sesión</button>
-        </div>
+      <a class="brand" href="../index.html">Study<span>Circle</span></a>
+      <nav aria-label="Navegación principal">
+        <a class="active" href="app.html">Explorar</a>
+        <a href="grupos.html">Grupos</a>
+        <a href="chat.html">Chat</a>
+        <a href="calendario.html">Calendario</a>
+      </nav>
+      <div class="header-user">
+        <span id="header-name">Mi perfil</span>
+        <button id="logout-button" type="button">Cerrar sesión</button>
+      </div>
     </header>
 
     <main class="app-layout">
-        <aside class="profile-panel">
-            <div class="avatar" id="profile-initial">T</div>
-            <h2 id="profile-name">Tu perfil</h2>
-            <p id="profile-career">Completa tus datos académicos</p>
-            <div class="profile-details">
-                <p><span>⌂</span> <span id="profile-university">StudyCircle</span></p>
-                <p><span>◷</span> <span id="profile-availability">Disponibilidad pendiente</span></p>
-                <p><span>◉</span> <span id="profile-modality">Modalidad pendiente</span></p>
-            </div>
-            <a class="outline-button" href="perfil.html">Editar perfil</a>
+      <aside class="profile-panel">
+        <div class="avatar" id="profile-initial">T</div>
+        <h2 id="profile-name">Tu perfil</h2>
+        <p id="profile-career">Completa tus datos académicos</p>
+        <div class="profile-details">
+          <p><span>⌂</span> <span id="profile-university">StudyCircle</span></p>
+          <p>
+            <span>◷</span>
+            <span id="profile-availability">Disponibilidad pendiente</span>
+          </p>
+          <p>
+            <span>◉</span>
+            <span id="profile-modality">Modalidad pendiente</span>
+          </p>
+        </div>
+        <a class="outline-button" href="perfil.html">Editar perfil</a>
 
-            <div class="premium-box">
-                <span>STUDYCIRCLE PREMIUM</span>
-                <strong>Estudia con más enfoque.</strong>
-                <p>Planificador, filtros avanzados y estadísticas.</p>
-                <a href="premium.html" class="text-button">Conocer Premium →</a>
-            </div>
-        </aside>
+        <div class="premium-box">
+          <span>STUDYCIRCLE PREMIUM</span>
+          <strong>Estudia con más enfoque.</strong>
+          <p>Planificador, filtros avanzados y estadísticas.</p>
+          <a href="premium.html" class="text-button">Conocer Premium →</a>
+        </div>
+      </aside>
 
-        <section class="content">
-            <section class="welcome" id="profile">
-                <div>
-                    <p class="eyebrow">TU ESPACIO DE ESTUDIO</p>
-                    <h1>Hola, <span id="welcome-name">estudiante</span> 👋</h1>
-                    <p>Encuentra a las personas con las que realmente quieres estudiar.</p>
-                </div>
-                <div class="pomodoro">
-                    <span>FOCUS SESSION</span>
-                    <strong>25:00</strong>
-                    <button type="button">Iniciar pomodoro</button>
-                </div>
-            </section>
-            <aside id="admin-notice" class="admin-notice" hidden></aside>
-
-            <section class="filter-section" aria-labelledby="filter-title">
-                <div class="section-heading">
-                    <div>
-                        <p class="eyebrow">ENCUENTRA TU CÍRCULO</p>
-                        <h2 id="filter-title">¿Con quién quieres estudiar hoy?</h2>
-                    </div>
-                    <button id="filter-button" class="primary-button" type="button">Buscar coincidencias</button>
-                </div>
-                <div class="filters">
-                    <label>¿Dónde estás?
-                        <select id="country-filter"><option>🇪🇨 Ecuador</option><option>🇵🇪 Perú</option><option>🇨🇴 Colombia</option><option>Latinoamérica</option></select>
-                    </label>
-                    <label>¿Qué estudias?
-                        <select id="career-filter"><option>💻 Computación</option><option>📊 Administración</option><option>⚕️ Medicina</option><option>📐 Ingeniería</option></select>
-                    </label>
-                    <label>Materia
-                        <select id="subject-filter"><option>📐 Cálculo</option><option>⌨️ Programación</option><option>⚛️ Física</option><option>📚 Otra materia</option></select>
-                    </label>
-                    <label>Horario
-                        <select id="time-filter"><option>18:00 – 20:00</option><option>14:00 – 16:00</option><option>20:00 – 22:00</option><option>Flexible</option></select>
-                    </label>
-                </div>
-                <div class="study-options">
-                    <span>Modalidad:</span>
-                    <label><input type="checkbox" checked> Videollamada</label>
-                    <label><input type="checkbox"> Sin micrófono</label>
-                    <label><input type="checkbox"> Con cámara</label>
-                    <span class="divider"></span>
-                    <span>Busco:</span>
-                    <label><input type="radio" name="search-type" checked> Una persona</label>
-                    <label><input type="radio" name="search-type"> Grupo pequeño</label>
-                    <label><input type="radio" name="search-type"> Sala pública</label>
-                </div>
-            </section>
-
-            <section id="matches" class="matches-section">
-                <div class="section-heading compact">
-                    <div>
-                        <p class="eyebrow">COINCIDENCIAS PARA TI</p>
-                        <h2>Tu próximo match está aquí</h2>
-                    </div>
-                    <span id="match-status" class="result-count">Cargando…</span>
-                </div>
-                <div id="match-preview" class="match-grid"></div>
-                <a href="matches.html" class="text-button match-more-link">Ver más coincidencias →</a>
-            </section>
-
-            <section id="groups" class="groups-section">
-                <div class="section-heading compact"><div><p class="eyebrow">GRUPOS</p><h2>Grupos activos en StudyCircle</h2></div><a class="text-button" href="grupos.html">Ver todos →</a></div>
-                <p id="group-preview-status" class="preview-status">Cargando grupos…</p>
-                <div id="group-preview" class="group-grid"></div>
-            </section>
-
-            <section class="groups-section room-preview-section">
-                <div class="section-heading compact"><div><p class="eyebrow">SALAS EN VIVO</p><h2>Únete a una sesión en curso</h2></div><a class="text-button" href="grupos.html#salas">Explorar salas →</a></div>
-                <p id="room-preview-status" class="preview-status">Cargando salas…</p>
-                <div id="room-preview" class="group-grid"></div>
-            </section>
-
-            <section class="tools-grid">
-                <article class="tool-card"><span>💬</span><div><h3>Chat de estudio</h3><p>Conversa con tu grupo y resuelve dudas.</p></div><a href="chat.html">Abrir chat</a></article>
-                <article class="tool-card"><span>🗓️</span><div><h3>Tu calendario</h3><p>Organiza tu próxima sesión de estudio.</p></div><a href="calendario.html">Ver calendario</a></article>
-                <article class="tool-card premium-tool"><span>✦</span><div><h3>Estadísticas Premium</h3><p>Conoce tus hábitos y progreso de estudio.</p></div><a href="premium.html">Ver planes</a></article>
-            </section>
+      <section class="content">
+        <section class="welcome" id="profile">
+          <div>
+            <p class="eyebrow">TU ESPACIO DE ESTUDIO</p>
+            <h1>Hola, <span id="welcome-name">estudiante</span> 👋</h1>
+            <p>
+              Encuentra a las personas con las que realmente quieres estudiar.
+            </p>
+          </div>
+          <div class="pomodoro">
+            <span>FOCUS SESSION</span>
+            <strong>25:00</strong>
+            <button type="button">Iniciar pomodoro</button>
+          </div>
         </section>
+        <aside id="admin-notice" class="admin-notice" hidden></aside>
+
+        <section class="filter-section" aria-labelledby="filter-title">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">ENCUENTRA TU CÍRCULO</p>
+              <h2 id="filter-title">¿Con quién quieres estudiar hoy?</h2>
+            </div>
+            <button id="filter-button" class="primary-button" type="button">
+              Buscar coincidencias
+            </button>
+          </div>
+          <div class="filters">
+            <label
+              >¿Dónde estás?
+              <select id="country-filter">
+                <option>🇪🇨 Ecuador</option>
+                <option>🇵🇪 Perú</option>
+                <option>🇨🇴 Colombia</option>
+                <option>Latinoamérica</option>
+              </select>
+            </label>
+            <label
+              >¿Qué estudias?
+              <select id="career-filter">
+                <option>💻 Computación</option>
+                <option>📊 Administración</option>
+                <option>⚕️ Medicina</option>
+                <option>📐 Ingeniería</option>
+              </select>
+            </label>
+            <label
+              >Materia
+              <select id="subject-filter">
+                <option>📐 Cálculo</option>
+                <option>⌨️ Programación</option>
+                <option>⚛️ Física</option>
+                <option>📚 Otra materia</option>
+              </select>
+            </label>
+            <label
+              >Horario
+              <select id="time-filter">
+                <option>18:00 – 20:00</option>
+                <option>14:00 – 16:00</option>
+                <option>20:00 – 22:00</option>
+                <option>Flexible</option>
+              </select>
+            </label>
+          </div>
+          <div class="study-options">
+            <span>Modalidad:</span>
+            <label><input type="checkbox" checked /> Videollamada</label>
+            <label><input type="checkbox" /> Sin micrófono</label>
+            <label><input type="checkbox" /> Con cámara</label>
+            <span class="divider"></span>
+            <span>Busco:</span>
+            <label
+              ><input type="radio" name="search-type" checked /> Una
+              persona</label
+            >
+            <label
+              ><input type="radio" name="search-type" /> Grupo pequeño</label
+            >
+            <label
+              ><input type="radio" name="search-type" /> Sala pública</label
+            >
+          </div>
+        </section>
+
+        <section id="matches" class="matches-section">
+          <div class="section-heading compact">
+            <div>
+              <p class="eyebrow">COINCIDENCIAS PARA TI</p>
+              <h2>Tu próximo match está aquí</h2>
+            </div>
+            <span id="match-status" class="result-count">Cargando…</span>
+          </div>
+          <div id="match-preview" class="match-grid"></div>
+          <a href="matches.html" class="text-button match-more-link"
+            >Ver más coincidencias →</a
+          >
+        </section>
+
+        <section id="groups" class="groups-section">
+          <div class="section-heading compact">
+            <div>
+              <p class="eyebrow">GRUPOS</p>
+              <h2>Grupos activos en StudyCircle</h2>
+            </div>
+            <a class="text-button" href="grupos.html">Ver todos →</a>
+          </div>
+          <p id="group-preview-status" class="preview-status">
+            Cargando grupos…
+          </p>
+          <div id="group-preview" class="group-grid"></div>
+        </section>
+
+        <section class="groups-section room-preview-section">
+          <div class="section-heading compact">
+            <div>
+              <p class="eyebrow">SALAS EN VIVO</p>
+              <h2>Únete a una sesión en curso</h2>
+            </div>
+            <a class="text-button" href="grupos.html#salas">Explorar salas →</a>
+          </div>
+          <p id="room-preview-status" class="preview-status">Cargando salas…</p>
+          <div id="room-preview" class="group-grid"></div>
+        </section>
+
+        <section class="tools-grid">
+          <article class="tool-card">
+            <span>💬</span>
+            <div>
+              <h3>Chat de estudio</h3>
+              <p>Conversa con tu grupo y resuelve dudas.</p>
+            </div>
+            <a href="chat.html">Abrir chat</a>
+          </article>
+          <article class="tool-card">
+            <span>🗓️</span>
+            <div>
+              <h3>Tu calendario</h3>
+              <p>Organiza tu próxima sesión de estudio.</p>
+            </div>
+            <a href="calendario.html">Ver calendario</a>
+          </article>
+          <article class="tool-card premium-tool">
+            <span>✦</span>
+            <div>
+              <h3>Estadísticas Premium</h3>
+              <p>Conoce tus hábitos y progreso de estudio.</p>
+            </div>
+            <a href="premium.html">Ver planes</a>
+          </article>
+        </section>
+      </section>
     </main>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="../js/supabase-client.js"></script>
     <script src="../js/app.js"></script>
-</body>
+  </body>
 </html>

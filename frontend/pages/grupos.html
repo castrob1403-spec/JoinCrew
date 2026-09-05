@@ -1,56 +1,153 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Grupos | StudyCircle</title>
-    <link rel="stylesheet" href="../css/MemberPages.css">
-</head>
-<body>
+    <link rel="stylesheet" href="../css/MemberPages.css" />
+  </head>
+  <body>
     <header class="header">
-        <a class="brand" href="app.html">Study<span>Circle</span></a>
-        <nav><a href="app.html">Explorar</a><a class="active" href="grupos.html">Grupos</a><a href="chat.html">Chat</a><a href="calendario.html">Calendario</a></nav>
-        <div class="header-right"><span data-user-name>Estudiante</span><button id="logout-button" class="logout">Cerrar sesión</button></div>
+      <a class="brand" href="app.html">Study<span>Circle</span></a>
+      <nav>
+        <a href="app.html">Explorar</a
+        ><a class="active" href="grupos.html">Grupos</a
+        ><a href="chat.html">Chat</a><a href="calendario.html">Calendario</a>
+      </nav>
+      <div class="header-right">
+        <span data-user-name>Estudiante</span
+        ><button id="logout-button" class="logout">Cerrar sesión</button>
+      </div>
     </header>
     <main class="page">
-        <p class="eyebrow">SALAS Y GRUPOS</p>
-        <h1 class="page-title">Encuentra tu espacio</h1>
-        <p class="subtitle">Crea un grupo o únete a uno que ya exista.</p>
-        <section class="card">
-            <h2>Crear un grupo</h2>
-            <form id="group-form" class="grid">
-                <label class="field">Nombre del grupo<input id="group-name" required maxlength="80" placeholder="Elige el nombre de tu grupo"></label>
-                <label class="field">Materia<select id="group-subject" required><option value="">Elige una materia</option><option>Cálculo</option><option>Programación</option><option>Física</option><option>Química</option><option>Estadística</option><option>Álgebra</option><option>Inglés</option><option>Otra</option></select></label>
-                <label class="field full">Descripción<textarea id="group-description" maxlength="500" placeholder="Objetivo y dinámica del grupo"></textarea></label>
-                <label class="field">Modalidad<select id="group-modality"><option>En línea</option><option>Presencial</option><option>Ambas</option></select></label>
-                <label class="field">Máximo de miembros<input id="group-capacity" type="number" min="2" max="999" value="5" required></label>
-                <div class="full"><button class="primary" type="submit">Crear grupo</button><p id="group-message" class="message" aria-live="polite"></p></div>
-            </form>
-        </section>
-        <section id="salas" class="card">
-            <p class="eyebrow">SALAS EN VIVO</p><h2>Crear sala pública</h2>
-            <p class="subtitle">Crea una videollamada abierta para tu grupo o la comunidad. Las salas privadas y de más de 5 personas son Premium.</p>
-            <form id="room-form" class="grid">
-                <label class="field">Nombre de la sala<input id="room-name" required maxlength="80" placeholder="Elige el nombre de tu sala"></label>
-                <label class="field">Máximo de participantes<input id="room-capacity" type="number" min="2" max="999" value="5" required></label>
-                <label class="field full">Descripción<textarea id="room-description" maxlength="500" placeholder="Qué se estudiará en esta sala"></textarea></label>
-                <div class="full"><button class="primary" type="submit">Abrir sala pública</button><p id="room-message" class="message" aria-live="polite"></p></div>
-            </form>
-        </section>
-        <section class="list-section"><h2>Grupos disponibles</h2><p id="groups-message" class="message" aria-live="polite"></p><div id="groups-list" class="group-list"></div></section>
-        <section class="list-section"><h2>Salas públicas en vivo</h2><p id="rooms-message" class="message" aria-live="polite"></p><div id="rooms-list" class="group-list"></div></section>
+      <p class="eyebrow">SALAS Y GRUPOS</p>
+      <h1 class="page-title">Encuentra tu espacio</h1>
+      <p class="subtitle">Crea un grupo o únete a uno que ya exista.</p>
+      <section class="card">
+        <h2>Crear un grupo</h2>
+        <form id="group-form" class="grid">
+          <label class="field"
+            >Nombre del grupo<input
+              id="group-name"
+              required
+              maxlength="80"
+              placeholder="Elige el nombre de tu grupo"
+          /></label>
+          <label class="field"
+            >Materia<select id="group-subject" required>
+              <option value="">Elige una materia</option>
+              <option>Cálculo</option>
+              <option>Programación</option>
+              <option>Física</option>
+              <option>Química</option>
+              <option>Estadística</option>
+              <option>Álgebra</option>
+              <option>Inglés</option>
+              <option>Otra</option>
+            </select></label
+          >
+          <label class="field full"
+            >Descripción<textarea
+              id="group-description"
+              maxlength="500"
+              placeholder="Objetivo y dinámica del grupo"
+            ></textarea>
+          </label>
+          <label class="field"
+            >Modalidad<select id="group-modality">
+              <option>En línea</option>
+              <option>Presencial</option>
+              <option>Ambas</option>
+            </select></label
+          >
+          <label class="field"
+            >Máximo de miembros<input
+              id="group-capacity"
+              type="number"
+              min="2"
+              max="999"
+              value="5"
+              required
+          /></label>
+          <div class="full">
+            <button class="primary" type="submit">Crear grupo</button>
+            <p id="group-message" class="message" aria-live="polite"></p>
+          </div>
+        </form>
+      </section>
+      <section id="salas" class="card">
+        <p class="eyebrow">SALAS EN VIVO</p>
+        <h2>Crear sala pública</h2>
+        <p class="subtitle">
+          Crea una videollamada abierta para tu grupo o la comunidad. Las salas
+          privadas y de más de 5 personas son Premium.
+        </p>
+        <form id="room-form" class="grid">
+          <label class="field"
+            >Nombre de la sala<input
+              id="room-name"
+              required
+              maxlength="80"
+              placeholder="Elige el nombre de tu sala"
+          /></label>
+          <label class="field"
+            >Máximo de participantes<input
+              id="room-capacity"
+              type="number"
+              min="2"
+              max="999"
+              value="5"
+              required
+          /></label>
+          <label class="field full"
+            >Descripción<textarea
+              id="room-description"
+              maxlength="500"
+              placeholder="Qué se estudiará en esta sala"
+            ></textarea>
+          </label>
+          <div class="full">
+            <button class="primary" type="submit">Abrir sala pública</button>
+            <p id="room-message" class="message" aria-live="polite"></p>
+          </div>
+        </form>
+      </section>
+      <section class="list-section">
+        <h2>Grupos disponibles</h2>
+        <p id="groups-message" class="message" aria-live="polite"></p>
+        <div id="groups-list" class="group-list"></div>
+      </section>
+      <section class="list-section">
+        <h2>Salas públicas en vivo</h2>
+        <p id="rooms-message" class="message" aria-live="polite"></p>
+        <div id="rooms-list" class="group-list"></div>
+      </section>
     </main>
     <dialog id="premium-modal" class="premium-modal">
-        <button id="close-premium-modal" class="modal-close" type="button" aria-label="Cerrar">×</button>
-        <span class="premium-spark">✦</span>
-        <p class="eyebrow">STUDYCIRCLE PREMIUM</p>
-        <h2>Tu círculo puede crecer aún más</h2>
-        <p>Con Premium puedes reunir a más de 5 estudiantes, crear salas privadas y organizar sesiones sin límites para que su grupo estudie a su ritmo.</p>
-        <div class="premium-modal-actions"><button id="keep-free-button" class="secondary" type="button">Seguir con Free</button><a class="primary" href="premium.html">Conocer Premium</a></div>
+      <button
+        id="close-premium-modal"
+        class="modal-close"
+        type="button"
+        aria-label="Cerrar"
+      >
+        ×
+      </button>
+      <span class="premium-spark">✦</span>
+      <p class="eyebrow">STUDYCIRCLE PREMIUM</p>
+      <h2>Tu círculo puede crecer aún más</h2>
+      <p>
+        Con Premium puedes reunir a más de 5 estudiantes, crear salas privadas y
+        organizar sesiones sin límites para que su grupo estudie a su ritmo.
+      </p>
+      <div class="premium-modal-actions">
+        <button id="keep-free-button" class="secondary" type="button">
+          Seguir con Free</button
+        ><a class="primary" href="premium.html">Conocer Premium</a>
+      </div>
     </dialog>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="../js/supabase-client.js"></script>
     <script src="../js/member-page.js"></script>
     <script src="../js/grupos.js"></script>
-</body>
+  </body>
 </html>

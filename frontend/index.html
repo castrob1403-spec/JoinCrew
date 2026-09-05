@@ -1,551 +1,333 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <title>StudyCircle | Find your study circle</title>
 
-    <link rel="stylesheet" href="css/IndexStyle.css">
-</head>
+    <link rel="stylesheet" href="css/IndexStyle.css" />
+  </head>
 
-<body>
-
+  <body>
     <!-- ================= HEADER ================= -->
 
     <header class="header">
+      <!-- LOGO -->
+      <a href="index.html" class="logo-link">
+        <div class="logo-placeholder">
+          <img src="img/logo.png" alt="Logo de StudyCircle" />
+        </div>
+      </a>
 
-        <!-- LOGO -->
-        <a href="index.html" class="logo-link">
-            <div class="logo-placeholder">
-                <img src="img/logo.png" alt="Logo de StudyCircle">
-            </div>
-        </a>
+      <!-- NAVEGACIÓN -->
+      <nav class="navbar">
+        <a href="#inicio">Inicio</a>
+        <a href="#problema">El problema</a>
+        <a href="#funcionamiento">Cómo funciona</a>
+        <a href="#caracteristicas">Características</a>
+      </nav>
 
-        <!-- NAVEGACIÓN -->
-        <nav class="navbar">
+      <!-- ACCIONES DEL HEADER -->
+      <div class="header-actions">
+        <!-- SELECTOR DE IDIOMA -->
+        <div class="language-selector">
+          <button class="language-button">
+            🌐 ES
+            <span>⌄</span>
+          </button>
 
-            <a href="#inicio">Inicio</a>
-            <a href="#problema">El problema</a>
-            <a href="#funcionamiento">Cómo funciona</a>
-            <a href="#caracteristicas">Características</a>
+          <div class="language-menu">
+            <a href="#" class="active-language"> 🇪🇸 Español </a>
 
-        </nav>
+            <a href="#"> 🇺🇸 English </a>
 
-        <!-- ACCIONES DEL HEADER -->
-        <div class="header-actions">
+            <a href="#"> 🇧🇷 Português </a>
 
-            <!-- SELECTOR DE IDIOMA -->
-            <div class="language-selector">
+            <a href="#"> 🇫🇷 Français </a>
 
-                <button class="language-button">
-                    🌐 ES
-                    <span>⌄</span>
-                </button>
-
-                <div class="language-menu">
-
-                    <a href="#" class="active-language">
-                        🇪🇸 Español
-                    </a>
-
-                    <a href="#">
-                        🇺🇸 English
-                    </a>
-
-                    <a href="#">
-                        🇧🇷 Português
-                    </a>
-
-                    <a href="#">
-                        🇫🇷 Français
-                    </a>
-
-                    <a href="#">
-                        🇩🇪 Deutsch
-                    </a>
-
-                </div>
-
-            </div>
-
-            <a href="pages/login.html" class="login-button">
-                Iniciar sesión
-            </a>
-
+            <a href="#"> 🇩🇪 Deutsch </a>
+          </div>
         </div>
 
+        <a href="pages/login.html" class="login-button"> Iniciar sesión </a>
+      </div>
     </header>
-
 
     <!-- ================= HERO ================= -->
 
     <main>
+      <section id="inicio" class="hero">
+        <div class="hero-content">
+          <span class="hero-tag"> STUDY • CONNECT • GROW </span>
 
-        <section id="inicio" class="hero">
+          <h1>
+            Encuentra personas que
+            <span>estudian como tú.</span>
+          </h1>
 
-            <div class="hero-content">
+          <p>
+            StudyCircle conecta estudiantes con personas que comparten sus
+            materias, horarios, idioma y objetivos de estudio.
+          </p>
 
-                <span class="hero-tag">
-                    STUDY • CONNECT • GROW
-                </span>
+          <div class="hero-buttons">
+            <a href="pages/registro.html" class="btn-primary">
+              Comenzar ahora
+            </a>
 
-                <h1>
-                    Encuentra personas que
-                    <span>estudian como tú.</span>
-                </h1>
+            <a href="#funcionamiento" class="btn-secondary"> Conocer más </a>
+          </div>
+        </div>
 
-                <p>
-                    StudyCircle conecta estudiantes con personas que
-                    comparten sus materias, horarios, idioma y
-                    objetivos de estudio.
-                </p>
+        <!-- REPRESENTACIÓN VISUAL DEL MATCH -->
 
-                <div class="hero-buttons">
-
-                    <a href="pages/registro.html" class="btn-primary">
-                        Comenzar ahora
-                    </a>
-
-                    <a href="#funcionamiento" class="btn-secondary">
-                        Conocer más
-                    </a>
-
-                </div>
-
+        <div class="hero-visual">
+          <div class="match-card main-card">
+            <div class="match-header">
+              <span>Tu próximo match</span>
+              <span class="match-status">●</span>
             </div>
 
+            <div class="profile-info">
+              <div class="profile-avatar">M</div>
 
-            <!-- REPRESENTACIÓN VISUAL DEL MATCH -->
-
-            <div class="hero-visual">
-
-                <div class="match-card main-card">
-
-                    <div class="match-header">
-                        <span>Tu próximo match</span>
-                        <span class="match-status">●</span>
-                    </div>
-
-                    <div class="profile-info">
-
-                        <div class="profile-avatar">
-                            M
-                        </div>
-
-                        <div>
-                            <h3>María</h3>
-                            <p>🇪🇨 Ecuador · Computación</p>
-                        </div>
-
-                    </div>
-
-                    <div class="match-data">
-
-                        <div>
-                            <span>📚</span>
-                            Cálculo
-                        </div>
-
-                        <div>
-                            <span>🕐</span>
-                            18:00 – 20:00
-                        </div>
-
-                        <div>
-                            <span>🌐</span>
-                            Español
-                        </div>
-
-                    </div>
-
-                    <div class="compatibility">
-
-                        <div class="compatibility-text">
-                            <span>Compatibilidad</span>
-                            <strong>94%</strong>
-                        </div>
-
-                        <div class="progress-bar">
-                            <div></div>
-                        </div>
-
-                    </div>
-
-                </div>
-
-                <div class="floating-card floating-one">
-                    📚 Cálculo
-                </div>
-
-                <div class="floating-card floating-two">
-                    🌎 Español
-                </div>
-
-                <div class="floating-card floating-three">
-                    🕐 18:00
-                </div>
-
+              <div>
+                <h3>María</h3>
+                <p>🇪🇨 Ecuador · Computación</p>
+              </div>
             </div>
 
-        </section>
+            <div class="match-data">
+              <div>
+                <span>📚</span>
+                Cálculo
+              </div>
 
+              <div>
+                <span>🕐</span>
+                18:00 – 20:00
+              </div>
 
-        <!-- ================= PROBLEMA ================= -->
-
-        <section id="problema" class="problem-section">
-
-            <div class="section-heading">
-
-                <span>EL PROBLEMA</span>
-
-                <h2>
-                    Estudiar acompañado no siempre
-                    significa encontrar compañía.
-                </h2>
-
-                <p>
-                    Muchos estudiantes quieren estudiar junto a otras
-                    personas, pero encontrar compañeros compatibles
-                    puede ser complicado.
-                </p>
-
+              <div>
+                <span>🌐</span>
+                Español
+              </div>
             </div>
 
+            <div class="compatibility">
+              <div class="compatibility-text">
+                <span>Compatibilidad</span>
+                <strong>94%</strong>
+              </div>
 
-            <!-- ESTADÍSTICAS -->
-
-            <div class="statistics">
-
-                <article class="stat-card">
-
-                    <strong>--%</strong>
-
-                    <p>
-                        Tiene dificultades para encontrar
-                        compañeros de estudio.
-                    </p>
-
-                </article>
-
-                <article class="stat-card">
-
-                    <strong>--%</strong>
-
-                    <p>
-                        Tiene problemas para coincidir
-                        en horarios.
-                    </p>
-
-                </article>
-
-                <article class="stat-card">
-
-                    <strong>--%</strong>
-
-                    <p>
-                        Considera importante estudiar
-                        con personas compatibles.
-                    </p>
-
-                </article>
-
+              <div class="progress-bar">
+                <div></div>
+              </div>
             </div>
+          </div>
 
+          <div class="floating-card floating-one">📚 Cálculo</div>
 
-            <!-- TESTIMONIOS -->
+          <div class="floating-card floating-two">🌎 Español</div>
 
-            <div class="quotes-container">
+          <div class="floating-card floating-three">🕐 18:00</div>
+        </div>
+      </section>
 
-                <div class="quote quote-one">
-                    <span>💬</span>
-                    "Me cuesta encontrar personas que
-                    estudien lo mismo que yo."
-                </div>
+      <!-- ================= PROBLEMA ================= -->
 
-                <div class="quote quote-two">
-                    <span>💬</span>
-                    "Mis amigos casi nunca tienen
-                    el mismo horario."
-                </div>
+      <section id="problema" class="problem-section">
+        <div class="section-heading">
+          <span>EL PROBLEMA</span>
 
-                <div class="quote quote-three">
-                    <span>💬</span>
-                    "Me gustaría encontrar un grupo
-                    para estudiar acompañado."
-                </div>
+          <h2>Estudiar acompañado no siempre significa encontrar compañía.</h2>
 
-            </div>
+          <p>
+            Muchos estudiantes quieren estudiar junto a otras personas, pero
+            encontrar compañeros compatibles puede ser complicado.
+          </p>
+        </div>
 
-        </section>
+        <!-- ESTADÍSTICAS -->
 
+        <div class="statistics">
+          <article class="stat-card">
+            <strong>--%</strong>
 
-        <!-- ================= SOLUCIÓN ================= -->
+            <p>Tiene dificultades para encontrar compañeros de estudio.</p>
+          </article>
 
-        <section id="funcionamiento" class="solution-section">
+          <article class="stat-card">
+            <strong>--%</strong>
 
-            <div class="solution-content">
+            <p>Tiene problemas para coincidir en horarios.</p>
+          </article>
 
-                <span>LA SOLUCIÓN</span>
+          <article class="stat-card">
+            <strong>--%</strong>
 
-                <h2>
-                    Una forma más sencilla de
-                    encontrar tu grupo de estudio.
-                </h2>
+            <p>Considera importante estudiar con personas compatibles.</p>
+          </article>
+        </div>
 
-                <p>
-                    StudyCircle analiza tus preferencias y encuentra
-                    personas con intereses académicos y horarios
-                    compatibles contigo.
-                </p>
+        <!-- TESTIMONIOS -->
 
-                <a href="pages/registro.html" class="btn-primary">
-                    Crear mi perfil
-                </a>
+        <div class="quotes-container">
+          <div class="quote quote-one">
+            <span>💬</span>
+            "Me cuesta encontrar personas que estudien lo mismo que yo."
+          </div>
 
-            </div>
+          <div class="quote quote-two">
+            <span>💬</span>
+            "Mis amigos casi nunca tienen el mismo horario."
+          </div>
 
-        </section>
+          <div class="quote quote-three">
+            <span>💬</span>
+            "Me gustaría encontrar un grupo para estudiar acompañado."
+          </div>
+        </div>
+      </section>
 
+      <!-- ================= SOLUCIÓN ================= -->
 
-        <!-- ================= CÓMO FUNCIONA ================= -->
+      <section id="funcionamiento" class="solution-section">
+        <div class="solution-content">
+          <span>LA SOLUCIÓN</span>
 
-        <section class="steps-section">
+          <h2>Una forma más sencilla de encontrar tu grupo de estudio.</h2>
 
-            <div class="section-heading">
+          <p>
+            StudyCircle analiza tus preferencias y encuentra personas con
+            intereses académicos y horarios compatibles contigo.
+          </p>
 
-                <span>CÓMO FUNCIONA</span>
+          <a href="pages/registro.html" class="btn-primary">
+            Crear mi perfil
+          </a>
+        </div>
+      </section>
 
-                <h2>
-                    Tres pasos para encontrar
-                    tu próximo grupo de estudio.
-                </h2>
+      <!-- ================= CÓMO FUNCIONA ================= -->
 
-            </div>
+      <section class="steps-section">
+        <div class="section-heading">
+          <span>CÓMO FUNCIONA</span>
 
+          <h2>Tres pasos para encontrar tu próximo grupo de estudio.</h2>
+        </div>
 
-            <div class="steps-container">
+        <div class="steps-container">
+          <article class="step-card">
+            <div class="step-number">01</div>
 
-                <article class="step-card">
+            <div class="step-icon">👤</div>
 
-                    <div class="step-number">
-                        01
-                    </div>
+            <h3>Crea tu perfil</h3>
 
-                    <div class="step-icon">
-                        👤
-                    </div>
+            <p>Indica tus materias, idioma, horarios y preferencias.</p>
+          </article>
 
-                    <h3>
-                        Crea tu perfil
-                    </h3>
+          <article class="step-card">
+            <div class="step-number">02</div>
 
-                    <p>
-                        Indica tus materias, idioma,
-                        horarios y preferencias.
-                    </p>
+            <div class="step-icon">🔎</div>
 
-                </article>
+            <h3>Encuentra tu match</h3>
 
+            <p>Descubre personas compatibles con tu forma de estudiar.</p>
+          </article>
 
-                <article class="step-card">
+          <article class="step-card">
+            <div class="step-number">03</div>
 
-                    <div class="step-number">
-                        02
-                    </div>
+            <div class="step-icon">🎯</div>
 
-                    <div class="step-icon">
-                        🔎
-                    </div>
+            <h3>Estudien juntos</h3>
 
-                    <h3>
-                        Encuentra tu match
-                    </h3>
+            <p>Únanse a una sesión y comiencen a estudiar.</p>
+          </article>
+        </div>
+      </section>
 
-                    <p>
-                        Descubre personas compatibles
-                        con tu forma de estudiar.
-                    </p>
+      <!-- ================= CARACTERÍSTICAS ================= -->
 
-                </article>
+      <section id="caracteristicas" class="features-section">
+        <div class="section-heading">
+          <span>CARACTERÍSTICAS</span>
 
+          <h2>Encuentra personas que realmente coincidan contigo.</h2>
+        </div>
 
-                <article class="step-card">
+        <div class="features-grid">
+          <article class="feature-card">
+            <div class="feature-icon">🌎</div>
 
-                    <div class="step-number">
-                        03
-                    </div>
+            <h3>Idioma</h3>
 
-                    <div class="step-icon">
-                        🎯
-                    </div>
+            <p>Encuentra personas que estudien en tu idioma.</p>
+          </article>
 
-                    <h3>
-                        Estudien juntos
-                    </h3>
+          <article class="feature-card">
+            <div class="feature-icon">📚</div>
 
-                    <p>
-                        Únanse a una sesión y
-                        comiencen a estudiar.
-                    </p>
+            <h3>Materia</h3>
 
-                </article>
+            <p>Conecta con personas que estudian lo mismo que tú.</p>
+          </article>
 
-            </div>
+          <article class="feature-card">
+            <div class="feature-icon">🕐</div>
 
-        </section>
+            <h3>Horarios</h3>
 
+            <p>Encuentra compañeros disponibles cuando tú lo estés.</p>
+          </article>
 
-        <!-- ================= CARACTERÍSTICAS ================= -->
+          <article class="feature-card">
+            <div class="feature-icon">🎯</div>
 
-        <section id="caracteristicas" class="features-section">
+            <h3>Objetivos</h3>
 
-            <div class="section-heading">
+            <p>Conecta con personas que comparten tus metas.</p>
+          </article>
+        </div>
+      </section>
 
-                <span>CARACTERÍSTICAS</span>
+      <!-- ================= CTA ================= -->
 
-                <h2>
-                    Encuentra personas que
-                    realmente coincidan contigo.
-                </h2>
+      <section class="cta-section">
+        <div>
+          <span>YOUR STUDY. YOUR PEOPLE.</span>
 
-            </div>
+          <h2>Encuentra tu lugar para estudiar.</h2>
 
+          <p>Crea tu perfil y descubre personas que comparten tus objetivos.</p>
 
-            <div class="features-grid">
-
-                <article class="feature-card">
-
-                    <div class="feature-icon">
-                        🌎
-                    </div>
-
-                    <h3>
-                        Idioma
-                    </h3>
-
-                    <p>
-                        Encuentra personas que estudien
-                        en tu idioma.
-                    </p>
-
-                </article>
-
-
-                <article class="feature-card">
-
-                    <div class="feature-icon">
-                        📚
-                    </div>
-
-                    <h3>
-                        Materia
-                    </h3>
-
-                    <p>
-                        Conecta con personas que
-                        estudian lo mismo que tú.
-                    </p>
-
-                </article>
-
-
-                <article class="feature-card">
-
-                    <div class="feature-icon">
-                        🕐
-                    </div>
-
-                    <h3>
-                        Horarios
-                    </h3>
-
-                    <p>
-                        Encuentra compañeros disponibles
-                        cuando tú lo estés.
-                    </p>
-
-                </article>
-
-
-                <article class="feature-card">
-
-                    <div class="feature-icon">
-                        🎯
-                    </div>
-
-                    <h3>
-                        Objetivos
-                    </h3>
-
-                    <p>
-                        Conecta con personas que
-                        comparten tus metas.
-                    </p>
-
-                </article>
-
-            </div>
-
-        </section>
-
-
-        <!-- ================= CTA ================= -->
-
-        <section class="cta-section">
-
-            <div>
-
-                <span>YOUR STUDY. YOUR PEOPLE.</span>
-
-                <h2>
-                    Encuentra tu lugar para estudiar.
-                </h2>
-
-                <p>
-                    Crea tu perfil y descubre personas
-                    que comparten tus objetivos.
-                </p>
-
-                <a href="pages/registro.html" class="btn-primary">
-                    Comenzar ahora
-                </a>
-
-            </div>
-
-        </section>
-
+          <a href="pages/registro.html" class="btn-primary"> Comenzar ahora </a>
+        </div>
+      </section>
     </main>
-
 
     <!-- ================= FOOTER ================= -->
 
     <footer class="footer">
+      <div class="footer-logo">
+        <strong>StudyCircle</strong>
+        <p>Find your study circle.</p>
+      </div>
 
-        <div class="footer-logo">
-            <strong>StudyCircle</strong>
-            <p>Find your study circle.</p>
-        </div>
+      <div class="footer-links">
+        <a href="#problema">El problema</a>
+        <a href="#funcionamiento">Cómo funciona</a>
+        <a href="#caracteristicas">Características</a>
+      </div>
 
-        <div class="footer-links">
-
-            <a href="#problema">El problema</a>
-            <a href="#funcionamiento">Cómo funciona</a>
-            <a href="#caracteristicas">Características</a>
-
-        </div>
-
-        <div class="footer-copy">
-
-            <p>
-                © 2026 StudyCircle. Todos los derechos reservados.
-            </p>
-
-        </div>
-
+      <div class="footer-copy">
+        <p>© 2026 StudyCircle. Todos los derechos reservados.</p>
+      </div>
     </footer>
-
-</body>
-
+  </body>
 </html>

@@ -1,18 +1,62 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
-<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Grupo | StudyCircle</title><link rel="stylesheet" href="../css/MemberPages.css"></head>
-<body>
-    <header class="header"><a class="brand" href="app.html">Study<span>Circle</span></a><nav><a href="app.html">Explorar</a><a class="active" href="grupos.html">Grupos</a><a href="chat.html">Chat</a><a href="calendario.html">Calendario</a></nav><div class="header-right"><span data-user-name>Estudiante</span><button id="logout-button" class="logout">Cerrar sesión</button></div></header>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Grupo | StudyCircle</title>
+    <link rel="stylesheet" href="../css/MemberPages.css" />
+  </head>
+  <body>
+    <header class="header">
+      <a class="brand" href="app.html">Study<span>Circle</span></a>
+      <nav>
+        <a href="app.html">Explorar</a
+        ><a class="active" href="grupos.html">Grupos</a
+        ><a href="chat.html">Chat</a><a href="calendario.html">Calendario</a>
+      </nav>
+      <div class="header-right">
+        <span data-user-name>Estudiante</span
+        ><button id="logout-button" class="logout">Cerrar sesión</button>
+      </div>
+    </header>
     <main class="page">
-        <a class="back-to-list" href="grupos.html">← Volver a grupos</a>
-        <p class="eyebrow">DETALLE DEL GRUPO</p><h1 id="group-name" class="page-title">Cargando grupo…</h1><p id="group-description" class="subtitle"></p>
-        <p id="detail-message" class="message" aria-live="polite"></p>
-        <section class="card group-info-card">
-            <div class="group-info-grid"><div><span class="info-label">MATERIA</span><strong id="group-subject">—</strong></div><div><span class="info-label">MODALIDAD</span><strong id="group-modality">—</strong></div><div><span class="info-label">INTEGRANTES</span><strong id="group-capacity">—</strong></div><div><span class="info-label">LÍDER</span><strong id="group-leader">—</strong></div></div>
-            <div id="group-actions" class="group-actions"></div>
-        </section>
-        <section class="list-section"><div class="section-title-row"><h2>Integrantes</h2><span id="member-count" class="score"></span></div><div id="member-list" class="member-list"></div></section>
+      <a class="back-to-list" href="grupos.html">← Volver a grupos</a>
+      <p class="eyebrow">DETALLE DEL GRUPO</p>
+      <h1 id="group-name" class="page-title">Cargando grupo…</h1>
+      <p id="group-description" class="subtitle"></p>
+      <p id="detail-message" class="message" aria-live="polite"></p>
+      <section class="card group-info-card">
+        <div class="group-info-grid">
+          <div>
+            <span class="info-label">MATERIA</span
+            ><strong id="group-subject">—</strong>
+          </div>
+          <div>
+            <span class="info-label">MODALIDAD</span
+            ><strong id="group-modality">—</strong>
+          </div>
+          <div>
+            <span class="info-label">INTEGRANTES</span
+            ><strong id="group-capacity">—</strong>
+          </div>
+          <div>
+            <span class="info-label">LÍDER</span
+            ><strong id="group-leader">—</strong>
+          </div>
+        </div>
+        <div id="group-actions" class="group-actions"></div>
+      </section>
+      <section class="list-section">
+        <div class="section-title-row">
+          <h2>Integrantes</h2>
+          <span id="member-count" class="score"></span>
+        </div>
+        <div id="member-list" class="member-list"></div>
+      </section>
     </main>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="../js/supabase-client.js"></script><script src="../js/member-page.js"></script><script src="../js/grupo.js"></script>
-</body>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../js/supabase-client.js"></script>
+    <script src="../js/member-page.js"></script>
+    <script src="../js/grupo.js"></script>
+  </body>
 </html>

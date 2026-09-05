@@ -1,5 +1,58 @@
-<!DOCTYPE html>
-<html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Chat | StudyCircle</title><link rel="stylesheet" href="../css/MemberPages.css"></head><body>
-<header class="header"><a class="brand" href="app.html">Study<span>Circle</span></a><nav><a href="app.html">Explorar</a><a href="grupos.html">Grupos</a><a class="active" href="chat.html">Chat</a><a href="calendario.html">Calendario</a></nav><div class="header-right"><span data-user-name>Estudiante</span><button id="logout-button" class="logout">Cerrar sesión</button></div></header>
-<main class="page"><p class="eyebrow">CHAT PRIVADO</p><h1 id="chat-title" class="page-title">Tus conversaciones</h1><p id="chat-subtitle" class="subtitle">Elige una coincidencia para empezar a hablar.</p><div class="chat-layout"><aside class="card conversation-panel"><h2>Mensajes directos</h2><div id="conversation-list" class="conversation-list"></div><h2 class="group-chat-heading">Chats de grupo</h2><div id="group-conversation-list" class="conversation-list"></div></aside><section class="card chat-window"><div id="chat-messages" class="chat-messages"><p class="empty-chat">Selecciona una conversación desde Matches para enviar el primer mensaje.</p></div><form id="chat-form" class="chat-form" hidden><input id="chat-input" maxlength="1000" placeholder="Escribe un mensaje" required><button class="primary" type="submit">Enviar</button></form></section></div></main>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="../js/supabase-client.js"></script><script src="../js/member-page.js"></script><script src="../js/chat.js"></script></body></html>
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chat | StudyCircle</title>
+    <link rel="stylesheet" href="../css/MemberPages.css" />
+  </head>
+  <body>
+    <header class="header">
+      <a class="brand" href="app.html">Study<span>Circle</span></a>
+      <nav>
+        <a href="app.html">Explorar</a><a href="grupos.html">Grupos</a
+        ><a class="active" href="chat.html">Chat</a
+        ><a href="calendario.html">Calendario</a>
+      </nav>
+      <div class="header-right">
+        <span data-user-name>Estudiante</span
+        ><button id="logout-button" class="logout">Cerrar sesión</button>
+      </div>
+    </header>
+    <main class="page">
+      <p class="eyebrow">CHAT PRIVADO</p>
+      <h1 id="chat-title" class="page-title">Tus conversaciones</h1>
+      <p id="chat-subtitle" class="subtitle">
+        Elige una coincidencia para empezar a hablar.
+      </p>
+      <div class="chat-layout">
+        <aside class="card conversation-panel">
+          <h2>Mensajes directos</h2>
+          <div id="conversation-list" class="conversation-list"></div>
+          <h2 class="group-chat-heading">Chats de grupo</h2>
+          <div id="group-conversation-list" class="conversation-list"></div>
+        </aside>
+        <section class="card chat-window">
+          <div id="chat-messages" class="chat-messages">
+            <p class="empty-chat">
+              Selecciona una conversación desde Matches para enviar el primer
+              mensaje.
+            </p>
+          </div>
+          <form id="chat-form" class="chat-form" hidden>
+            <input
+              id="chat-input"
+              maxlength="1000"
+              placeholder="Escribe un mensaje"
+              required
+            /><button class="primary" type="submit">Enviar</button>
+          </form>
+        </section>
+      </div>
+    </main>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../js/supabase-client.js"></script>
+    <script src="../js/member-page.js"></script>
+    <script src="../js/chat.js"></script>
+  </body>
+</html>

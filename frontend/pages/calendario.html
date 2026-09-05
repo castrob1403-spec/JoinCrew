@@ -1,1 +1,57 @@
-<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Calendario | StudyCircle</title><link rel="stylesheet" href="../css/MemberPages.css"></head><body><header class="header"><a class="brand" href="app.html">Study<span>Circle</span></a><nav><a href="app.html">Explorar</a><a href="grupos.html">Grupos</a><a href="chat.html">Chat</a><a class="active" href="calendario.html">Calendario</a></nav><div class="header-right"><span data-user-name>Estudiante</span><button id="logout-button" class="logout">Cerrar sesión</button></div></header><main class="page"><p class="eyebrow">PLANIFICACIÓN</p><h1 class="page-title">Tu calendario de estudio</h1><p class="subtitle">Organiza sesiones para mantener el ritmo y estudiar acompañado.</p><section class="card"><h2>Esta semana</h2><div class="calendar-grid"><div class="day">Lun<br>18</div><div class="day active">Mar<br>19<span class="session">Cálculo · 18:00</span></div><div class="day">Mié<br>20</div><div class="day active">Jue<br>21<span class="session">Programación · 20:00</span></div><div class="day">Vie<br>22</div><div class="day">Sáb<br>23</div><div class="day">Dom<br>24</div></div></section><section class="card" style="margin-top:18px"><h2>Próxima sesión</h2><p>Martes, 18:00 · Cálculo con María López.</p><a class="primary" href="chat.html">Abrir chat de la sesión</a></section></main><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="../js/supabase-client.js"></script><script src="../js/member-page.js"></script><script>protectMemberPage();</script></body></html>
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Calendario | StudyCircle</title>
+    <link rel="stylesheet" href="../css/MemberPages.css" />
+  </head>
+  <body>
+    <header class="header">
+      <a class="brand" href="app.html">Study<span>Circle</span></a>
+      <nav>
+        <a href="app.html">Explorar</a><a href="grupos.html">Grupos</a
+        ><a href="chat.html">Chat</a
+        ><a class="active" href="calendario.html">Calendario</a>
+      </nav>
+      <div class="header-right">
+        <span data-user-name>Estudiante</span
+        ><button id="logout-button" class="logout">Cerrar sesión</button>
+      </div>
+    </header>
+    <main class="page">
+      <p class="eyebrow">PLANIFICACIÓN</p>
+      <h1 class="page-title">Tu calendario de estudio</h1>
+      <p class="subtitle">
+        Organiza sesiones para mantener el ritmo y estudiar acompañado.
+      </p>
+      <section class="card">
+        <h2>Esta semana</h2>
+        <div class="calendar-grid">
+          <div class="day">Lun<br />18</div>
+          <div class="day active">
+            Mar<br />19<span class="session">Cálculo · 18:00</span>
+          </div>
+          <div class="day">Mié<br />20</div>
+          <div class="day active">
+            Jue<br />21<span class="session">Programación · 20:00</span>
+          </div>
+          <div class="day">Vie<br />22</div>
+          <div class="day">Sáb<br />23</div>
+          <div class="day">Dom<br />24</div>
+        </div>
+      </section>
+      <section class="card" style="margin-top: 18px">
+        <h2>Próxima sesión</h2>
+        <p>Martes, 18:00 · Cálculo con María López.</p>
+        <a class="primary" href="chat.html">Abrir chat de la sesión</a>
+      </section>
+    </main>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../js/supabase-client.js"></script>
+    <script src="../js/member-page.js"></script>
+    <script>
+      protectMemberPage();
+    </script>
+  </body>
+</html>

@@ -1,9 +1,36 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
-<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Sala en vivo | StudyCircle</title><link rel="stylesheet" href="../css/MemberPages.css"></head>
-<body>
-    <header class="header"><a class="brand" href="app.html">Study<span>Circle</span></a><nav><a href="app.html">Explorar</a><a href="grupos.html">Grupos</a><a class="active" href="chat.html">Chat</a><a href="calendario.html">Calendario</a></nav><div class="header-right"><span data-user-name>Estudiante</span><button id="logout-button" class="logout">Cerrar sesión</button></div></header>
-    <main class="page"><a class="back-to-list" href="grupos.html#salas">← Volver a salas</a><p class="eyebrow">SALA EN VIVO</p><h1 class="page-title">Conectando tu sesión…</h1><p id="room-status" class="subtitle">Estamos preparando la videollamada segura.</p><div id="jaas-meeting" class="jaas-meeting"></div></main>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="../js/supabase-client.js"></script><script src="../js/member-page.js"></script><script src="../js/sala.js"></script>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sala en vivo | StudyCircle</title>
+    <link rel="stylesheet" href="../css/MemberPages.css" />
+  </head>
+  <body>
+    <header class="header">
+      <a class="brand" href="app.html">Study<span>Circle</span></a>
+      <nav>
+        <a href="app.html">Explorar</a><a href="grupos.html">Grupos</a
+        ><a class="active" href="chat.html">Chat</a
+        ><a href="calendario.html">Calendario</a>
+      </nav>
+      <div class="header-right">
+        <span data-user-name>Estudiante</span
+        ><button id="logout-button" class="logout">Cerrar sesión</button>
+      </div>
+    </header>
+    <main class="page">
+      <a class="back-to-list" href="grupos.html#salas">← Volver a salas</a>
+      <p class="eyebrow">SALA EN VIVO</p>
+      <h1 class="page-title">Conectando tu sesión…</h1>
+      <p id="room-status" class="subtitle">
+        Estamos preparando la videollamada segura.
+      </p>
+      <div id="jaas-meeting" class="jaas-meeting"></div>
+    </main>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../js/supabase-client.js"></script>
+    <script src="../js/member-page.js"></script>
+    <script src="../js/sala.js"></script>
+  </body>
 </html>
