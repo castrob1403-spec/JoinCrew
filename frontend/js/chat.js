@@ -5,17 +5,202 @@ const chatForm = document.querySelector("#chat-form");
 const chatInput = document.querySelector("#chat-input");
 const chatTitle = document.querySelector("#chat-title");
 const chatSubtitle = document.querySelector("#chat-subtitle");
+const callPanel = document.querySelector("#direct-call-panel");
+const callActions = document.querySelector("#direct-call-actions");
+
 let currentUser;
 let currentConversationId = new URLSearchParams(window.location.search).get("conversation");
-let realtimeChannel;
+let messageChannel;
+let callChannel;
 
-function escapeHtml(value) { const element = document.createElement("span"); element.textContent = value || ""; return element.innerHTML; }
-function renderMessage(message, sender) { const bubble = document.createElement("div"); bubble.className = `bubble ${message.sender_id === currentUser.id ? "me" : ""}`; bubble.innerHTML = `${message.sender_id === currentUser.id ? "" : `<strong>${escapeHtml(sender?.full_name || "Estudiante")}</strong><br>`}${escapeHtml(message.content)}`; chatMessages.append(bubble); }
-async function getProfiles(ids) { if (!ids.length) return {}; const { data } = await window.studyCircleSupabase.from("profiles").select("id, full_name").in("id", ids); return Object.fromEntries((data || []).map((profile) => [profile.id, profile])); }
-async function loadMessages() { if (!currentConversationId) return; const { data: messages, error } = await window.studyCircleSupabase.from("direct_messages").select("id, sender_id, content, created_at").eq("conversation_id", currentConversationId).order("created_at"); if (error) { chatMessages.innerHTML = '<p class="message">No se pudieron cargar los mensajes.</p>'; return; } const profiles = await getProfiles([...new Set((messages || []).map((message) => message.sender_id))]); chatMessages.innerHTML = ""; (messages || []).forEach((message) => renderMessage(message, profiles[message.sender_id])); chatMessages.scrollTop = chatMessages.scrollHeight; }
-function subscribeToMessages() { realtimeChannel?.unsubscribe(); if (!currentConversationId) return; realtimeChannel = window.studyCircleSupabase.channel(`direct-messages-${currentConversationId}`).on("postgres_changes", { event: "INSERT", schema: "public", table: "direct_messages", filter: `conversation_id=eq.${currentConversationId}` }, async (payload) => { if (payload.new.sender_id === currentUser.id) return; const profiles = await getProfiles([payload.new.sender_id]); renderMessage(payload.new, profiles[payload.new.sender_id]); chatMessages.scrollTop = chatMessages.scrollHeight; }).subscribe(); }
-async function loadConversations() { const { data: conversations, error } = await window.studyCircleSupabase.from("direct_conversations").select("id, user_one, user_two, created_at").order("created_at", { ascending: false }); if (error) { conversationList.textContent = "No se pudieron cargar las conversaciones."; return; } const otherIds = (conversations || []).map((conversation) => conversation.user_one === currentUser.id ? conversation.user_two : conversation.user_one); const profiles = await getProfiles(otherIds); conversationList.innerHTML = (conversations || []).map((conversation) => { const otherId = conversation.user_one === currentUser.id ? conversation.user_two : conversation.user_one; const profile = profiles[otherId]; return `<a class="conversation-link ${conversation.id === currentConversationId ? "selected" : ""}" href="chat.html?conversation=${conversation.id}">${escapeHtml(profile?.full_name || "Estudiante")}</a>`; }).join("") || "Aún no tienes conversaciones."; if (currentConversationId) { const active = conversations?.find((conversation) => conversation.id === currentConversationId); if (!active) { currentConversationId = null; return; } const otherId = active.user_one === currentUser.id ? active.user_two : active.user_one; chatTitle.textContent = profiles[otherId]?.full_name || "Conversación"; chatSubtitle.textContent = "Chat privado para coordinar su sesión de estudio."; chatForm.hidden = false; await loadMessages(); subscribeToMessages(); } }
-async function loadGroupConversations() { const { data: memberships, error } = await window.studyCircleSupabase.from("group_members").select("group_id").eq("user_id", currentUser.id); if (error) { groupConversationList.textContent = "No se pudieron cargar los grupos."; return; } const ids = (memberships || []).map((membership) => membership.group_id); if (!ids.length) { groupConversationList.textContent = "Aún no te has unido a un grupo."; return; } const { data: groups } = await window.studyCircleSupabase.from("study_groups").select("id, name").in("id", ids); groupConversationList.innerHTML = (groups || []).map((group) => `<a class="conversation-link" href="grupo-chat.html?group=${group.id}">${escapeHtml(group.name)}</a>`).join("") || "Aún no tienes chats de grupo."; }
-chatForm.addEventListener("submit", async (event) => { event.preventDefault(); const content = chatInput.value.trim(); if (!content || !currentConversationId) return; const { data, error } = await window.studyCircleSupabase.from("direct_messages").insert({ conversation_id: currentConversationId, sender_id: currentUser.id, content }).select("id, sender_id, content, created_at").single(); if (error) { chatSubtitle.textContent = "No se pudo enviar el mensaje."; return; } renderMessage(data, { full_name: "Tú" }); chatInput.value = ""; chatMessages.scrollTop = chatMessages.scrollHeight; });
-async function startChat() { const member = await protectMemberPage(); if (!member) return; currentUser = member.user; await Promise.all([loadConversations(), loadGroupConversations()]); }
+function escapeHtml(value) {
+    const element = document.createElement("span");
+    element.textContent = value || "";
+    return element.innerHTML;
+}
+
+function renderMessage(message, sender) {
+    const bubble = document.createElement("div");
+    bubble.className = `bubble ${message.sender_id === currentUser.id ? "me" : ""}`;
+    bubble.innerHTML = `${message.sender_id === currentUser.id ? "" : `<strong>${escapeHtml(sender?.full_name || "Estudiante")}</strong><br>`}${escapeHtml(message.content)}`;
+    chatMessages.append(bubble);
+}
+
+async function getProfiles(ids) {
+    if (!ids.length) return {};
+    const { data } = await window.studyCircleSupabase
+        .from("profiles")
+        .select("id, full_name")
+        .in("id", ids);
+    return Object.fromEntries((data || []).map((profile) => [profile.id, profile]));
+}
+
+async function loadMessages() {
+    if (!currentConversationId) return;
+    const { data: messages, error } = await window.studyCircleSupabase
+        .from("direct_messages")
+        .select("id, sender_id, content, created_at")
+        .eq("conversation_id", currentConversationId)
+        .order("created_at");
+    if (error) {
+        chatMessages.innerHTML = '<p class="message">No se pudieron cargar los mensajes.</p>';
+        return;
+    }
+    const profiles = await getProfiles([...new Set((messages || []).map((message) => message.sender_id))]);
+    chatMessages.innerHTML = "";
+    (messages || []).forEach((message) => renderMessage(message, profiles[message.sender_id]));
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+
+function subscribeToMessages() {
+    messageChannel?.unsubscribe();
+    if (!currentConversationId) return;
+    messageChannel = window.studyCircleSupabase
+        .channel(`direct-messages-${currentConversationId}`)
+        .on("postgres_changes", { event: "INSERT", schema: "public", table: "direct_messages", filter: `conversation_id=eq.${currentConversationId}` }, async (payload) => {
+            if (payload.new.sender_id === currentUser.id) return;
+            const profiles = await getProfiles([payload.new.sender_id]);
+            renderMessage(payload.new, profiles[payload.new.sender_id]);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        })
+        .subscribe();
+}
+
+function renderCallPanel(call) {
+    callPanel.hidden = !call;
+    if (!call) {
+        callPanel.innerHTML = "";
+        return;
+    }
+    const typeLabel = call.call_type === "audio" ? "Llamada en curso" : "Videollamada en curso";
+    const startedByMe = call.started_by === currentUser.id;
+    callPanel.innerHTML = `<div><strong>${typeLabel}</strong><span>${startedByMe ? "La iniciaste tú." : "Tu compañero/a te está esperando."}</span></div><div><a class="primary" href="sala.html?call=${encodeURIComponent(call.id)}">${startedByMe ? "Volver a la llamada" : "Unirme"}</a><button id="end-direct-call" class="end-call" type="button">Finalizar</button></div>`;
+    document.querySelector("#end-direct-call")?.addEventListener("click", () => endDirectCall(call.id));
+}
+
+async function loadActiveCall() {
+    if (!currentConversationId) return;
+    const { data, error } = await window.studyCircleSupabase
+        .from("direct_calls")
+        .select("id, started_by, call_type, status, expires_at")
+        .eq("conversation_id", currentConversationId)
+        .eq("status", "active")
+        .gt("expires_at", new Date().toISOString())
+        .order("created_at", { ascending: false })
+        .limit(1)
+        .maybeSingle();
+    if (error) return;
+    renderCallPanel(data);
+}
+
+function subscribeToCalls() {
+    callChannel?.unsubscribe();
+    if (!currentConversationId) return;
+    callChannel = window.studyCircleSupabase
+        .channel(`direct-calls-${currentConversationId}`)
+        .on("postgres_changes", { event: "*", schema: "public", table: "direct_calls", filter: `conversation_id=eq.${currentConversationId}` }, loadActiveCall)
+        .subscribe();
+}
+
+async function startDirectCall(callType) {
+    if (!currentConversationId) return;
+    const { data, error } = await window.studyCircleSupabase.rpc("start_direct_call", {
+        target_conversation_id: currentConversationId,
+        requested_call_type: callType,
+    });
+    if (error) {
+        chatSubtitle.textContent = "No se pudo iniciar la llamada.";
+        return;
+    }
+    window.location.href = `sala.html?call=${encodeURIComponent(data.id)}`;
+}
+
+async function endDirectCall(callId) {
+    const { error } = await window.studyCircleSupabase.rpc("end_direct_call", { target_call_id: callId });
+    if (error) {
+        chatSubtitle.textContent = "No se pudo finalizar la llamada.";
+        return;
+    }
+    await loadActiveCall();
+}
+
+async function loadConversations() {
+    const { data: conversations, error } = await window.studyCircleSupabase
+        .from("direct_conversations")
+        .select("id, user_one, user_two, created_at")
+        .order("created_at", { ascending: false });
+    if (error) {
+        conversationList.textContent = "No se pudieron cargar las conversaciones.";
+        return;
+    }
+    const otherIds = (conversations || []).map((conversation) => conversation.user_one === currentUser.id ? conversation.user_two : conversation.user_one);
+    const profiles = await getProfiles(otherIds);
+    conversationList.innerHTML = (conversations || []).map((conversation) => {
+        const otherId = conversation.user_one === currentUser.id ? conversation.user_two : conversation.user_one;
+        return `<a class="conversation-link ${conversation.id === currentConversationId ? "selected" : ""}" href="chat.html?conversation=${conversation.id}">${escapeHtml(profiles[otherId]?.full_name || "Estudiante")}</a>`;
+    }).join("") || "Aún no tienes conversaciones.";
+
+    if (!currentConversationId) return;
+    const active = conversations?.find((conversation) => conversation.id === currentConversationId);
+    if (!active) {
+        currentConversationId = null;
+        return;
+    }
+    const otherId = active.user_one === currentUser.id ? active.user_two : active.user_one;
+    chatTitle.textContent = profiles[otherId]?.full_name || "Conversación";
+    chatSubtitle.textContent = "Chat privado para coordinar su sesión de estudio.";
+    chatForm.hidden = false;
+    callActions.hidden = false;
+    await Promise.all([loadMessages(), loadActiveCall()]);
+    subscribeToMessages();
+    subscribeToCalls();
+}
+
+async function loadGroupConversations() {
+    const { data: memberships, error } = await window.studyCircleSupabase
+        .from("group_members")
+        .select("group_id")
+        .eq("user_id", currentUser.id);
+    if (error) {
+        groupConversationList.textContent = "No se pudieron cargar los grupos.";
+        return;
+    }
+    const ids = (memberships || []).map((membership) => membership.group_id);
+    if (!ids.length) {
+        groupConversationList.textContent = "Aún no te has unido a un grupo.";
+        return;
+    }
+    const { data: groups } = await window.studyCircleSupabase.from("study_groups").select("id, name").in("id", ids);
+    groupConversationList.innerHTML = (groups || []).map((group) => `<a class="conversation-link" href="grupo-chat.html?group=${group.id}">${escapeHtml(group.name)}</a>`).join("") || "Aún no tienes chats de grupo.";
+}
+
+chatForm.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const content = chatInput.value.trim();
+    if (!content || !currentConversationId) return;
+    const { data, error } = await window.studyCircleSupabase
+        .from("direct_messages")
+        .insert({ conversation_id: currentConversationId, sender_id: currentUser.id, content })
+        .select("id, sender_id, content, created_at")
+        .single();
+    if (error) {
+        chatSubtitle.textContent = "No se pudo enviar el mensaje.";
+        return;
+    }
+    renderMessage(data, { full_name: "Tú" });
+    chatInput.value = "";
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+});
+
+callActions.querySelectorAll("[data-start-call]").forEach((button) => {
+    button.addEventListener("click", () => startDirectCall(button.dataset.startCall));
+});
+
+async function startChat() {
+    const member = await protectMemberPage();
+    if (!member) return;
+    currentUser = member.user;
+    await Promise.all([loadConversations(), loadGroupConversations()]);
+}
+
 startChat();

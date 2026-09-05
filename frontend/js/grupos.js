@@ -8,6 +8,7 @@ const roomsMessage = document.querySelector("#rooms-message");
 const roomMessage = document.querySelector("#room-message");
 const premiumModal = document.querySelector("#premium-modal");
 let currentPlan = "free";
+let currentUserId;
 
 function safeText(value) { const element = document.createElement("span"); element.textContent = value || ""; return element.innerHTML; }
 
@@ -31,11 +32,20 @@ async function loadRooms() {
     roomsMessage.textContent = "Cargando salas…";
     const { data: rooms, error } = await window.studyCircleSupabase
         .from("study_rooms")
-        .select("id, name, description, max_participants, created_at")
+        .select("id, name, description, max_participants, created_by, created_at")
         .eq("is_public", true).eq("status", "live").order("created_at", { ascending: false });
     if (error) { roomsMessage.textContent = "No se pudieron cargar las salas."; return; }
     roomsMessage.textContent = rooms?.length ? `${rooms.length} sala(s) en vivo.` : "No hay salas en vivo. Abre la primera.";
-    roomsList.innerHTML = (rooms || []).map((room, index) => `<article class="group"><div class="avatar ${index % 2 ? "amber" : ""}">📹</div><div class="group-content"><span class="score">EN VIVO · máximo ${room.max_participants}</span><h2>${safeText(room.name)}</h2><p>${safeText(room.description || "Sala pública de estudio")}</p></div><a class="primary" href="sala.html?room=${encodeURIComponent(room.id)}">Entrar</a></article>`).join("");
+    roomsList.innerHTML = (rooms || []).map((room, index) => `<article class="group"><div class="avatar ${index % 2 ? "amber" : ""}">📹</div><div class="group-content"><span class="score">EN VIVO · máximo ${room.max_participants}</span><h2>${safeText(room.name)}</h2><p>${safeText(room.description || "Sala pública de estudio")}</p></div><div class="room-actions"><a class="primary" href="sala.html?room=${encodeURIComponent(room.id)}">Entrar</a>${room.created_by === currentUserId ? `<button class="end-call" type="button" data-end-room="${room.id}">Finalizar sala</button>` : ""}</div></article>`).join("");
+    roomsList.querySelectorAll("[data-end-room]").forEach((button) => button.addEventListener("click", () => endPublicRoom(button.dataset.endRoom)));
+}
+
+async function endPublicRoom(roomId) {
+    if (!confirm("¿Finalizar esta sala pública? Dejará de aparecer para nuevos participantes.")) return;
+    const { error } = await window.studyCircleSupabase.rpc("end_study_room", { target_room_id: roomId });
+    if (error) { roomsMessage.textContent = "No se pudo finalizar la sala."; return; }
+    roomsMessage.textContent = "Sala finalizada correctamente.";
+    await loadRooms();
 }
 
 groupForm.addEventListener("submit", async (event) => {
@@ -72,6 +82,7 @@ document.querySelector("#keep-free-button").addEventListener("click", () => prem
 async function startGroups() {
     const member = await protectMemberPage();
     if (!member) return;
+    currentUserId = member.user.id;
     const { data: profile } = await window.studyCircleSupabase.from("profiles").select("plan").eq("id", member.user.id).single();
     currentPlan = profile?.plan || "free";
     await Promise.all([loadGroups(), loadRooms()]);
