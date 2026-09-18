@@ -425,4 +425,20 @@ td strong {
     .admin-activity-list article { grid-template-columns: 1fr; }
 }
 
-.brand img { display:block; width:auto; height:38px; max-width:160px; object-fit:contain; }
+.brand {
+    display: inline-flex;
+    align-items: center;
+    flex: 0 0 auto;
+}
+
+.brand img {
+    display: block;
+    width: 56px;
+    height: 56px;
+    padding: 4px;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    background: #fff;
+    box-shadow: 0 5px 14px rgba(23, 32, 51, 0.12);
+    object-fit: contain;
+}
