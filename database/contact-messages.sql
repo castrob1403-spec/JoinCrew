@@ -29,3 +29,8 @@ with check (public.is_admin());
 
 grant insert on public.contact_messages to anon, authenticated;
 grant select, update, delete on public.contact_messages to authenticated;
+-- Campos usados por el administrador al responder.
+alter table public.contact_messages
+  add column if not exists admin_reply text check (admin_reply is null or char_length(trim(admin_reply)) between 1 and 2000),
+  add column if not exists replied_at timestamptz,
+  add column if not exists replied_by uuid references auth.users(id) on delete set null;

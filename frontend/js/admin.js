@@ -24,7 +24,7 @@ async function loadActivity() { const [groups, rooms] = await Promise.all([windo
 async function loadContacts() {
     const { data, error } = await window.joinCrewSupabase
         .from("contact_messages")
-        .select("id, full_name, email, subject, message, status, created_at")
+        .select("id, full_name, email, subject, message, status, admin_reply, replied_at, created_at")
         .order("created_at", { ascending: false })
         .limit(20);
     if (error) {
@@ -33,7 +33,50 @@ async function loadContacts() {
         return;
     }
     contactsMessage.textContent = `${data?.length || 0} mensaje(s) recibido(s).`;
-    adminContactsList.innerHTML = (data || []).map((item) => `<article><strong>${escapeHtml(item.subject)}</strong><span>${escapeHtml(item.full_name)} · ${escapeHtml(item.email)} · ${new Date(item.created_at).toLocaleDateString("es-EC")}</span><p>${escapeHtml(item.message)}</p><em>${item.status === "new" ? "Nuevo" : item.status === "read" ? "Leído" : "Resuelto"}</em></article>`).join("") || "Aún no hay mensajes de contacto.";
+    adminContactsList.innerHTML = (data || []).map((item) => {
+        const reply = item.admin_reply || "";
+        return `<article class="contact-message-card"><strong>${escapeHtml(item.subject)}</strong><span>${escapeHtml(item.full_name)} · ${escapeHtml(item.email)} · ${new Date(item.created_at).toLocaleDateString("es-EC")}</span><p class="contact-message-body">${escapeHtml(item.message)}</p>${reply ? `<div class="saved-contact-reply"><b>Respuesta guardada</b><p>${escapeHtml(reply)}</p></div>` : ""}<div class="contact-admin-actions"><button data-send-contact="${item.id}" type="button">Enviar por Gmail</button><button data-reply-contact="${item.id}" type="button">${reply ? "Editar respuesta" : "Redactar respuesta"}</button><em>${item.status === "new" ? "Nuevo" : item.status === "read" ? "Leído" : "Respondido"}</em></div><div id="contact-reply-${item.id}" class="contact-reply-editor hidden"><label>Respuesta para ${escapeHtml(item.full_name)}<textarea maxlength="2000" data-reply-text>${escapeHtml(reply)}</textarea></label><button data-save-contact="${item.id}" type="button">Guardar borrador</button></div></article>`;
+    }).join("") || "Aún no hay mensajes de contacto.";
+    adminContactsList.querySelectorAll("[data-reply-contact]").forEach((button) => button.addEventListener("click", () => document.querySelector(`#contact-reply-${button.dataset.replyContact}`).classList.toggle("hidden")));
+    adminContactsList.querySelectorAll("[data-save-contact]").forEach((button) => button.addEventListener("click", () => saveContactReply(button.dataset.saveContact)));
+    adminContactsList.querySelectorAll("[data-send-contact]").forEach((button) => button.addEventListener("click", () => sendContactReply(button.dataset.sendContact)));
+}
+
+async function saveContactReply(id) {
+    const editor = document.querySelector(`#contact-reply-${id}`);
+    const reply = editor.querySelector("[data-reply-text]").value.trim();
+    if (!reply) { alert("Escribe una respuesta antes de guardarla."); return; }
+    const saveButton = editor.querySelector("[data-save-contact]");
+    saveButton.disabled = true;
+    saveButton.textContent = "Guardando…";
+    const { error } = await window.joinCrewSupabase.from("contact_messages").update({ admin_reply: reply, replied_at: new Date().toISOString(), replied_by: currentAdmin.id, status: "resolved" }).eq("id", id);
+    if (error) { alert(error.message || "No se pudo guardar la respuesta."); saveButton.disabled = false; saveButton.textContent = "Guardar borrador"; return; }
+    await loadContacts();
+}
+
+async function sendContactReply(id) {
+    const editor = document.querySelector(`#contact-reply-${id}`);
+    const reply = editor.querySelector("[data-reply-text]").value.trim();
+    if (!reply) { alert("Escribe una respuesta antes de enviarla."); return; }
+    const sendButton = document.querySelector(`[data-send-contact="${id}"]`);
+    sendButton.disabled = true;
+    sendButton.textContent = "Enviando…";
+    try {
+        const { data: { session } } = await window.joinCrewSupabase.auth.getSession();
+        const result = await fetch("/.netlify/functions/contact-reply", {
+            method: "POST",
+            headers: { "Content-Type": "application/json", Authorization: `Bearer ${session?.access_token || ""}` },
+            body: JSON.stringify({ contactId: id, reply }),
+        });
+        const payload = await result.json();
+        if (!result.ok) throw new Error(payload.error);
+        await loadContacts();
+        alert("Respuesta enviada al correo de la persona.");
+    } catch (error) {
+        alert(error.message || "No se pudo enviar el correo.");
+        sendButton.disabled = false;
+        sendButton.textContent = "Enviar por Gmail";
+    }
 }
 function scheduleReload() { clearTimeout(reloadTimer); reloadTimer = setTimeout(() => { loadProfiles(); loadActivity(); loadContacts(); }, 350); }
 function subscribeToChanges() { window.joinCrewSupabase.channel("admin-live-data").on("postgres_changes", { event: "*", schema: "public", table: "profiles" }, scheduleReload).on("postgres_changes", { event: "*", schema: "public", table: "study_groups" }, scheduleReload).on("postgres_changes", { event: "*", schema: "public", table: "study_rooms" }, scheduleReload).subscribe(); }
