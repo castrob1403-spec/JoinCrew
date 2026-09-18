@@ -25,3 +25,9 @@ begin
   return new;
 end;
 $$;
+-- Completa solamente los perfiles de estudiantes creados antes de este cambio.
+-- La cuenta administradora no se modifica.
+update public.profiles
+set country = 'Ecuador'
+where role = 'user'
+  and (country is null or country = 'No especificado');
