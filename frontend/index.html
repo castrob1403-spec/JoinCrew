@@ -32,21 +32,15 @@
       <div class="header-actions">
         <!-- SELECTOR DE IDIOMA -->
         <div class="language-selector">
-          <button class="language-button">
+          <button class="language-button" type="button" aria-haspopup="true" aria-expanded="false">
             🌐 ES
             <span>⌄</span>
           </button>
 
           <div class="language-menu">
-            <a href="#" class="active-language"> 🇪🇸 Español </a>
-
-            <a href="#"> 🇺🇸 English </a>
-
-            <a href="#"> 🇧🇷 Português </a>
-
-            <a href="#"> 🇫🇷 Français </a>
-
-            <a href="#"> 🇩🇪 Deutsch </a>
+            <a href="#" class="active-language" data-language="es">🇪🇸 Español</a>
+            <a href="#" data-language="en">🇺🇸 English</a>
+            <a href="#" data-language="pt">🇧🇷 Português</a>
           </div>
         </div>
 
@@ -303,5 +297,6 @@
         <p>© 2026 JoinCrew. Todos los derechos reservados.</p>
       </div>
     </footer>
+      <script src="js/language.js"></script>
   </body>
 </html>

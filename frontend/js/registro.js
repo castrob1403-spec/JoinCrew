@@ -50,6 +50,7 @@ form.addEventListener("submit", async (event) => {
                 data: {
                     full_name: data.get("fullName").trim(),
                     university: data.get("university").trim(),
+                    country: data.get("country"),
                     career: data.get("career").trim(),
                     subjects,
                     availability: data.get("availability"),

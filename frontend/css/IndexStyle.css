@@ -1328,3 +1328,9 @@ button {
     .logo-link { min-width: 140px; }
     .logo-placeholder { width: 130px; height: 68px; }
 }
+/* El menú de idioma también se abre con clic o teclado. */
+.language-selector:focus-within .language-menu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
