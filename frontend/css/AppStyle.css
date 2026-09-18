@@ -597,3 +597,5 @@ nav a.active, nav a:hover {
         font-size:26px;
     }
 }
+
+.brand img { display:block; width:auto; height:38px; max-width:160px; object-fit:contain; }

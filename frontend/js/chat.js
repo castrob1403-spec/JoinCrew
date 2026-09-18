@@ -28,7 +28,7 @@ function renderMessage(message, sender) {
 
 async function getProfiles(ids) {
     if (!ids.length) return {};
-    const { data } = await window.studyCircleSupabase
+    const { data } = await window.joinCrewSupabase
         .from("profiles")
         .select("id, full_name")
         .in("id", ids);
@@ -37,7 +37,7 @@ async function getProfiles(ids) {
 
 async function loadMessages() {
     if (!currentConversationId) return;
-    const { data: messages, error } = await window.studyCircleSupabase
+    const { data: messages, error } = await window.joinCrewSupabase
         .from("direct_messages")
         .select("id, sender_id, content, created_at")
         .eq("conversation_id", currentConversationId)
@@ -55,7 +55,7 @@ async function loadMessages() {
 function subscribeToMessages() {
     messageChannel?.unsubscribe();
     if (!currentConversationId) return;
-    messageChannel = window.studyCircleSupabase
+    messageChannel = window.joinCrewSupabase
         .channel(`direct-messages-${currentConversationId}`)
         .on("postgres_changes", { event: "INSERT", schema: "public", table: "direct_messages", filter: `conversation_id=eq.${currentConversationId}` }, async (payload) => {
             if (payload.new.sender_id === currentUser.id) return;
@@ -80,7 +80,7 @@ function renderCallPanel(call) {
 
 async function loadActiveCall() {
     if (!currentConversationId) return;
-    const { data, error } = await window.studyCircleSupabase
+    const { data, error } = await window.joinCrewSupabase
         .from("direct_calls")
         .select("id, started_by, call_type, status, expires_at")
         .eq("conversation_id", currentConversationId)
@@ -96,7 +96,7 @@ async function loadActiveCall() {
 function subscribeToCalls() {
     callChannel?.unsubscribe();
     if (!currentConversationId) return;
-    callChannel = window.studyCircleSupabase
+    callChannel = window.joinCrewSupabase
         .channel(`direct-calls-${currentConversationId}`)
         .on("postgres_changes", { event: "*", schema: "public", table: "direct_calls", filter: `conversation_id=eq.${currentConversationId}` }, loadActiveCall)
         .subscribe();
@@ -104,7 +104,7 @@ function subscribeToCalls() {
 
 async function startDirectCall(callType) {
     if (!currentConversationId) return;
-    const { data, error } = await window.studyCircleSupabase.rpc("start_direct_call", {
+    const { data, error } = await window.joinCrewSupabase.rpc("start_direct_call", {
         target_conversation_id: currentConversationId,
         requested_call_type: callType,
     });
@@ -116,7 +116,7 @@ async function startDirectCall(callType) {
 }
 
 async function endDirectCall(callId) {
-    const { error } = await window.studyCircleSupabase.rpc("end_direct_call", { target_call_id: callId });
+    const { error } = await window.joinCrewSupabase.rpc("end_direct_call", { target_call_id: callId });
     if (error) {
         chatSubtitle.textContent = "No se pudo finalizar la llamada.";
         return;
@@ -125,7 +125,7 @@ async function endDirectCall(callId) {
 }
 
 async function loadConversations() {
-    const { data: conversations, error } = await window.studyCircleSupabase
+    const { data: conversations, error } = await window.joinCrewSupabase
         .from("direct_conversations")
         .select("id, user_one, user_two, created_at")
         .order("created_at", { ascending: false });
@@ -157,7 +157,7 @@ async function loadConversations() {
 }
 
 async function loadGroupConversations() {
-    const { data: memberships, error } = await window.studyCircleSupabase
+    const { data: memberships, error } = await window.joinCrewSupabase
         .from("group_members")
         .select("group_id")
         .eq("user_id", currentUser.id);
@@ -170,7 +170,7 @@ async function loadGroupConversations() {
         groupConversationList.textContent = "Aún no te has unido a un grupo.";
         return;
     }
-    const { data: groups } = await window.studyCircleSupabase.from("study_groups").select("id, name").in("id", ids);
+    const { data: groups } = await window.joinCrewSupabase.from("study_groups").select("id, name").in("id", ids);
     groupConversationList.innerHTML = (groups || []).map((group) => `<a class="conversation-link" href="grupo-chat.html?group=${group.id}">${escapeHtml(group.name)}</a>`).join("") || "Aún no tienes chats de grupo.";
 }
 
@@ -178,7 +178,7 @@ chatForm.addEventListener("submit", async (event) => {
     event.preventDefault();
     const content = chatInput.value.trim();
     if (!content || !currentConversationId) return;
-    const { data, error } = await window.studyCircleSupabase
+    const { data, error } = await window.joinCrewSupabase
         .from("direct_messages")
         .insert({ conversation_id: currentConversationId, sender_id: currentUser.id, content })
         .select("id, sender_id, content, created_at")

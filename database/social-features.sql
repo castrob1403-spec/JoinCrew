@@ -1,5 +1,5 @@
 -- =========================================================
--- STUDYCIRCLE: grupos, chat privado y sesiones de estudio
+-- JOINCREW: grupos, chat privado y sesiones de estudio
 -- Ejecutar una vez en Supabase > SQL Editor
 -- =========================================================
 

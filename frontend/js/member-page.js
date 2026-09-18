@@ -1,11 +1,11 @@
 async function protectMemberPage() {
-    const { data: { user } } = await window.studyCircleSupabase.auth.getUser();
+    const { data: { user } } = await window.joinCrewSupabase.auth.getUser();
     if (!user) {
         window.location.href = "login.html";
         return null;
     }
 
-    const { data: profile } = await window.studyCircleSupabase
+    const { data: profile } = await window.joinCrewSupabase
         .from("profiles")
         .select("full_name, role, account_status")
         .eq("id", user.id)
@@ -17,8 +17,8 @@ async function protectMemberPage() {
     }
 
     if (profile?.account_status === "banned") {
-        await window.studyCircleSupabase.auth.signOut();
-        alert("Tu cuenta fue suspendida. Contacta a StudyCircle si crees que es un error.");
+        await window.joinCrewSupabase.auth.signOut();
+        alert("Tu cuenta fue suspendida. Contacta a JoinCrew si crees que es un error.");
         window.location.href = "login.html";
         return null;
     }
@@ -31,6 +31,6 @@ async function protectMemberPage() {
 }
 
 document.querySelector("#logout-button")?.addEventListener("click", async () => {
-    await window.studyCircleSupabase.auth.signOut();
+    await window.joinCrewSupabase.auth.signOut();
     window.location.href = "login.html";
 });

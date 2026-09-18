@@ -13,17 +13,17 @@ async function loadGroup() {
     const member = await protectMemberPage();
     if (!member || !groupId) { window.location.href = "grupos.html"; return; }
     currentUser = member.user;
-    const { data: group, error: groupError } = await window.studyCircleSupabase.from("study_groups").select("id, name, description, subject, modality, max_members, created_by").eq("id", groupId).single();
+    const { data: group, error: groupError } = await window.joinCrewSupabase.from("study_groups").select("id, name, description, subject, modality, max_members, created_by").eq("id", groupId).single();
     if (groupError || !group) { showMessage("Este grupo no está disponible."); return; }
     currentGroup = group;
-    const { data: groupMembers, error: membersError } = await window.studyCircleSupabase.from("group_members").select("user_id, member_role, joined_at").eq("group_id", groupId).order("joined_at");
+    const { data: groupMembers, error: membersError } = await window.joinCrewSupabase.from("group_members").select("user_id, member_role, joined_at").eq("group_id", groupId).order("joined_at");
     if (membersError) { showMessage("No se pudieron cargar los integrantes."); return; }
     members = groupMembers || [];
     const profiles = await getProfiles(members.map((item) => item.user_id));
     renderGroup(profiles);
 }
 
-async function getProfiles(ids) { if (!ids.length) return {}; const { data } = await window.studyCircleSupabase.from("profiles").select("id, full_name, university, career").in("id", ids); return Object.fromEntries((data || []).map((profile) => [profile.id, profile])); }
+async function getProfiles(ids) { if (!ids.length) return {}; const { data } = await window.joinCrewSupabase.from("profiles").select("id, full_name, university, career").in("id", ids); return Object.fromEntries((data || []).map((profile) => [profile.id, profile])); }
 
 function renderGroup(profiles) {
     const isLeader = currentGroup.created_by === currentUser.id;
@@ -49,10 +49,10 @@ function renderGroup(profiles) {
     memberList.querySelectorAll("button[data-remove-user]").forEach((button) => button.addEventListener("click", () => removeMember(button.dataset.removeUser)));
 }
 
-async function joinGroup() { const { error } = await window.studyCircleSupabase.rpc("join_study_group", { target_group_id: groupId }); showMessage(error ? error.message : "Te uniste al grupo.", !error); if (!error) loadGroup(); }
-async function createGroupRoom() { const name = prompt("Nombre de la sala pública", `Sala de ${currentGroup.name}`); if (!name?.trim()) return; const { data, error } = await window.studyCircleSupabase.rpc("create_study_room", { room_name: name.trim(), room_description: currentGroup.description || "Sala del grupo", target_group_id: groupId, room_is_public: true, room_max_participants: 5 }); if (error) { showMessage(error.message); return; } window.location.href = `sala.html?room=${encodeURIComponent(data.id)}`; }
-async function updateRole(userId, role) { const { error } = await window.studyCircleSupabase.rpc("set_group_member_role", { target_group_id: groupId, target_user_id: userId, new_role: role }); showMessage(error ? error.message : "Rol actualizado.", !error); if (!error) loadGroup(); }
-async function removeMember(userId) { if (!confirm("¿Retirar a este integrante del grupo?")) return; const { error } = await window.studyCircleSupabase.rpc("remove_group_member", { target_group_id: groupId, target_user_id: userId }); showMessage(error ? error.message : "Integrante retirado.", !error); if (!error) loadGroup(); }
-async function dissolveGroup() { if (!confirm("¿Disolver este grupo? Esta acción no se puede deshacer.")) return; const { error } = await window.studyCircleSupabase.from("study_groups").delete().eq("id", groupId); if (error) { showMessage("No se pudo disolver el grupo."); return; } window.location.href = "grupos.html"; }
+async function joinGroup() { const { error } = await window.joinCrewSupabase.rpc("join_study_group", { target_group_id: groupId }); showMessage(error ? error.message : "Te uniste al grupo.", !error); if (!error) loadGroup(); }
+async function createGroupRoom() { const name = prompt("Nombre de la sala pública", `Sala de ${currentGroup.name}`); if (!name?.trim()) return; const { data, error } = await window.joinCrewSupabase.rpc("create_study_room", { room_name: name.trim(), room_description: currentGroup.description || "Sala del grupo", target_group_id: groupId, room_is_public: true, room_max_participants: 5 }); if (error) { showMessage(error.message); return; } window.location.href = `sala.html?room=${encodeURIComponent(data.id)}`; }
+async function updateRole(userId, role) { const { error } = await window.joinCrewSupabase.rpc("set_group_member_role", { target_group_id: groupId, target_user_id: userId, new_role: role }); showMessage(error ? error.message : "Rol actualizado.", !error); if (!error) loadGroup(); }
+async function removeMember(userId) { if (!confirm("¿Retirar a este integrante del grupo?")) return; const { error } = await window.joinCrewSupabase.rpc("remove_group_member", { target_group_id: groupId, target_user_id: userId }); showMessage(error ? error.message : "Integrante retirado.", !error); if (!error) loadGroup(); }
+async function dissolveGroup() { if (!confirm("¿Disolver este grupo? Esta acción no se puede deshacer.")) return; const { error } = await window.joinCrewSupabase.from("study_groups").delete().eq("id", groupId); if (error) { showMessage("No se pudo disolver el grupo."); return; } window.location.href = "grupos.html"; }
 
 loadGroup();

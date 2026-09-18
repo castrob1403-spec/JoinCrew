@@ -1,5 +1,5 @@
 -- =========================================================
--- STUDYCIRCLE: planes, salas en vivo y administración
+-- JOINCREW: planes, salas en vivo y administración
 -- Ejecutar UNA VEZ después de social-features.sql y group-management.sql
 -- en Supabase > SQL Editor.
 -- =========================================================

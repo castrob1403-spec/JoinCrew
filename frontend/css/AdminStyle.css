@@ -1,5 +1,5 @@
 /* =========================================================
-   STUDYCIRCLE - PANEL DE ADMINISTRACIÓN
+   JOINCREW - PANEL DE ADMINISTRACIÓN
    ========================================================= */
 
 :root {
@@ -424,3 +424,5 @@ td strong {
     .student-detail-grid { grid-template-columns: 1fr; }
     .admin-activity-list article { grid-template-columns: 1fr; }
 }
+
+.brand img { display:block; width:auto; height:38px; max-width:160px; object-fit:contain; }

@@ -11,7 +11,7 @@ async function loadProfile() {
     const member = await protectMemberPage();
     if (!member) return;
     profileId = member.user.id;
-    const { data, error } = await window.studyCircleSupabase
+    const { data, error } = await window.joinCrewSupabase
         .from("profiles")
         .select("full_name, university, career, subjects, availability, study_preference")
         .eq("id", profileId)
@@ -29,7 +29,7 @@ profileForm.addEventListener("submit", async (event) => {
     event.preventDefault();
     const button = profileForm.querySelector("button");
     button.disabled = true; button.textContent = "Guardando…"; setMessage("");
-    const { error } = await window.studyCircleSupabase.rpc("update_my_profile", {
+    const { error } = await window.joinCrewSupabase.rpc("update_my_profile", {
         p_full_name: document.querySelector("#full-name").value.trim(), p_university: document.querySelector("#university").value.trim(), p_career: document.querySelector("#career").value.trim(), p_subjects: document.querySelector("#subjects").value.split(",").map((item) => item.trim()).filter(Boolean), p_availability: document.querySelector("#availability").value, p_study_preference: document.querySelector("#study-preference").value,
     });
     button.disabled = false; button.textContent = "Guardar cambios";

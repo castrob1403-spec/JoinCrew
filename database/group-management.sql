@@ -1,5 +1,5 @@
 -- =========================================================
--- STUDYCIRCLE: administración, detalles y chat multimedia
+-- JOINCREW: administración, detalles y chat multimedia
 -- Ejecutar después de social-features.sql
 -- =========================================================
 

@@ -17,14 +17,14 @@ form.addEventListener("submit", async (event) => {
     showMessage("");
 
     try {
-        const { data, error } = await window.studyCircleSupabase.auth.signInWithPassword({
+        const { data, error } = await window.joinCrewSupabase.auth.signInWithPassword({
             email,
             password: userPassword,
         });
 
         if (error) throw error;
 
-        const { data: profile, error: profileError } = await window.studyCircleSupabase
+        const { data: profile, error: profileError } = await window.joinCrewSupabase
             .from("profiles")
             .select("role, account_status")
             .eq("id", data.user.id)
@@ -33,8 +33,8 @@ form.addEventListener("submit", async (event) => {
         if (profileError) throw profileError;
 
         if (profile.account_status === "banned") {
-            await window.studyCircleSupabase.auth.signOut();
-            throw new Error("Tu cuenta fue suspendida. Contacta a StudyCircle si crees que es un error.");
+            await window.joinCrewSupabase.auth.signOut();
+            throw new Error("Tu cuenta fue suspendida. Contacta a JoinCrew si crees que es un error.");
         }
 
         window.location.href = profile.role === "admin" ? "admin.html" : "app.html";

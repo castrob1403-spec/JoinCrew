@@ -1,5 +1,5 @@
 -- =========================================================
--- STUDYCIRCLE: finalizar salas públicas
+-- JOINCREW: finalizar salas públicas
 -- Ejecutar una vez en Supabase > SQL Editor.
 -- =========================================================
 

@@ -1,5 +1,5 @@
 -- =========================================================
--- STUDYCIRCLE: llamadas privadas entre dos estudiantes
+-- JOINCREW: llamadas privadas entre dos estudiantes
 -- Ejecutar una vez en Supabase > SQL Editor.
 -- Estas llamadas NO se almacenan en study_rooms y nunca aparecen
 -- en el listado de salas públicas.

@@ -19,7 +19,7 @@ function showVerificationState(email) {
 }
 
 async function redirectIfVerified() {
-    const { data: { user } } = await window.studyCircleSupabase.auth.getUser();
+    const { data: { user } } = await window.joinCrewSupabase.auth.getUser();
 
     if (user?.email_confirmed_at) {
         window.location.href = "app.html";
@@ -43,7 +43,7 @@ form.addEventListener("submit", async (event) => {
 
     try {
         const email = data.get("email").trim();
-        const { error } = await window.studyCircleSupabase.auth.signUp({
+        const { error } = await window.joinCrewSupabase.auth.signUp({
             email,
             password: data.get("password"),
             options: {
@@ -81,7 +81,7 @@ checkVerificationButton.addEventListener("click", async () => {
     }
 });
 
-window.studyCircleSupabase.auth.onAuthStateChange((_event, session) => {
+window.joinCrewSupabase.auth.onAuthStateChange((_event, session) => {
     if (session?.user?.email_confirmed_at) {
         window.location.href = "app.html";
     }

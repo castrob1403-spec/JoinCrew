@@ -17,7 +17,7 @@ function fillProfile(profile) {
     headerName.textContent = name;
     profileInitial.textContent = name.charAt(0).toUpperCase();
     document.querySelector("#profile-career").textContent = profile.career || "Perfil académico";
-    document.querySelector("#profile-university").textContent = profile.university || "StudyCircle";
+    document.querySelector("#profile-university").textContent = profile.university || "JoinCrew";
     document.querySelector("#profile-availability").textContent = profile.availability || "Horario flexible";
     document.querySelector("#profile-modality").textContent = profile.study_preference || "Modalidad no definida";
 }
@@ -44,7 +44,7 @@ function calculateCompatibility(current, candidate) {
 }
 
 async function openConversation(targetUserId) {
-    const { data, error } = await window.studyCircleSupabase
+    const { data, error } = await window.joinCrewSupabase
         .rpc("get_or_create_direct_conversation", { target_user_id: targetUserId });
 
     if (error) {
@@ -56,7 +56,7 @@ async function openConversation(targetUserId) {
 }
 
 async function loadMatchPreview(user, currentProfile) {
-    const { data: profiles, error } = await window.studyCircleSupabase
+    const { data: profiles, error } = await window.joinCrewSupabase
         .from("profiles")
         .select("id, full_name, university, career, subjects, availability, study_preference")
         .eq("role", "user")
@@ -77,7 +77,7 @@ async function loadMatchPreview(user, currentProfile) {
         : "Sin coincidencias aún";
 
     if (!previewMatches.length) {
-        matchPreview.innerHTML = '<p class="empty-match-preview">Aún no hay otros estudiantes registrados. Invita a tus compañeros a unirse a StudyCircle.</p>';
+        matchPreview.innerHTML = '<p class="empty-match-preview">Aún no hay otros estudiantes registrados. Invita a tus compañeros a unirse a JoinCrew.</p>';
         return;
     }
 
@@ -102,8 +102,8 @@ function renderSpaceCard({ icon, label, name, detail, count, href, buttonText })
 
 async function loadSpacePreviews() {
     const [groupsResult, roomsResult] = await Promise.all([
-        window.studyCircleSupabase.from("study_groups").select("id, name, description, subject, modality, max_members, group_members(user_id)").eq("is_public", true).order("created_at", { ascending: false }).limit(2),
-        window.studyCircleSupabase.from("study_rooms").select("id, name, description, max_participants, group_id").eq("status", "live").eq("is_public", true).order("created_at", { ascending: false }).limit(2),
+        window.joinCrewSupabase.from("study_groups").select("id, name, description, subject, modality, max_members, group_members(user_id)").eq("is_public", true).order("created_at", { ascending: false }).limit(2),
+        window.joinCrewSupabase.from("study_rooms").select("id, name, description, max_participants, group_id").eq("status", "live").eq("is_public", true).order("created_at", { ascending: false }).limit(2),
     ]);
 
     if (groupsResult.error) {
@@ -138,22 +138,22 @@ async function loadSpacePreviews() {
 }
 
 async function loadAdminNotice(user) {
-    const { data } = await window.studyCircleSupabase.from("admin_notifications")
+    const { data } = await window.joinCrewSupabase.from("admin_notifications")
         .select("content, created_at").eq("recipient_id", user.id).order("created_at", { ascending: false }).limit(1);
     const notice = data?.[0];
     if (!notice) return;
     adminNotice.hidden = false;
-    adminNotice.innerHTML = `<strong>Mensaje de StudyCircle</strong><span>${escapeHtml(notice.content)}</span>`;
+    adminNotice.innerHTML = `<strong>Mensaje de JoinCrew</strong><span>${escapeHtml(notice.content)}</span>`;
 }
 
 async function loadApp() {
-    const { data: { user } } = await window.studyCircleSupabase.auth.getUser();
+    const { data: { user } } = await window.joinCrewSupabase.auth.getUser();
     if (!user) {
         window.location.href = "login.html";
         return;
     }
 
-    const { data: profile, error } = await window.studyCircleSupabase
+    const { data: profile, error } = await window.joinCrewSupabase
         .from("profiles")
         .select("full_name, university, career, subjects, availability, study_preference, role, plan, account_status")
         .eq("id", user.id)
@@ -165,8 +165,8 @@ async function loadApp() {
     }
 
     if (!error && profile?.account_status === "banned") {
-        await window.studyCircleSupabase.auth.signOut();
-        alert("Tu cuenta fue suspendida. Contacta a StudyCircle si crees que es un error.");
+        await window.joinCrewSupabase.auth.signOut();
+        alert("Tu cuenta fue suspendida. Contacta a JoinCrew si crees que es un error.");
         window.location.href = "login.html";
         return;
     }
@@ -178,7 +178,7 @@ async function loadApp() {
 }
 
 document.querySelector("#logout-button").addEventListener("click", async () => {
-    await window.studyCircleSupabase.auth.signOut();
+    await window.joinCrewSupabase.auth.signOut();
     window.location.href = "login.html";
 });
 

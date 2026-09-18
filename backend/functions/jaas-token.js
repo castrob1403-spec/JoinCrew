@@ -73,7 +73,7 @@ exports.handler = async (event) => {
                 membership = members[0];
                 if (!room.is_public && !membership) throw new Error("Esta es una sala privada del grupo.");
             }
-            jaasRoomName = `StudyCircle_room_${room.id}`;
+            jaasRoomName = `JoinCrew_room_${room.id}`;
             isModerator = room.created_by === user.id || membership?.member_role === "leader";
             canEndRoom = room.created_by === user.id;
         } else {
@@ -83,7 +83,7 @@ exports.handler = async (event) => {
             const conversations = await supabaseRequest(`/rest/v1/direct_conversations?id=eq.${encodeURIComponent(call.conversation_id)}&select=user_one,user_two`, serviceKey, serviceKey, "conversation");
             const conversation = conversations[0];
             if (!conversation || ![conversation.user_one, conversation.user_two].includes(user.id)) throw new Error("Esta llamada es privada para los participantes del chat.");
-            jaasRoomName = `StudyCircle_call_${call.id}`;
+            jaasRoomName = `JoinCrew_call_${call.id}`;
             isModerator = call.started_by === user.id;
             callType = call.call_type;
         }

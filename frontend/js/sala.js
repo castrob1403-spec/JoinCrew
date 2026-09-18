@@ -24,7 +24,7 @@ function leaveClosedRoom() {
 
 function subscribeToRoomClosure() {
     if (!roomId) return;
-    roomChannel = window.studyCircleSupabase
+    roomChannel = window.joinCrewSupabase
         .channel(`study-room-status-${roomId}`)
         .on("postgres_changes", { event: "UPDATE", schema: "public", table: "study_rooms", filter: `id=eq.${roomId}` }, (payload) => {
             if (payload.new.status === "closed") leaveClosedRoom();
@@ -35,7 +35,7 @@ function subscribeToRoomClosure() {
 async function endPublicRoom() {
     const confirmed = confirm("¿Finalizar esta sala para todas las personas? Ya no aparecerá en las salas públicas.");
     if (!confirmed) return;
-    const { error } = await window.studyCircleSupabase.rpc("end_study_room", { target_room_id: roomId });
+    const { error } = await window.joinCrewSupabase.rpc("end_study_room", { target_room_id: roomId });
     if (error) {
         roomStatus.textContent = "No se pudo finalizar la sala.";
         return;
@@ -49,7 +49,7 @@ async function startRoom() {
         window.location.href = "grupos.html";
         return;
     }
-    const { data: { session } } = await window.studyCircleSupabase.auth.getSession();
+    const { data: { session } } = await window.joinCrewSupabase.auth.getSession();
     try {
         const response = await fetch("/.netlify/functions/jaas-token", {
             method: "POST",
@@ -68,7 +68,7 @@ async function startRoom() {
             interfaceConfigOverwrite: { MOBILE_APP_PROMO: false },
         });
         document.querySelector(".page-title").textContent = callId ? (payload.callType === "audio" ? "Llamada privada" : "Videollamada privada") : "Sala de estudio";
-        roomStatus.textContent = callId ? "Esta llamada solo está disponible para las dos personas de este chat." : "Ya estás en una videollamada segura de StudyCircle.";
+        roomStatus.textContent = callId ? "Esta llamada solo está disponible para las dos personas de este chat." : "Ya estás en una videollamada segura de JoinCrew.";
         if (roomId && payload.canEndRoom) {
             ownerActions.hidden = false;
             document.querySelector("#end-public-room").addEventListener("click", endPublicRoom);
