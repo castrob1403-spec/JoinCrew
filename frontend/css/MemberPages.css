@@ -2,7 +2,7 @@
 * { box-sizing:border-box; }
 body { margin:0; background:var(--bg); color:var(--ink); font-family:"Segoe UI",Arial,sans-serif; }
 button,input,select,textarea { font:inherit; }
-.header { display:flex; align-items:center; gap:32px; min-height:70px; padding:0 max(24px,calc((100vw - 1180px)/2)); border-bottom:1px solid var(--line); background:var(--paper); }
+.header { display:flex; align-items:center; gap:32px; min-height:96px; padding:0 max(24px,calc((100vw - 1180px)/2)); border-bottom:1px solid var(--line); background:var(--paper); }
 .brand { color:var(--ink); font-size:22px; font-weight:800; letter-spacing:-1px; text-decoration:none; }.brand span { color:var(--primary); }
 nav { display:flex; gap:20px; } nav a { padding:24px 0 21px; border-bottom:3px solid transparent; color:var(--muted); font-size:14px; font-weight:600; text-decoration:none; } nav a:hover,nav a.active { border-color:var(--primary); color:var(--primary); }
 .header-right { display:flex; align-items:center; gap:14px; margin-left:auto; color:var(--muted); font-size:13px; }.logout { border:0; background:transparent; color:var(--primary); cursor:pointer; font-weight:700; }
@@ -24,4 +24,8 @@ nav { display:flex; gap:20px; } nav a { padding:24px 0 21px; border-bottom:3px s
 @media (max-width:700px) { .header { padding:15px 20px; flex-wrap:wrap; gap:14px; }.header nav { order:3; width:100%; justify-content:space-between; gap:0; }.header nav a { padding:7px 0; font-size:12px; }.header-right { margin-left:auto; }.page { width:min(100% - 32px,1120px); padding-top:30px; }.grid,.plans,.chat-layout,.group-info-grid { grid-template-columns:1fr; }.full { grid-column:auto; }.match,.group { align-items:flex-start; flex-wrap:wrap; }.match>a,.group>a { width:100%; }.calendar-grid { grid-template-columns:repeat(2,1fr); }.chat-form,.group-chat-form { flex-direction:column; }.member-row { align-items:flex-start; flex-wrap:wrap; }.member-controls { width:100%; } }
 
 .brand { display:inline-flex; align-items:center; flex:0 0 auto; }
-.brand img { display:block; width:52px; height:52px; padding:4px; border:1px solid var(--line); border-radius:14px; background:#fff; box-shadow:0 5px 14px rgba(23,32,51,.12); object-fit:contain; }
+.brand img { display:block; width:200px; height:78px; object-fit:contain; }
+
+/* JoinCrew wordmark: larger and clean. */
+.header { min-height: 96px; }
+.header .brand img { width: 200px; height: 78px; padding: 0; border: 0; border-radius: 0; background: transparent; box-shadow: none; object-fit: contain; }

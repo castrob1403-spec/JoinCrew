@@ -44,7 +44,7 @@ input {
     width: min(520px, calc(100% - 40px));
     margin: 15vh auto;
     padding: 38px;
-    border: 1px solid var(--border);
+
     border-radius: 22px;
     background: var(--bg-white);
     text-align: center;
@@ -162,7 +162,7 @@ input {
 .stat-card,
 .admin-section,
 .future-grid article {
-    border: 1px solid var(--border);
+
     border-radius: var(--radius);
     background: var(--bg-white);
 }
@@ -214,7 +214,7 @@ input {
     width: 240px;
     margin-top: 6px;
     padding: 10px 12px;
-    border: 1px solid var(--border);
+
     border-radius: 8px;
     outline: none;
 }
@@ -308,7 +308,7 @@ td strong {
 .action-cell button,
 #close-detail {
     padding: 6px 8px;
-    border: 1px solid var(--border);
+
     border-radius: 7px;
     background: var(--bg-white);
     color: var(--primary);
@@ -346,7 +346,7 @@ td strong {
     align-items: center;
     gap: 12px;
     padding: 12px;
-    border: 1px solid var(--border);
+
     border-radius: 10px;
     color: var(--text-secondary);
     font-size: 13px;
@@ -433,12 +433,18 @@ td strong {
 
 .brand img {
     display: block;
-    width: 56px;
-    height: 56px;
-    padding: 4px;
-    border: 1px solid var(--border);
-    border-radius: 14px;
-    background: #fff;
-    box-shadow: 0 5px 14px rgba(23, 32, 51, 0.12);
+    width: 210px;
+    height: 78px;
+
+
+
+
+
     object-fit: contain;
 }
+
+/* Restore component borders and keep the JoinCrew wordmark clean. */
+.status-card, .stat-card, .admin-section, .future-grid article { border: 1px solid var(--border); }
+.search-label input, .action-cell button, #close-detail, .admin-activity-list article { border: 1px solid var(--border); }
+.admin-header { padding-top: 9px; padding-bottom: 9px; }
+.admin-header .brand img { width: 210px; height: 78px; padding: 0; border: 0; border-radius: 0; background: transparent; box-shadow: none; object-fit: contain; }

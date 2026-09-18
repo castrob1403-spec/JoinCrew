@@ -23,7 +23,7 @@ button, select {
     font:inherit;
 }
 .app-header {
-    height:72px;
+    height:96px;
     padding:0 max(24px,calc((100vw - 1400px)/2));
     display:flex;
     align-items:center;
@@ -606,12 +606,16 @@ nav a.active, nav a:hover {
 
 .brand img {
     display: block;
-    width: 56px;
-    height: 56px;
-    padding: 4px;
-    border: 1px solid var(--line);
-    border-radius: 14px;
-    background: #fff;
-    box-shadow: 0 5px 14px rgba(23, 32, 51, 0.12);
+    width: 210px;
+    height: 78px;
+
+
+
+
+
     object-fit: contain;
 }
+
+/* JoinCrew wordmark: larger and clean. */
+.app-header { height: 96px; }
+.app-header .brand img { width: 210px; height: 78px; padding: 0; border: 0; border-radius: 0; background: transparent; box-shadow: none; object-fit: contain; }
