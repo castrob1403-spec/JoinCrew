@@ -143,8 +143,7 @@ async function loadNotificationBadge(user) {
         .eq("recipient_id", user.id)
         .is("read_at", null);
     if (error) return;
-    notificationsBadge.hidden = !count;
-    notificationsBadge.textContent = count > 9 ? "9+" : count;
+    notificationsButton.classList.toggle("has-unread", Number(count || 0) > 0);
 }
 async function loadApp() {
     const { data: { user } } = await window.joinCrewSupabase.auth.getUser();

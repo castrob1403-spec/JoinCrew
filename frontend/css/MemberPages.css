@@ -29,3 +29,6 @@ nav { display:flex; gap:20px; } nav a { padding:24px 0 21px; border-bottom:3px s
 /* JoinCrew wordmark: larger and clean. */
 .header { min-height: 96px; }
 .header .brand img { width: 200px; height: 78px; padding: 0; border: 0; border-radius: 0; background: transparent; box-shadow: none; object-fit: contain; }
+.header-right .profile-link { display: inline-flex; align-items: center; min-height: 36px; padding: 0 13px; border: 1px solid #dce2f4; border-radius: 9px; background: #f8f9ff; color: var(--primary); font-size: 13px; font-weight: 700; text-decoration: none; transition: border-color .2s ease, background .2s ease; }
+.header-right .profile-link:hover { border-color: var(--primary); background: var(--soft); }
+.header-right .logout { padding: 9px 0; white-space: nowrap; }
