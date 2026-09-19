@@ -12,7 +12,26 @@ function renderProfiles(items) {
     tableBody.querySelectorAll("[data-account]").forEach((b) => b.addEventListener("click", () => toggleAccount(b.dataset.account)));
 }
 function updateStats() { document.querySelector("#total-users").textContent = profiles.length; document.querySelector("#total-universities").textContent = new Set(profiles.map((p) => p.university).filter(Boolean)).size; document.querySelector("#total-subjects").textContent = new Set(profiles.flatMap((p) => p.subjects || [])).size; document.querySelector("#total-premium").textContent = profiles.filter((p) => p.plan === "premium").length; }
-async function loadProfiles() { tableMessage.textContent = "Cargando estudiantes…"; const { data, error } = await window.joinCrewSupabase.rpc("admin_profiles_with_email"); if (error) { tableMessage.textContent = "No se pudieron cargar los perfiles. Ejecuta el SQL de correos para administración."; return; } profiles = data || []; renderNotificationRecipients(); tableMessage.textContent = `${profiles.length} estudiante(s) cargado(s).`; updateStats(); renderProfiles(profiles); }
+async function loadProfiles() {
+    tableMessage.textContent = "Cargando estudiantes…";
+    let { data, error } = await window.joinCrewSupabase.rpc("admin_profiles_with_email");
+    let emailNotice = "";
+    if (error) {
+        const fallback = await window.joinCrewSupabase.from("profiles")
+            .select("id, full_name, university, career, subjects, availability, study_preference, created_at, role, plan, account_status")
+            .eq("role", "user")
+            .order("created_at", { ascending: false });
+        data = fallback.data;
+        error = fallback.error;
+        emailNotice = " Los correos aparecerán cuando ejecutes el SQL de correos para administración.";
+    }
+    if (error) { tableMessage.textContent = "No se pudieron cargar los perfiles."; return; }
+    profiles = data || [];
+    renderNotificationRecipients();
+    tableMessage.textContent = `${profiles.length} estudiante(s) cargado(s).${emailNotice}`;
+    updateStats();
+    renderProfiles(profiles);
+}
 
 function showStudentDetail(id) {
     const p = profiles.find((item) => item.id === id);
