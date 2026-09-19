@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Notificaciones | JoinCrew</title>
+    <link rel="stylesheet" href="../css/MemberPages.css" />
+    <link rel="stylesheet" href="../css/NotificacionesStyle.css" />
+  </head>
+  <body>
+    <header class="header">
+      <a class="brand" href="app.html"><img src="../img/LOGOJC2.png" alt="JoinCrew" /></a>
+      <nav>
+        <a href="app.html">Explorar</a><a href="grupos.html">Grupos</a><a href="chat.html">Chat</a><a href="calendario.html">Calendario</a>
+      </nav>
+      <div class="header-actions"><a href="perfil.html">Mi perfil</a><button id="logout-button" class="logout" type="button">Cerrar sesión</button></div>
+    </header>
+    <main class="notifications-page">
+      <section class="notifications-hero">
+        <p class="eyebrow">TU BANDEJA</p>
+        <h1>Notificaciones</h1>
+        <p>Encuentra aquí los comunicados y mensajes enviados por la administración de JoinCrew.</p>
+      </section>
+      <section class="notifications-inbox" aria-labelledby="inbox-title">
+        <div class="inbox-heading"><h2 id="inbox-title">Todos tus mensajes</h2><span id="inbox-count"></span></div>
+        <p id="notifications-status" class="notifications-status">Cargando notificaciones…</p>
+        <div id="notifications-inbox-list" class="notifications-inbox-list"></div>
+      </section>
+    </main>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../js/supabase-client.js"></script>
+    <script src="../js/member-page.js"></script>
+    <script src="../js/notificaciones.js"></script>
+  </body>
+</html>

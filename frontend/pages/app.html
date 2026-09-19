@@ -17,13 +17,7 @@
       </nav>
       <div class="header-user">
         <span id="header-name">Mi perfil</span>
-        <div class="notification-center">
-          <button id="notifications-button" class="notification-bell" type="button" aria-label="Abrir notificaciones" aria-expanded="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 9a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4" /></svg><span id="notifications-badge" hidden>0</span></button>
-          <section id="notifications-menu" class="notifications-menu" hidden aria-label="Bandeja de notificaciones">
-            <div class="notifications-menu-heading"><strong>Notificaciones</strong><span id="notifications-count"></span></div>
-            <div id="notifications-list" class="notifications-list"></div>
-          </section>
-        </div>
+        <a id="notifications-button" class="notification-bell" href="notificaciones.html" aria-label="Abrir notificaciones"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 9a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4" /></svg><span id="notifications-badge" hidden>0</span></a>
         <button id="logout-button" type="button">Cerrar sesión</button>
       </div>
     </header>
@@ -69,7 +63,6 @@
             <button type="button">Iniciar pomodoro</button>
           </div>
         </section>
-        <aside id="admin-notice" class="admin-notice" hidden></aside>
 
         <section class="filter-section" aria-labelledby="filter-title">
           <div class="section-heading">

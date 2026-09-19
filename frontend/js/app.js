@@ -8,13 +8,7 @@ const groupPreview = document.querySelector("#group-preview");
 const groupPreviewStatus = document.querySelector("#group-preview-status");
 const roomPreview = document.querySelector("#room-preview");
 const roomPreviewStatus = document.querySelector("#room-preview-status");
-const adminNotice = document.querySelector("#admin-notice");
-const notificationsButton = document.querySelector("#notifications-button");
-const notificationsMenu = document.querySelector("#notifications-menu");
 const notificationsBadge = document.querySelector("#notifications-badge");
-const notificationsCount = document.querySelector("#notifications-count");
-const notificationsList = document.querySelector("#notifications-list");
-let activeNotifications = [];
 
 function fillProfile(profile) {
     const name = profile.full_name || "Estudiante";
@@ -143,102 +137,15 @@ async function loadSpacePreviews() {
     }
 }
 
-function formatNotificationDate(value) {
-    return new Intl.DateTimeFormat("es-EC", { day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" }).format(new Date(value));
-}
-
-function renderNotifications() {
-    const visibleNotice = activeNotifications.find((item) => !item.hidden_at);
-    adminNotice.hidden = !visibleNotice;
-    if (visibleNotice) {
-        adminNotice.innerHTML = `<div><strong>Mensaje de JoinCrew</strong><span>${escapeHtml(visibleNotice.content)}</span></div><button type="button" class="hide-notice-button" data-hide-notification="${visibleNotice.id}">Ocultar</button>`;
-        adminNotice.querySelector("[data-hide-notification]").addEventListener("click", () => setNotificationVisibility(visibleNotice.id, true));
-    }
-
-    const unreadCount = activeNotifications.filter((item) => !item.read_at).length;
-    notificationsBadge.hidden = unreadCount === 0;
-    notificationsBadge.textContent = unreadCount > 9 ? "9+" : unreadCount;
-    notificationsCount.textContent = activeNotifications.length ? `${activeNotifications.length} activa(s)` : "";
-    notificationsList.innerHTML = activeNotifications.length ? activeNotifications.map((item) => `<article class="notification-item ${item.hidden_at ? "is-hidden" : ""}"><p>${escapeHtml(item.content)}</p><small>${formatNotificationDate(item.created_at)} · vence ${formatNotificationDate(item.expires_at)}</small><button type="button" data-notification-action="${item.hidden_at ? "restore" : "hide"}" data-notification-id="${item.id}">${item.hidden_at ? "Mostrar en inicio" : "Ocultar del inicio"}</button></article>`).join("") : '<p class="empty-notifications">No tienes notificaciones activas.</p>';
-    notificationsList.querySelectorAll("[data-notification-action]").forEach((button) => button.addEventListener("click", () => setNotificationVisibility(button.dataset.notificationId, button.dataset.notificationAction === "hide")));
-}
-
-function showNotificationFeedback(text, state = "error") {
-    const previous = document.querySelector("#notification-feedback");
-    previous?.remove();
-    const feedback = document.createElement("p");
-    feedback.id = "notification-feedback";
-    feedback.className = `notification-feedback ${state}`;
-    feedback.textContent = text;
-    notificationsMenu.hidden = false;
-    notificationsList.before(feedback);
-}
-
-async function setNotificationVisibility(notificationId, shouldHide) {
-    const item = activeNotifications.find((notification) => notification.id === notificationId);
-    if (!item) return;
-    const previousHiddenAt = item.hidden_at;
-    const previousReadAt = item.read_at;
-    item.hidden_at = shouldHide ? new Date().toISOString() : null;
-    if (shouldHide && !item.read_at) item.read_at = new Date().toISOString();
-    renderNotifications();
-
-const { data: { session } } = await window.joinCrewSupabase.auth.getSession();
-    const response = await fetch("/.netlify/functions/notification-state", {
-        method: "POST",
-        headers: { "Content-Type": "application/json", Authorization: `Bearer ${session?.access_token || ""}` },
-        body: JSON.stringify({ action: shouldHide ? "hide" : "restore", notificationId }),
-    });
-    const payload = await response.json();
-    const error = response.ok ? null : new Error(payload.error || "No se pudo actualizar la notificación.");
-    if (error) {
-        item.hidden_at = previousHiddenAt;
-        item.read_at = previousReadAt;
-        renderNotifications();
-        console.error("Notification update failed:", error);
-        showNotificationFeedback("No pudimos actualizar este aviso. Ejecuta el SQL de notificaciones en Supabase y vuelve a intentarlo.");
-    }
-}
-
-async function markNotificationsRead() {
-    const unread = activeNotifications.filter((item) => !item.read_at);
-    if (!unread.length) return;
-    unread.forEach((item) => { item.read_at = new Date().toISOString(); });
-    renderNotifications();
-const { data: { session } } = await window.joinCrewSupabase.auth.getSession();
-    const response = await fetch("/.netlify/functions/notification-state", {
-        method: "POST",
-        headers: { "Content-Type": "application/json", Authorization: `Bearer ${session?.access_token || ""}` },
-        body: JSON.stringify({ action: "read-all" }),
-    });
-    const error = response.ok ? null : new Error("No se pudo actualizar el estado de lectura.");
-    if (error) console.error("Notification read state failed:", error);
-}
-
-async function loadNotifications() {
-    const { data, error } = await window.joinCrewSupabase.from("admin_notifications")
-        .select("id, content, created_at, expires_at, hidden_at, read_at")
-        .gt("expires_at", new Date().toISOString())
-        .order("created_at", { ascending: false });
+async function loadNotificationBadge(user) {
+    const { count, error } = await window.joinCrewSupabase.from("admin_notifications")
+        .select("id", { count: "exact", head: true })
+        .eq("recipient_id", user.id)
+        .is("read_at", null);
     if (error) return;
-    activeNotifications = data || [];
-    renderNotifications();
+    notificationsBadge.hidden = !count;
+    notificationsBadge.textContent = count > 9 ? "9+" : count;
 }
-
-notificationsButton.addEventListener("click", () => {
-    const opened = notificationsMenu.hidden;
-    notificationsMenu.hidden = !opened;
-    notificationsButton.setAttribute("aria-expanded", String(opened));
-    if (opened) markNotificationsRead();
-});
-
-document.addEventListener("click", (event) => {
-    if (!event.target.closest(".notification-center") && !notificationsMenu.hidden) {
-        notificationsMenu.hidden = true;
-        notificationsButton.setAttribute("aria-expanded", "false");
-    }
-});
-
 async function loadApp() {
     const { data: { user } } = await window.joinCrewSupabase.auth.getUser();
     if (!user) {
@@ -266,7 +173,7 @@ async function loadApp() {
 
     if (!error && profile) {
         fillProfile(profile);
-        await Promise.all([loadMatchPreview(user, profile), loadSpacePreviews(), loadNotifications()]);
+        await Promise.all([loadMatchPreview(user, profile), loadSpacePreviews(), loadNotificationBadge(user)]);
     }
 }
 
