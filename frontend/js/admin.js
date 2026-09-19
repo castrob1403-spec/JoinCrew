@@ -23,7 +23,8 @@ async function loadProfiles() {
             .order("created_at", { ascending: false });
         data = fallback.data;
         error = fallback.error;
-        emailNotice = " Los correos aparecerán cuando ejecutes el SQL de correos para administración.";
+        console.warn("No se pudieron cargar los correos del panel:", error);
+        emailNotice = ` No se pudieron cargar los correos: ${error.message || "error desconocido"}.`;
     }
     if (error) { tableMessage.textContent = "No se pudieron cargar los perfiles."; return; }
     profiles = data || [];
