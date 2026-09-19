@@ -482,3 +482,4 @@ td strong {
 .notification-composer-footer { display: flex; justify-content: space-between; align-items: center; gap: 16px; }
 .notification-composer-footer p { margin: 0; color: var(--text-secondary); font-size: 12px; }
 @media (max-width: 600px) { .notification-composer-footer { align-items: stretch; flex-direction: column; } }
+.sent-notifications-section .section-heading p:last-child { margin: 6px 0 0; color: var(--text-secondary); font-size: 13px; }

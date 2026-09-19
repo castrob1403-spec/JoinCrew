@@ -1,4 +1,4 @@
-const loadingState = document.querySelector("#loading-state"), accessDenied = document.querySelector("#access-denied"), dashboard = document.querySelector("#admin-dashboard"), tableBody = document.querySelector("#users-table-body"), tableMessage = document.querySelector("#table-message"), searchInput = document.querySelector("#user-search"), studentDetail = document.querySelector("#student-detail"), adminGroupsList = document.querySelector("#admin-groups-list"), adminRoomsList = document.querySelector("#admin-rooms-list"), adminContactsList = document.querySelector("#admin-contacts-list"), contactsMessage = document.querySelector("#contacts-admin-message"), notificationRecipient = document.querySelector("#notification-recipient"), notificationRecipientWrap = document.querySelector("#notification-recipient-wrap"), notificationContent = document.querySelector("#admin-notification-content"), notificationComposerStatus = document.querySelector("#notification-composer-status"), sendAdminNotificationButton = document.querySelector("#send-admin-notification");
+const loadingState = document.querySelector("#loading-state"), accessDenied = document.querySelector("#access-denied"), dashboard = document.querySelector("#admin-dashboard"), tableBody = document.querySelector("#users-table-body"), tableMessage = document.querySelector("#table-message"), searchInput = document.querySelector("#user-search"), studentDetail = document.querySelector("#student-detail"), adminGroupsList = document.querySelector("#admin-groups-list"), adminRoomsList = document.querySelector("#admin-rooms-list"), adminContactsList = document.querySelector("#admin-contacts-list"), contactsMessage = document.querySelector("#contacts-admin-message"), notificationRecipient = document.querySelector("#notification-recipient"), notificationRecipientWrap = document.querySelector("#notification-recipient-wrap"), notificationContent = document.querySelector("#admin-notification-content"), notificationComposerStatus = document.querySelector("#notification-composer-status"), sendAdminNotificationButton = document.querySelector("#send-admin-notification"), sentNotificationsList = document.querySelector("#sent-notifications-list"), sentNotificationsStatus = document.querySelector("#sent-notifications-status");
 let profiles = [], currentAdmin, reloadTimer, contactReplyState = new Map(), selectedStudentId, notificationMode = "all";
 const escapeHtml = (value) => { const e = document.createElement("span"); e.textContent = value || ""; return e.innerHTML; };
 function showDashboard() { loadingState.classList.add("hidden"); dashboard.classList.remove("hidden"); }
@@ -35,6 +35,7 @@ async function loadProfiles() {
     renderNotificationRecipients();
     updateStats();
     renderProfiles(profiles);
+    loadSentNotifications();
     tableMessage.textContent = emailUnavailable
         ? `${profiles.length} estudiante(s) cargado(s). Los correos privados no están disponibles todavía.`
         : `${profiles.length} estudiante(s) cargado(s).`;
@@ -70,6 +71,28 @@ async function deleteAdminNotification(id) {
     const { error } = await window.joinCrewSupabase.rpc("delete_admin_notification", { notification_id: id });
     if (error) { alert(error.message || "No se pudo eliminar el aviso."); return; }
     if (selectedStudentId) loadStudentNotifications(selectedStudentId);
+    loadSentNotifications();
+}
+
+async function loadSentNotifications() {
+    if (!sentNotificationsList || !sentNotificationsStatus) return;
+    const { data, error } = await window.joinCrewSupabase
+        .from("admin_notifications")
+        .select("id, recipient_id, content, created_at, read_at")
+        .order("created_at", { ascending: false })
+        .limit(40);
+    if (error) {
+        sentNotificationsStatus.textContent = "No se pudieron cargar los mensajes enviados.";
+        return;
+    }
+    sentNotificationsStatus.textContent = `${data?.length || 0} aviso(s) enviados recientemente.`;
+    sentNotificationsList.innerHTML = (data || []).map((item) => {
+        const recipient = profiles.find((profile) => profile.id === item.recipient_id);
+        const recipientName = recipient?.full_name || "Estudiante";
+        const state = item.read_at ? "Leído" : "Sin leer";
+        return `<article class="sent-notification"><strong>${escapeHtml(item.content)}</strong><span>Para ${escapeHtml(recipientName)} · ${state} · ${new Date(item.created_at).toLocaleDateString("es-EC")}</span><button data-delete-notification="${item.id}" type="button">Eliminar</button></article>`;
+    }).join("") || "Todavía no has enviado avisos.";
+    sentNotificationsList.querySelectorAll("[data-delete-notification]").forEach((button) => button.addEventListener("click", () => deleteAdminNotification(button.dataset.deleteNotification)));
 }
 function renderNotificationRecipients() {
     notificationRecipient.innerHTML = profiles.map((profile) => `<option value="${profile.id}">${escapeHtml(profile.full_name)} · ${escapeHtml(profile.email || "Sin correo")}</option>`).join("");
@@ -92,7 +115,7 @@ async function sendAdminNotification() {
     sendAdminNotificationButton.textContent = "Enviando…";
     notificationComposerStatus.textContent = "";
     const { error } = await window.joinCrewSupabase.from("admin_notifications").insert(recipients.map((recipientId) => ({ recipient_id: recipientId, sender_id: currentAdmin.id, content })));
-    if (error) { notificationComposerStatus.textContent = error.message || "No se pudo enviar el mensaje."; } else { notificationContent.value = ""; notificationComposerStatus.textContent = notificationMode === "all" ? `Comunicado enviado a ${recipients.length} estudiante(s).` : "Mensaje enviado a la bandeja del estudiante."; if (notificationMode === "individual" && selectedStudentId) loadStudentNotifications(selectedStudentId); }
+    if (error) { notificationComposerStatus.textContent = error.message || "No se pudo enviar el mensaje."; } else { notificationContent.value = ""; notificationComposerStatus.textContent = notificationMode === "all" ? `Comunicado enviado a ${recipients.length} estudiante(s).` : "Mensaje enviado a la bandeja del estudiante."; if (notificationMode === "individual" && selectedStudentId) loadStudentNotifications(selectedStudentId); loadSentNotifications(); }
     sendAdminNotificationButton.disabled = false;
     sendAdminNotificationButton.textContent = notificationMode === "all" ? "Enviar a todos" : "Enviar mensaje";
 }

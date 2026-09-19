@@ -8,7 +8,7 @@ const groupPreview = document.querySelector("#group-preview");
 const groupPreviewStatus = document.querySelector("#group-preview-status");
 const roomPreview = document.querySelector("#room-preview");
 const roomPreviewStatus = document.querySelector("#room-preview-status");
-const notificationsBadge = document.querySelector("#notifications-badge");
+const notificationsButton = document.querySelector("#notifications-button");
 
 function fillProfile(profile) {
     const name = profile.full_name || "Estudiante";

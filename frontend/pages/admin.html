@@ -72,6 +72,11 @@
           <label class="notification-content-label" for="admin-notification-content">Mensaje<textarea id="admin-notification-content" maxlength="1000" placeholder="Escribe un comunicado claro y útil para la comunidad."></textarea></label>
           <div class="notification-composer-footer"><p id="notification-composer-status" aria-live="polite"></p><button id="send-admin-notification" class="primary-button" type="button">Enviar a todos</button></div>
         </section>
+        <section class="admin-section sent-notifications-section">
+          <div class="section-heading"><div><p class="eyebrow">HISTORIAL</p><h2>Mensajes enviados</h2><p>Elimina un aviso para retirarlo de la bandeja del estudiante.</p></div></div>
+          <p id="sent-notifications-status" class="table-message">Cargando mensajes…</p>
+          <div id="sent-notifications-list" class="admin-activity-list"></div>
+        </section>
         <section class="admin-section">
           <div class="section-heading">
             <div>
