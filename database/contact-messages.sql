@@ -34,3 +34,6 @@ alter table public.contact_messages
   add column if not exists admin_reply text check (admin_reply is null or char_length(trim(admin_reply)) between 1 and 2000),
   add column if not exists replied_at timestamptz,
   add column if not exists replied_by uuid references auth.users(id) on delete set null;
+-- La Netlify Function usa service_role para obtener de forma segura el destinatario
+-- y registrar la respuesta después de enviar el correo.
+grant select, update on public.contact_messages to service_role;

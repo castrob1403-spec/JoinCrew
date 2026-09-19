@@ -17,6 +17,13 @@
       </nav>
       <div class="header-user">
         <span id="header-name">Mi perfil</span>
+        <div class="notification-center">
+          <button id="notifications-button" class="notification-bell" type="button" aria-label="Abrir notificaciones" aria-expanded="false">🔔<span id="notifications-badge" hidden>0</span></button>
+          <section id="notifications-menu" class="notifications-menu" hidden aria-label="Bandeja de notificaciones">
+            <div class="notifications-menu-heading"><strong>Notificaciones</strong><span id="notifications-count"></span></div>
+            <div id="notifications-list" class="notifications-list"></div>
+          </section>
+        </div>
         <button id="logout-button" type="button">Cerrar sesión</button>
       </div>
     </header>

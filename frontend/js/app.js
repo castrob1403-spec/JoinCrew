@@ -9,6 +9,12 @@ const groupPreviewStatus = document.querySelector("#group-preview-status");
 const roomPreview = document.querySelector("#room-preview");
 const roomPreviewStatus = document.querySelector("#room-preview-status");
 const adminNotice = document.querySelector("#admin-notice");
+const notificationsButton = document.querySelector("#notifications-button");
+const notificationsMenu = document.querySelector("#notifications-menu");
+const notificationsBadge = document.querySelector("#notifications-badge");
+const notificationsCount = document.querySelector("#notifications-count");
+const notificationsList = document.querySelector("#notifications-list");
+let activeNotifications = [];
 
 function fillProfile(profile) {
     const name = profile.full_name || "Estudiante";
@@ -137,14 +143,52 @@ async function loadSpacePreviews() {
     }
 }
 
-async function loadAdminNotice(user) {
-    const { data } = await window.joinCrewSupabase.from("admin_notifications")
-        .select("content, created_at").eq("recipient_id", user.id).order("created_at", { ascending: false }).limit(1);
-    const notice = data?.[0];
-    if (!notice) return;
-    adminNotice.hidden = false;
-    adminNotice.innerHTML = `<strong>Mensaje de JoinCrew</strong><span>${escapeHtml(notice.content)}</span>`;
+function formatNotificationDate(value) {
+    return new Intl.DateTimeFormat("es-EC", { day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" }).format(new Date(value));
 }
+
+function renderNotifications() {
+    const visibleNotice = activeNotifications.find((item) => !item.hidden_at);
+    adminNotice.hidden = !visibleNotice;
+    if (visibleNotice) {
+        adminNotice.innerHTML = `<div><strong>Mensaje de JoinCrew</strong><span>${escapeHtml(visibleNotice.content)}</span></div><button type="button" class="hide-notice-button" data-hide-notification="${visibleNotice.id}">Ocultar</button>`;
+        adminNotice.querySelector("[data-hide-notification]").addEventListener("click", () => setNotificationVisibility(visibleNotice.id, true));
+    }
+
+    notificationsBadge.hidden = activeNotifications.length === 0;
+    notificationsBadge.textContent = activeNotifications.length > 9 ? "9+" : activeNotifications.length;
+    notificationsCount.textContent = activeNotifications.length ? `${activeNotifications.length} activa(s)` : "";
+    notificationsList.innerHTML = activeNotifications.length ? activeNotifications.map((item) => `<article class="notification-item ${item.hidden_at ? "is-hidden" : ""}"><p>${escapeHtml(item.content)}</p><small>${formatNotificationDate(item.created_at)} · vence ${formatNotificationDate(item.expires_at)}</small><button type="button" data-notification-action="${item.hidden_at ? "restore" : "hide"}" data-notification-id="${item.id}">${item.hidden_at ? "Mostrar en inicio" : "Ocultar del inicio"}</button></article>`).join("") : '<p class="empty-notifications">No tienes notificaciones activas.</p>';
+    notificationsList.querySelectorAll("[data-notification-action]").forEach((button) => button.addEventListener("click", () => setNotificationVisibility(button.dataset.notificationId, button.dataset.notificationAction === "hide")));
+}
+
+async function setNotificationVisibility(notificationId, shouldHide) {
+    const { error } = await window.joinCrewSupabase.rpc(shouldHide ? "hide_my_admin_notification" : "restore_my_admin_notification", { notification_id: notificationId });
+    if (!error) await loadNotifications();
+}
+
+async function loadNotifications() {
+    const { data, error } = await window.joinCrewSupabase.from("admin_notifications")
+        .select("id, content, created_at, expires_at, hidden_at")
+        .gt("expires_at", new Date().toISOString())
+        .order("created_at", { ascending: false });
+    if (error) return;
+    activeNotifications = data || [];
+    renderNotifications();
+}
+
+notificationsButton.addEventListener("click", () => {
+    const opened = notificationsMenu.hidden;
+    notificationsMenu.hidden = !opened;
+    notificationsButton.setAttribute("aria-expanded", String(opened));
+});
+
+document.addEventListener("click", (event) => {
+    if (!event.target.closest(".notification-center") && !notificationsMenu.hidden) {
+        notificationsMenu.hidden = true;
+        notificationsButton.setAttribute("aria-expanded", "false");
+    }
+});
 
 async function loadApp() {
     const { data: { user } } = await window.joinCrewSupabase.auth.getUser();
@@ -173,7 +217,7 @@ async function loadApp() {
 
     if (!error && profile) {
         fillProfile(profile);
-        await Promise.all([loadMatchPreview(user, profile), loadSpacePreviews(), loadAdminNotice(user)]);
+        await Promise.all([loadMatchPreview(user, profile), loadSpacePreviews(), loadNotifications()]);
     }
 }
 
