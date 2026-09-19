@@ -37,3 +37,5 @@ $$;
 
 revoke all on function public.admin_profiles_with_email() from public;
 grant execute on function public.admin_profiles_with_email() to authenticated;
+-- Actualiza la caché de la API para que el panel detecte la función de inmediato.
+NOTIFY pgrst, 'reload schema';
