@@ -162,9 +162,25 @@ function renderNotifications() {
     notificationsList.querySelectorAll("[data-notification-action]").forEach((button) => button.addEventListener("click", () => setNotificationVisibility(button.dataset.notificationId, button.dataset.notificationAction === "hide")));
 }
 
+function showNotificationFeedback(text, state = "error") {
+    const previous = document.querySelector("#notification-feedback");
+    previous?.remove();
+    const feedback = document.createElement("p");
+    feedback.id = "notification-feedback";
+    feedback.className = `notification-feedback ${state}`;
+    feedback.textContent = text;
+    notificationsMenu.hidden = false;
+    notificationsList.before(feedback);
+}
+
 async function setNotificationVisibility(notificationId, shouldHide) {
     const { error } = await window.joinCrewSupabase.rpc(shouldHide ? "hide_my_admin_notification" : "restore_my_admin_notification", { notification_id: notificationId });
-    if (!error) await loadNotifications();
+    if (error) {
+        console.error("Notification update failed:", error);
+        showNotificationFeedback("No pudimos actualizar este aviso. Ejecuta el SQL de notificaciones en Supabase y vuelve a intentarlo.");
+        return;
+    }
+    await loadNotifications();
 }
 
 async function loadNotifications() {

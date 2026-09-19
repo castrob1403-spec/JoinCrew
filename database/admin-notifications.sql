@@ -12,6 +12,7 @@ create index if not exists admin_notifications_recipient_active_idx
   on public.admin_notifications(recipient_id, expires_at desc);
 
 drop policy if exists "Recipients can read their admin messages" on public.admin_notifications;
+drop policy if exists "Recipients can read active admin messages" on public.admin_notifications;
 create policy "Recipients can read active admin messages"
 on public.admin_notifications for select to authenticated
 using (recipient_id = (select auth.uid()) and expires_at > now());

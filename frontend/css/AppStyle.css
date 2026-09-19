@@ -621,8 +621,9 @@ nav a.active, nav a:hover {
 .app-header .brand img { width: 210px; height: 78px; padding: 0; border: 0; border-radius: 0; background: transparent; box-shadow: none; object-fit: contain; }
 /* Campana y bandeja de avisos administrativos. */
 .notification-center { position: relative; }
-.notification-bell { position: relative; width: 38px; height: 38px; border: 1px solid var(--line) !important; border-radius: 50%; background: #fff !important; font-size: 17px; }
-.notification-badge { position: absolute; top: -6px; right: -8px; min-width: 18px; padding: 1px 5px; border-radius: 99px; background: #e5484d; color: #fff; font-size: 10px; font-weight: 800; }
+.notification-bell { position: relative; display: grid; width: 38px; height: 38px; padding: 0; place-items: center; border: 0 !important; border-radius: 50%; background: transparent !important; color: var(--primary) !important; cursor: pointer; }
+.notification-bell svg { width: 24px; height: 24px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.notification-badge { position: absolute; top: 1px; right: -2px; min-width: 17px; padding: 1px 4px; border: 2px solid #fff; border-radius: 99px; background: #e5484d; color: #fff; font-size: 10px; font-weight: 800; line-height: 15px; }
 .notifications-menu { position: absolute; z-index: 20; top: 48px; right: 0; width: min(360px, calc(100vw - 32px)); padding: 14px; border: 1px solid var(--line); border-radius: 14px; background: #fff; box-shadow: 0 18px 38px rgba(20,30,50,.16); }
 .notifications-menu[hidden] { display: none; }
 .notifications-menu-heading { display: flex; justify-content: space-between; gap: 12px; padding: 2px 2px 10px; border-bottom: 1px solid var(--line); font-size: 13px; }
@@ -639,3 +640,4 @@ nav a.active, nav a:hover {
 .admin-notice > div { display: grid; gap: 4px; }
 .admin-notice .hide-notice-button { padding: 7px 9px; border: 1px solid #d9dfff; border-radius: 7px; background: #fff; }
 @media (max-width: 680px) { .notifications-menu { right: -42px; } .header-user { gap: 10px; } }
+.notification-feedback { margin: 10px 0 0; padding: 9px; border-radius: 8px; background: #fff1f1; color: #ae3434; font-size: 11px; line-height: 1.4; }
