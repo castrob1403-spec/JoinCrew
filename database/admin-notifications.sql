@@ -54,3 +54,15 @@ revoke all on function public.delete_admin_notification(uuid) from public;
 grant execute on function public.hide_my_admin_notification(uuid) to authenticated;
 grant execute on function public.restore_my_admin_notification(uuid) to authenticated;
 grant execute on function public.delete_admin_notification(uuid) to authenticated;
+create or replace function public.mark_my_admin_notifications_read()
+returns void language plpgsql security definer set search_path = public as $$
+begin
+  update public.admin_notifications
+  set read_at = now()
+  where recipient_id = auth.uid() and expires_at > now() and read_at is null;
+end;
+$$;
+revoke all on function public.mark_my_admin_notifications_read() from public;
+grant execute on function public.mark_my_admin_notifications_read() to authenticated;
+-- La Function de Netlify actualiza únicamente la notificación de la sesión validada.
+grant select, update on public.admin_notifications to service_role;

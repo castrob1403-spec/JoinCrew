@@ -155,8 +155,9 @@ function renderNotifications() {
         adminNotice.querySelector("[data-hide-notification]").addEventListener("click", () => setNotificationVisibility(visibleNotice.id, true));
     }
 
-    notificationsBadge.hidden = activeNotifications.length === 0;
-    notificationsBadge.textContent = activeNotifications.length > 9 ? "9+" : activeNotifications.length;
+    const unreadCount = activeNotifications.filter((item) => !item.read_at).length;
+    notificationsBadge.hidden = unreadCount === 0;
+    notificationsBadge.textContent = unreadCount > 9 ? "9+" : unreadCount;
     notificationsCount.textContent = activeNotifications.length ? `${activeNotifications.length} activa(s)` : "";
     notificationsList.innerHTML = activeNotifications.length ? activeNotifications.map((item) => `<article class="notification-item ${item.hidden_at ? "is-hidden" : ""}"><p>${escapeHtml(item.content)}</p><small>${formatNotificationDate(item.created_at)} · vence ${formatNotificationDate(item.expires_at)}</small><button type="button" data-notification-action="${item.hidden_at ? "restore" : "hide"}" data-notification-id="${item.id}">${item.hidden_at ? "Mostrar en inicio" : "Ocultar del inicio"}</button></article>`).join("") : '<p class="empty-notifications">No tienes notificaciones activas.</p>';
     notificationsList.querySelectorAll("[data-notification-action]").forEach((button) => button.addEventListener("click", () => setNotificationVisibility(button.dataset.notificationId, button.dataset.notificationAction === "hide")));
@@ -174,18 +175,49 @@ function showNotificationFeedback(text, state = "error") {
 }
 
 async function setNotificationVisibility(notificationId, shouldHide) {
-    const { error } = await window.joinCrewSupabase.rpc(shouldHide ? "hide_my_admin_notification" : "restore_my_admin_notification", { notification_id: notificationId });
+    const item = activeNotifications.find((notification) => notification.id === notificationId);
+    if (!item) return;
+    const previousHiddenAt = item.hidden_at;
+    const previousReadAt = item.read_at;
+    item.hidden_at = shouldHide ? new Date().toISOString() : null;
+    if (shouldHide && !item.read_at) item.read_at = new Date().toISOString();
+    renderNotifications();
+
+const { data: { session } } = await window.joinCrewSupabase.auth.getSession();
+    const response = await fetch("/.netlify/functions/notification-state", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${session?.access_token || ""}` },
+        body: JSON.stringify({ action: shouldHide ? "hide" : "restore", notificationId }),
+    });
+    const payload = await response.json();
+    const error = response.ok ? null : new Error(payload.error || "No se pudo actualizar la notificación.");
     if (error) {
+        item.hidden_at = previousHiddenAt;
+        item.read_at = previousReadAt;
+        renderNotifications();
         console.error("Notification update failed:", error);
         showNotificationFeedback("No pudimos actualizar este aviso. Ejecuta el SQL de notificaciones en Supabase y vuelve a intentarlo.");
-        return;
     }
-    await loadNotifications();
+}
+
+async function markNotificationsRead() {
+    const unread = activeNotifications.filter((item) => !item.read_at);
+    if (!unread.length) return;
+    unread.forEach((item) => { item.read_at = new Date().toISOString(); });
+    renderNotifications();
+const { data: { session } } = await window.joinCrewSupabase.auth.getSession();
+    const response = await fetch("/.netlify/functions/notification-state", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${session?.access_token || ""}` },
+        body: JSON.stringify({ action: "read-all" }),
+    });
+    const error = response.ok ? null : new Error("No se pudo actualizar el estado de lectura.");
+    if (error) console.error("Notification read state failed:", error);
 }
 
 async function loadNotifications() {
     const { data, error } = await window.joinCrewSupabase.from("admin_notifications")
-        .select("id, content, created_at, expires_at, hidden_at")
+        .select("id, content, created_at, expires_at, hidden_at, read_at")
         .gt("expires_at", new Date().toISOString())
         .order("created_at", { ascending: false });
     if (error) return;
@@ -197,6 +229,7 @@ notificationsButton.addEventListener("click", () => {
     const opened = notificationsMenu.hidden;
     notificationsMenu.hidden = !opened;
     notificationsButton.setAttribute("aria-expanded", String(opened));
+    if (opened) markNotificationsRead();
 });
 
 document.addEventListener("click", (event) => {
