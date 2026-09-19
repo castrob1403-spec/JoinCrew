@@ -30,7 +30,7 @@ begin
     p.availability, p.study_preference, p.created_at, p.role, p.plan, p.account_status
   from public.profiles p
   join auth.users u on u.id = p.id
-  where p.role = 'user'
+  where coalesce(p.role, 'user') <> 'admin'
   order by p.created_at desc;
 end;
 $$;

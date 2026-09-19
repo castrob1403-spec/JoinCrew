@@ -17,16 +17,17 @@ async function loadProfiles() {
     let { data, error } = await window.joinCrewSupabase.rpc("admin_profiles_with_email");
     let emailNotice = "";
     if (error) {
+        const emailError = error;
+        console.warn("No se pudieron cargar los correos del panel:", emailError);
         const fallback = await window.joinCrewSupabase.from("profiles")
             .select("id, full_name, university, career, subjects, availability, study_preference, created_at, role, plan, account_status")
-            .eq("role", "user")
+            .neq("role", "admin")
             .order("created_at", { ascending: false });
         data = fallback.data;
         error = fallback.error;
-        console.warn("No se pudieron cargar los correos del panel:", error);
-        emailNotice = ` No se pudieron cargar los correos: ${error.message || "error desconocido"}.`;
+        emailNotice = ` No se pudieron cargar los correos: ${emailError.message || "error desconocido"}.`;
     }
-    if (error) { tableMessage.textContent = "No se pudieron cargar los perfiles."; return; }
+    if (error) { tableMessage.textContent = `No se pudieron cargar los perfiles: ${error.message || "error desconocido"}.`; return; }
     profiles = data || [];
     renderNotificationRecipients();
     tableMessage.textContent = `${profiles.length} estudiante(s) cargado(s).${emailNotice}`;
