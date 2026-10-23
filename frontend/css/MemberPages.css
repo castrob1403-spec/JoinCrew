@@ -500,6 +500,60 @@ nav a.active {
   grid-template-columns: repeat(7, 1fr);
   gap: 7px;
 }
+.calendar-form {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  margin-top: 16px;
+}
+.calendar-form label {
+  display: grid;
+  gap: 7px;
+  color: var(--ink);
+  font-size: 13px;
+  font-weight: 700;
+}
+.calendar-form input,
+.calendar-form select,
+.calendar-form textarea {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 11px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  color: var(--ink);
+  font: inherit;
+}
+.calendar-form textarea {
+  min-height: 84px;
+  resize: vertical;
+}
+.calendar-notes,
+.calendar-form-footer {
+  grid-column: 1 / -1;
+}
+.calendar-form-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.calendar-form-footer .message {
+  margin: 0;
+}
+.calendar-week-card {
+  margin-top: 18px;
+}
+.calendar-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.calendar-heading span {
+  color: var(--muted);
+  font-size: 13px;
+}
 .day {
   min-height: 90px;
   padding: 9px;
@@ -508,6 +562,18 @@ nav a.active {
   background: #fff;
   color: var(--muted);
   font-size: 12px;
+}
+.day > strong,
+.day > span {
+  display: block;
+}
+.day > strong {
+  text-transform: capitalize;
+  font-size: 11px;
+}
+.day > span {
+  margin-top: 2px;
+  font-size: 16px;
 }
 .day.active {
   border-color: #afbcff;
@@ -523,6 +589,42 @@ nav a.active {
   background: var(--soft);
   color: #4055d6;
   font-size: 10px;
+}
+.upcoming-sessions {
+  display: grid;
+  gap: 10px;
+}
+.upcoming-session {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 13px 0;
+  border-top: 1px solid var(--line);
+}
+.upcoming-session strong,
+.upcoming-session span {
+  display: block;
+}
+.upcoming-session span,
+.upcoming-session p {
+  margin: 5px 0 0;
+  color: var(--muted);
+  font-size: 13px;
+}
+.upcoming-session button {
+  border: 0;
+  background: transparent;
+  color: #b23b32;
+  cursor: pointer;
+  font-weight: 700;
+}
+.upcoming-actions {
+  display: flex;
+  gap: 8px;
+}
+.upcoming-actions button:first-child {
+  color: var(--primary);
 }
 .plans {
   display: grid;
@@ -748,6 +850,13 @@ nav a.active {
   }
   .calendar-grid {
     grid-template-columns: repeat(2, 1fr);
+  }
+  .calendar-form {
+    grid-template-columns: 1fr;
+  }
+  .calendar-notes,
+  .calendar-form-footer {
+    grid-column: auto;
   }
   .chat-form,
   .group-chat-form {

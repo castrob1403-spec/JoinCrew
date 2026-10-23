@@ -28,30 +28,71 @@
         Organiza sesiones para mantener el ritmo y estudiar acompañado.
       </p>
       <section class="card">
-        <h2>Esta semana</h2>
-        <div class="calendar-grid">
-          <div class="day">Lun<br />18</div>
-          <div class="day active">
-            Mar<br />19<span class="session">Cálculo · 18:00</span>
+        <h2 id="calendar-form-title">Agenda una sesión</h2>
+        <form id="session-form" class="calendar-form">
+          <label
+            >Materia<input
+              id="session-subject"
+              maxlength="100"
+              required
+              placeholder="Ej.: Cálculo"
+          /></label>
+          <label
+            >Fecha y hora<input
+              id="session-starts-at"
+              type="datetime-local"
+              required
+          /></label>
+          <label
+            >Duración<select id="session-duration" required>
+              <option value="30">30 minutos</option>
+              <option value="60" selected>1 hora</option>
+              <option value="90">1 hora y media</option>
+              <option value="120">2 horas</option>
+              <option value="180">3 horas</option>
+            </select></label
+          >
+          <label class="calendar-notes"
+            >Notas opcionales<textarea
+              id="session-notes"
+              maxlength="500"
+              placeholder="Qué quieres repasar o preparar"
+            ></textarea>
+          </label>
+          <div class="calendar-form-footer">
+            <p id="calendar-message" class="message" aria-live="polite"></p>
+            <div>
+              <button
+                id="cancel-session-edit"
+                class="secondary hidden"
+                type="button"
+              >
+                Cancelar
+              </button>
+              <button id="save-session-button" class="primary" type="submit">
+                Guardar sesión
+              </button>
+            </div>
           </div>
-          <div class="day">Mié<br />20</div>
-          <div class="day active">
-            Jue<br />21<span class="session">Programación · 20:00</span>
-          </div>
-          <div class="day">Vie<br />22</div>
-          <div class="day">Sáb<br />23</div>
-          <div class="day">Dom<br />24</div>
+        </form>
+      </section>
+      <section class="card calendar-week-card">
+        <div class="calendar-heading">
+          <h2>Esta semana</h2>
+          <span id="calendar-week-label"></span>
         </div>
+        <div id="calendar-grid" class="calendar-grid"></div>
       </section>
       <section class="card" style="margin-top: 18px">
-        <h2>Próxima sesión</h2>
-        <p>Martes, 18:00 · Cálculo con María López.</p>
-        <a class="primary" href="chat.html">Abrir chat de la sesión</a>
+        <h2>Próximas sesiones</h2>
+        <p id="upcoming-session-status" class="message">
+          Cargando tus sesiones…
+        </p>
+        <div id="upcoming-sessions" class="upcoming-sessions"></div>
       </section>
     </main>
+    <script src="../js/api-client.js"></script>
     <script src="../js/member-page.js"></script>
-    <script>
-      protectMemberPage();
-    </script>
+    <script src="../js/calendar.js"></script>
   </body>
 </html>
