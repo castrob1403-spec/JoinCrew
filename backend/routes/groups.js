@@ -1,6 +1,7 @@
 const express = require("express");
 const StudyGroup = require("../models/StudyGroup");
 const GroupMessage = require("../models/GroupMessage");
+const StudyRoom = require("../models/StudyRoom");
 const User = require("../models/User");
 const { requireAuth } = require("./auth");
 
@@ -49,6 +50,19 @@ function detailedGroup(group) {
   };
 }
 
+function safePrivateRoom(room) {
+  return {
+    id: room._id,
+    name: room.name,
+    description: room.description,
+    maxParticipants: room.maxParticipants,
+    status: room.status,
+    createdAt: room.createdAt,
+    group: room.group,
+    isPublic: false,
+  };
+}
+
 async function findGroup(groupId) {
   return StudyGroup.findById(groupId).populate(
     "members.user",
@@ -86,11 +100,9 @@ router.post("/", async (request, response, next) => {
     );
 
     if (!name || !subject || !Number.isInteger(maxMembers)) {
-      return response
-        .status(400)
-        .json({
-          error: "Completa el nombre, la materia y la capacidad del grupo.",
-        });
+      return response.status(400).json({
+        error: "Completa el nombre, la materia y la capacidad del grupo.",
+      });
     }
     if (maxMembers < 2 || maxMembers > 999) {
       return response
@@ -130,6 +142,103 @@ router.get("/:groupId", async (request, response, next) => {
         .status(404)
         .json({ error: "Este grupo no está disponible." });
     response.json({ group: detailedGroup(group) });
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.get("/:groupId/rooms", async (request, response, next) => {
+  try {
+    const group = await findGroup(request.params.groupId);
+    if (!group)
+      return response
+        .status(404)
+        .json({ error: "Este grupo no está disponible." });
+    if (!isMember(group, userId(request))) {
+      return response
+        .status(403)
+        .json({ error: "Únete al grupo para ver sus salas privadas." });
+    }
+    const rooms = await StudyRoom.find({
+      group: group._id,
+      isPublic: false,
+      status: "live",
+    }).sort({ createdAt: -1 });
+    response.json({ rooms: rooms.map(safePrivateRoom) });
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.post("/:groupId/rooms", async (request, response, next) => {
+  try {
+    const group = await findGroup(request.params.groupId);
+    if (!group)
+      return response
+        .status(404)
+        .json({ error: "Este grupo no está disponible." });
+    if (!isLeader(group, userId(request))) {
+      return response
+        .status(403)
+        .json({ error: "Solo el líder puede iniciar la llamada del grupo." });
+    }
+
+    const activeRoom = await StudyRoom.findOne({
+      group: group._id,
+      isPublic: false,
+      status: "live",
+    });
+    if (activeRoom) return response.json({ room: safePrivateRoom(activeRoom) });
+
+    const room = await StudyRoom.create({
+      name: `Reunión privada · ${group.name}`,
+      description: `Sala privada para integrantes de ${group.name}.`,
+      maxParticipants: group.members.length,
+      createdBy: userId(request),
+      group: group._id,
+      isPublic: false,
+    });
+    response.status(201).json({ room: safePrivateRoom(room) });
+  } catch (error) {
+    if (error?.code === 11000) {
+      const room = await StudyRoom.findOne({
+        group: request.params.groupId,
+        isPublic: false,
+        status: "live",
+      });
+      if (room) return response.json({ room: safePrivateRoom(room) });
+    }
+    next(error);
+  }
+});
+
+router.delete("/:groupId/rooms/:roomId", async (request, response, next) => {
+  try {
+    const group = await findGroup(request.params.groupId);
+    if (!group)
+      return response
+        .status(404)
+        .json({ error: "Este grupo no está disponible." });
+    if (!isLeader(group, userId(request))) {
+      return response
+        .status(403)
+        .json({ error: "Solo el líder puede finalizar la llamada del grupo." });
+    }
+    const room = await StudyRoom.findOne({
+      _id: request.params.roomId,
+      group: group._id,
+      isPublic: false,
+      status: "live",
+    });
+    if (!room)
+      return response
+        .status(404)
+        .json({ error: "Esta llamada privada ya no está disponible." });
+
+    room.status = "closed";
+    room.endedAt = new Date();
+    await room.save();
+    response.json({ message: "Llamada privada finalizada." });
   } catch (error) {
     next(error);
   }
@@ -207,12 +316,10 @@ router.delete(
           .status(403)
           .json({ error: "Solo el líder puede retirar integrantes." });
       if (request.params.memberId === userId(request))
-        return response
-          .status(400)
-          .json({
-            error:
-              "El líder no puede retirarse; disuelve el grupo si corresponde.",
-          });
+        return response.status(400).json({
+          error:
+            "El líder no puede retirarse; disuelve el grupo si corresponde.",
+        });
 
       const before = group.members.length;
       group.members = group.members.filter(
@@ -245,6 +352,10 @@ router.delete("/:groupId", async (request, response, next) => {
         .json({ error: "Solo el líder puede disolver el grupo." });
 
     await GroupMessage.deleteMany({ group: group._id });
+    await StudyRoom.updateMany(
+      { group: group._id, status: "live" },
+      { status: "closed", endedAt: new Date() },
+    );
     await group.deleteOne();
     response.json({ message: "Grupo disuelto correctamente." });
   } catch (error) {
@@ -306,16 +417,14 @@ router.post("/:groupId/messages", async (request, response, next) => {
     });
     group.updatedAt = new Date();
     await group.save();
-    response
-      .status(201)
-      .json({
-        message: {
-          id: message._id,
-          senderId: userId(request),
-          content: message.content,
-          createdAt: message.createdAt,
-        },
-      });
+    response.status(201).json({
+      message: {
+        id: message._id,
+        senderId: userId(request),
+        content: message.content,
+        createdAt: message.createdAt,
+      },
+    });
   } catch (error) {
     next(error);
   }

@@ -2,8 +2,10 @@ const groupId = new URLSearchParams(window.location.search).get("id");
 const detailMessage = document.querySelector("#detail-message");
 const groupActions = document.querySelector("#group-actions");
 const memberList = document.querySelector("#member-list");
+const groupRoomCard = document.querySelector("#group-room-card");
 let currentUser;
 let currentGroup;
+let roomPoller;
 
 function escapeHtml(value) {
   const element = document.createElement("span");
@@ -71,6 +73,67 @@ function renderGroup() {
     );
 }
 
+function renderGroupRoom(room) {
+  const isLeader = String(currentGroup.createdBy) === String(currentUser.id);
+  const chatUrl = `grupo-chat.html?group=${currentGroup.id}`;
+  groupRoomCard.hidden = false;
+
+  if (!room) {
+    groupRoomCard.innerHTML = isLeader
+      ? `<div><p class="eyebrow">REUNIÓN PRIVADA</p><h2>Sin llamada activa</h2><p>Inicia una sala privada para las personas de tu grupo.</p></div><button id="start-group-room" class="primary" type="button">Iniciar llamada privada</button>`
+      : `<div><p class="eyebrow">REUNIÓN PRIVADA</p><h2>Sin llamada activa</h2><p>Cuando el líder inicie una reunión, aparecerá aquí y en el chat del grupo.</p></div><a class="secondary" href="${chatUrl}">Ir al chat</a>`;
+    document
+      .querySelector("#start-group-room")
+      ?.addEventListener("click", startGroupRoom);
+    return;
+  }
+
+  groupRoomCard.innerHTML = `<div><p class="eyebrow">REUNIÓN PRIVADA ACTIVA</p><h2>${escapeHtml(room.name)}</h2><p>Solo integrantes de este grupo pueden entrar.</p></div><div class="room-actions"><a class="primary" href="sala.html?room=${room.id}&group=${currentGroup.id}">Unirse</a>${isLeader ? `<button id="end-group-room" class="danger-button" type="button">Finalizar llamada</button>` : ""}</div>`;
+  document
+    .querySelector("#end-group-room")
+    ?.addEventListener("click", () => endGroupRoom(room.id));
+}
+
+async function loadGroupRoom() {
+  const isMember = currentGroup.members.some(
+    (member) => String(member.id) === String(currentUser.id),
+  );
+  if (!isMember) return;
+  try {
+    const { rooms } = await window.joinCrewApi.get(
+      `/groups/${encodeURIComponent(groupId)}/rooms`,
+    );
+    renderGroupRoom(rooms[0] || null);
+  } catch (error) {
+    showMessage(error.message || "No se pudo cargar la llamada del grupo.");
+  }
+}
+
+async function startGroupRoom() {
+  try {
+    const { room } = await window.joinCrewApi.post(
+      `/groups/${encodeURIComponent(groupId)}/rooms`,
+    );
+    window.location.href = `sala.html?room=${room.id}&group=${groupId}`;
+  } catch (error) {
+    showMessage(error.message || "No se pudo iniciar la llamada privada.");
+  }
+}
+
+async function endGroupRoom(roomId) {
+  if (!confirm("¿Finalizar esta llamada para todo el grupo?")) return;
+  try {
+    await window.joinCrewApi.request(
+      `/groups/${encodeURIComponent(groupId)}/rooms/${encodeURIComponent(roomId)}`,
+      { method: "DELETE" },
+    );
+    showMessage("Llamada privada finalizada.", true);
+    await loadGroupRoom();
+  } catch (error) {
+    showMessage(error.message || "No se pudo finalizar la llamada.");
+  }
+}
+
 async function loadGroup() {
   try {
     const { group } = await window.joinCrewApi.get(
@@ -78,6 +141,7 @@ async function loadGroup() {
     );
     currentGroup = group;
     renderGroup();
+    await loadGroupRoom();
   } catch (error) {
     showMessage(error.message || "Este grupo no está disponible.");
   }
@@ -143,6 +207,8 @@ async function startGroup() {
   }
   currentUser = member.user;
   await loadGroup();
+  roomPoller = window.setInterval(loadGroupRoom, 8000);
 }
 
+window.addEventListener("beforeunload", () => window.clearInterval(roomPoller));
 startGroup();

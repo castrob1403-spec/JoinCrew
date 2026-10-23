@@ -445,6 +445,12 @@ nav a.active {
   grid-template-rows: 1fr auto auto;
   min-height: 430px;
 }
+.group-chat-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 290px;
+  align-items: start;
+  gap: 18px;
+}
 .group-chat-form {
   display: flex;
   flex-wrap: wrap;
@@ -652,6 +658,52 @@ nav a.active {
   justify-content: flex-end;
   gap: 8px;
 }
+
+.group-room-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  margin-top: 20px;
+  padding: 20px 22px;
+  border: 1px solid #cbd4ff;
+  border-radius: var(--radius);
+  background: #f7f8ff;
+}
+
+.group-chat-layout .group-room-card {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  margin-top: 0;
+}
+
+.group-chat-layout .group-room-card .room-actions,
+.group-chat-layout .group-room-card > .primary {
+  justify-content: stretch;
+  margin-top: 14px;
+}
+
+.group-chat-layout .group-room-card .primary,
+.group-chat-layout .group-room-card .danger-button {
+  width: 100%;
+}
+
+.group-room-card[hidden] {
+  display: none;
+}
+
+.group-room-card h2 {
+  margin: 0 0 6px;
+  color: var(--ink);
+  font-size: 17px;
+}
+
+.group-room-card p:not(.eyebrow) {
+  margin: 0;
+  color: var(--muted);
+  font-size: 13px;
+}
 @media (max-width: 700px) {
   .header {
     padding: 15px 20px;
@@ -678,6 +730,7 @@ nav a.active {
   .grid,
   .plans,
   .chat-layout,
+  .group-chat-layout,
   .group-info-grid {
     grid-template-columns: 1fr;
   }
@@ -706,6 +759,10 @@ nav a.active {
   }
   .member-controls {
     width: 100%;
+  }
+  .group-room-card {
+    align-items: flex-start;
+    flex-direction: column;
   }
 }
 

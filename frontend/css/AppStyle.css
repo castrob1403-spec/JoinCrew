@@ -236,6 +236,46 @@ nav a:hover {
   border-radius: var(--radius);
   background: var(--paper);
 }
+
+.student-info-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+  margin-top: 21px;
+}
+
+.student-info-grid article {
+  min-width: 0;
+  padding: 15px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: #fbfcff;
+}
+
+.student-info-grid span {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.student-info-grid strong {
+  display: block;
+  overflow-wrap: anywhere;
+  color: var(--deep);
+  font-size: 14px;
+}
+
+.student-info-grid .student-subjects {
+  grid-column: 1 / -1;
+}
+
+.student-info-grid .tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
 .section-heading {
   display: flex;
   justify-content: space-between;
@@ -550,6 +590,9 @@ nav a:hover {
   .filters {
     grid-template-columns: repeat(2, 1fr);
   }
+  .student-info-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 @media (max-width: 680px) {
   .app-header {
@@ -582,6 +625,7 @@ nav a:hover {
     width: 100%;
   }
   .filters,
+  .student-info-grid,
   .match-grid,
   .tools-grid {
     grid-template-columns: 1fr;

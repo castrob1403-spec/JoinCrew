@@ -40,16 +40,22 @@ router.post("/token", requireAuth, async (request, response, next) => {
     const roomId = String(request.body.roomId || "");
     const appId = process.env.JAAS_APP_ID;
     const keyId = process.env.JAAS_KEY_ID;
-    const privateKey = normalizePrivateKey(process.env.JAAS_PRIVATE_KEY);
 
     if (!roomId)
       return response
         .status(400)
         .json({ error: "Selecciona una sala válida." });
-    if (!appId || !keyId || !privateKey) {
+    if (!appId || !keyId || !process.env.JAAS_PRIVATE_KEY) {
       return response
         .status(503)
         .json({ error: "La videollamada aún no está configurada." });
+    }
+    let privateKey;
+    try {
+      privateKey = normalizePrivateKey(process.env.JAAS_PRIVATE_KEY);
+    } catch (error) {
+      error.statusCode = 503;
+      throw error;
     }
 
     const [user, room] = await Promise.all([
@@ -117,6 +123,8 @@ router.post("/token", requireAuth, async (request, response, next) => {
       callType: "video",
       canEndRoom: String(room.createdBy) === String(user._id),
       displayName: user.fullName || "Estudiante",
+      groupId: room.group || null,
+      isPublic: room.isPublic,
     });
   } catch (error) {
     next(error);

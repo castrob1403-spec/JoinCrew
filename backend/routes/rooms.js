@@ -1,5 +1,6 @@
 const express = require("express");
 const StudyRoom = require("../models/StudyRoom");
+const StudyGroup = require("../models/StudyGroup");
 const User = require("../models/User");
 const { requireAuth } = require("./auth");
 
@@ -73,6 +74,17 @@ router.get("/:roomId", async (request, response, next) => {
       return response
         .status(404)
         .json({ error: "Esta sala no está disponible." });
+    if (!room.isPublic) {
+      const group = await StudyGroup.findById(room.group).select("members");
+      const belongsToGroup = group?.members.some(
+        (member) => String(member.user) === currentUserId(request),
+      );
+      if (!belongsToGroup) {
+        return response
+          .status(403)
+          .json({ error: "Esta es una sala privada del grupo." });
+      }
+    }
     response.json({
       room: safeRoom(room),
       canEnd:

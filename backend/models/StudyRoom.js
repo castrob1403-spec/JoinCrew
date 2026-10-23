@@ -23,5 +23,12 @@ const studyRoomSchema = new mongoose.Schema(
 );
 
 studyRoomSchema.index({ isPublic: 1, status: 1, createdAt: -1 });
+studyRoomSchema.index(
+  { group: 1, status: 1 },
+  {
+    unique: true,
+    partialFilterExpression: { group: { $type: "objectId" }, status: "live" },
+  },
+);
 
 module.exports = mongoose.model("StudyRoom", studyRoomSchema);

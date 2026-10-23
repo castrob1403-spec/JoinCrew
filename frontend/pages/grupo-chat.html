@@ -30,24 +30,20 @@
       <p class="subtitle">
         Coordinen sesiones, compartan recursos y estudien juntos.
       </p>
-      <div class="call-actions">
-        <a id="audio-call" class="secondary" target="_blank" rel="noopener"
-          >Iniciar llamada</a
-        ><a id="video-call" class="primary" target="_blank" rel="noopener"
-          >Iniciar videollamada</a
-        >
+      <div class="group-chat-layout">
+        <section class="card group-chat-window">
+          <div id="group-chat-messages" class="chat-messages"></div>
+          <form id="group-chat-form" class="group-chat-form">
+            <input
+              id="group-message-input"
+              maxlength="1000"
+              placeholder="Escribe un mensaje"
+            /><button class="primary" type="submit">Enviar</button>
+          </form>
+          <p id="group-chat-message" class="message" aria-live="polite"></p>
+        </section>
+        <aside id="group-room-card" class="group-room-card" hidden></aside>
       </div>
-      <section class="card group-chat-window">
-        <div id="group-chat-messages" class="chat-messages"></div>
-        <form id="group-chat-form" class="group-chat-form">
-          <input
-            id="group-message-input"
-            maxlength="1000"
-            placeholder="Escribe un mensaje"
-          /><button class="primary" type="submit">Enviar</button>
-        </form>
-        <p id="group-chat-message" class="message" aria-live="polite"></p>
-      </section>
     </main>
     <script src="../js/api-client.js"></script>
     <script src="../js/member-page.js"></script>

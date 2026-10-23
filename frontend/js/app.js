@@ -24,6 +24,19 @@ function fillProfile(profile) {
     profile.availability || "Horario flexible";
   document.querySelector("#profile-modality").textContent =
     profile.studyPreference || "Modalidad no definida";
+  document.querySelector("#student-country").textContent =
+    profile.country || "Sin especificar";
+  document.querySelector("#student-university").textContent =
+    profile.university || "Sin especificar";
+  document.querySelector("#student-career").textContent =
+    profile.career || "Sin especificar";
+  document.querySelector("#student-availability").textContent =
+    profile.availability || "Sin especificar";
+  document.querySelector("#student-subjects").innerHTML = (
+    profile.subjects || []
+  )
+    .map((subject) => `<span>📚 ${escapeHtml(subject)}</span>`)
+    .join("");
 }
 
 function escapeHtml(value) {
@@ -126,8 +139,5 @@ async function loadApp() {
 document.querySelector("#logout-button").addEventListener("click", () => {
   window.joinCrewApi.clearSession();
   window.location.href = "login.html";
-});
-document.querySelector("#filter-button").addEventListener("click", () => {
-  window.location.href = "matches.html";
 });
 loadApp();

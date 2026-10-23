@@ -1,4 +1,5 @@
 const roomId = new URLSearchParams(window.location.search).get("room");
+const groupId = new URLSearchParams(window.location.search).get("group");
 const roomStatus = document.querySelector("#room-status");
 const ownerActions = document.querySelector("#room-owner-actions");
 let meetingApi;
@@ -21,7 +22,9 @@ function leaveClosedRoom() {
   roomStatus.textContent = "La sala fue finalizada por su creador.";
   ownerActions.hidden = true;
   setTimeout(() => {
-    window.location.href = "grupos.html#salas";
+    window.location.href = groupId
+      ? `grupo-chat.html?group=${encodeURIComponent(groupId)}`
+      : "grupos.html#salas";
   }, 1300);
 }
 
@@ -40,7 +43,10 @@ async function endPublicRoom() {
   );
   if (!confirmed) return;
   try {
-    await window.joinCrewApi.request(`/rooms/${roomId}`, { method: "DELETE" });
+    const endpoint = groupId
+      ? `/groups/${encodeURIComponent(groupId)}/rooms/${encodeURIComponent(roomId)}`
+      : `/rooms/${encodeURIComponent(roomId)}`;
+    await window.joinCrewApi.request(endpoint, { method: "DELETE" });
     leaveClosedRoom();
   } catch (error) {
     roomStatus.textContent = error.message || "No se pudo finalizar la sala.";
@@ -73,6 +79,10 @@ async function startRoom() {
     roomStatus.textContent = "Ya estás en una videollamada segura de JoinCrew.";
     if (payload.canEndRoom) {
       ownerActions.hidden = false;
+      if (!payload.isPublic) {
+        document.querySelector("#end-public-room").textContent =
+          "Finalizar llamada del grupo";
+      }
       document
         .querySelector("#end-public-room")
         .addEventListener("click", endPublicRoom);
