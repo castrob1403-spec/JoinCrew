@@ -193,7 +193,7 @@ router.post("/:groupId/rooms", async (request, response, next) => {
     const room = await StudyRoom.create({
       name: `Reunión privada · ${group.name}`,
       description: `Sala privada para integrantes de ${group.name}.`,
-      maxParticipants: group.members.length,
+      maxParticipants: Math.max(2, group.members.length),
       createdBy: userId(request),
       group: group._id,
       isPublic: false,

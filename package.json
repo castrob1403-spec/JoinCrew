@@ -12,6 +12,7 @@
     "serverless-http": "^4.0.0"
   },
   "scripts": {
-    "start": "node backend/index.js"
+    "start": "node backend/index.js",
+    "create:admin": "node backend/scripts/create-admin.js"
   }
 }
