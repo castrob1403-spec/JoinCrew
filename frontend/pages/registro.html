@@ -21,22 +21,31 @@
                 id="full-name"
                 name="fullName"
                 type="text"
-                placeholder="Tu nombre"
+                placeholder="Nombre y apellido"
                 autocomplete="name"
+                minlength="3"
+                maxlength="100"
                 required
               />
             </div>
 
             <div class="form-field">
-              <label for="email">Correo electrónico</label>
-              <input
-                id="email"
-                name="email"
-                type="email"
-                placeholder="correo@gmail.com"
-                autocomplete="email"
-                required
-              />
+              <label for="gmail-username">Correo de Gmail</label>
+              <div class="gmail-input">
+                <input
+                  id="gmail-username"
+                  name="gmailUsername"
+                  type="text"
+                  placeholder="tu.usuario"
+                  autocomplete="username"
+                  minlength="6"
+                  maxlength="30"
+                  pattern="[A-Za-z0-9.]+"
+                  required
+                />
+                <span aria-hidden="true">@gmail.com</span>
+              </div>
+              <small>Usa letras, números y puntos.</small>
             </div>
 
             <div class="form-field">
@@ -45,9 +54,9 @@
                 id="password"
                 name="password"
                 type="password"
-                placeholder="Mínimo 6 caracteres"
+                placeholder="Mayúscula, minúscula y número"
                 autocomplete="new-password"
-                minlength="6"
+                minlength="8"
                 required
               />
             </div>
@@ -59,6 +68,8 @@
                 name="university"
                 type="text"
                 placeholder="Ej. Universidad Central"
+                minlength="3"
+                maxlength="120"
                 required
               />
             </div>
@@ -66,24 +77,61 @@
               <label for="country">País</label>
               <select id="country" name="country" required>
                 <option value="" selected disabled>Selecciona tu país</option>
-                <option>Argentina</option><option>Bolivia</option><option>Brasil</option><option>Canadá</option>
-                <option>Chile</option><option>Colombia</option><option>Costa Rica</option><option>Cuba</option>
-                <option>Ecuador</option><option>El Salvador</option><option>España</option><option>Estados Unidos</option>
-                <option>Guatemala</option><option>Honduras</option><option>México</option><option>Nicaragua</option>
-                <option>Panamá</option><option>Paraguay</option><option>Perú</option><option>Puerto Rico</option>
-                <option>República Dominicana</option><option>Uruguay</option><option>Venezuela</option>
+                <option>Argentina</option>
+                <option>Bolivia</option>
+                <option>Brasil</option>
+                <option>Canadá</option>
+                <option>Chile</option>
+                <option>Colombia</option>
+                <option>Costa Rica</option>
+                <option>Cuba</option>
+                <option>Ecuador</option>
+                <option>El Salvador</option>
+                <option>España</option>
+                <option>Estados Unidos</option>
+                <option>Guatemala</option>
+                <option>Honduras</option>
+                <option>México</option>
+                <option>Nicaragua</option>
+                <option>Panamá</option>
+                <option>Paraguay</option>
+                <option>Perú</option>
+                <option>Puerto Rico</option>
+                <option>República Dominicana</option>
+                <option>Uruguay</option>
+                <option>Venezuela</option>
               </select>
             </div>
 
             <div class="form-field">
-              <label for="career">Carrera</label>
-              <input
-                id="career"
-                name="career"
-                type="text"
-                placeholder="Ej. Ingeniería de Software"
-                required
-              />
+              <label for="career">Carrera universitaria</label>
+              <select id="career" name="career" required>
+                <option value="" selected disabled>
+                  Selecciona tu carrera
+                </option>
+                <option>Administración de Empresas</option>
+                <option>Arquitectura</option>
+                <option>Biología</option>
+                <option>Comunicación</option>
+                <option>Contabilidad y Auditoría</option>
+                <option>Derecho</option>
+                <option>Diseño Gráfico</option>
+                <option>Economía</option>
+                <option>Educación</option>
+                <option>Enfermería</option>
+                <option>Ingeniería Ambiental</option>
+                <option>Ingeniería Civil</option>
+                <option>Ingeniería de Software</option>
+                <option>Ingeniería en Sistemas</option>
+                <option>Ingeniería Industrial</option>
+                <option>Medicina</option>
+                <option>Nutrición</option>
+                <option>Odontología</option>
+                <option>Psicología</option>
+                <option>Relaciones Internacionales</option>
+                <option>Trabajo Social</option>
+                <option>Turismo</option>
+              </select>
             </div>
 
             <div class="form-field full-width">
@@ -139,34 +187,9 @@
         <p class="login-prompt">
           ¿Ya tienes cuenta? <a href="login.html">Iniciar sesión</a>
         </p>
-
-        <section
-          id="verification-state"
-          class="verification-state"
-          hidden
-          aria-live="polite"
-        >
-          <div class="verification-icon">✉</div>
-          <h2>Verifica tu correo</h2>
-          <p>
-            Enviamos un enlace de confirmación a
-            <strong id="verification-email"></strong>. Ábrelo para activar tu
-            cuenta.
-          </p>
-          <p class="verification-hint">
-            Esta página detectará la confirmación y te llevará a tu espacio de
-            JoinCrew.
-          </p>
-          <button id="check-verification-button" type="button">
-            Ya confirmé mi correo
-          </button>
-          <a href="login.html">Volver a iniciar sesión</a>
-        </section>
       </section>
     </main>
-
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="../js/supabase-client.js"></script>
+    <script src="../js/api-client.js"></script>
     <script src="../js/registro.js"></script>
   </body>
 </html>

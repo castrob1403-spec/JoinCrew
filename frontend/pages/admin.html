@@ -23,7 +23,9 @@
 
       <section id="admin-dashboard" class="hidden">
         <header class="admin-header">
-          <a class="brand" href="../index.html"><img src="../img/LOGOJC2.png" alt="JoinCrew" /></a>
+          <a class="brand" href="../index.html"
+            ><img src="../img/LOGOJC2.png" alt="JoinCrew"
+          /></a>
           <div class="admin-actions">
             <span id="admin-name">Administradora</span>
             <a href="admin.html" aria-current="page">Mi panel</a>
@@ -66,15 +68,65 @@
         </section>
 
         <section class="admin-section notification-composer">
-          <div class="section-heading"><div><p class="eyebrow">COMUNICADOS</p><h2>Enviar mensaje</h2><p>Envía un aviso individual o comunícalo a todos los estudiantes registrados.</p></div></div>
-          <div class="notification-mode-toggle" role="group" aria-label="Destinatarios"><button class="active" data-notification-mode="all" type="button">Todos los estudiantes</button><button data-notification-mode="individual" type="button">Un estudiante</button></div>
-          <label id="notification-recipient-wrap" class="notification-recipient hidden">Destinatario<select id="notification-recipient"></select></label>
-          <label class="notification-content-label" for="admin-notification-content">Mensaje<textarea id="admin-notification-content" maxlength="1000" placeholder="Escribe un comunicado claro y útil para la comunidad."></textarea></label>
-          <div class="notification-composer-footer"><p id="notification-composer-status" aria-live="polite"></p><button id="send-admin-notification" class="primary-button" type="button">Enviar a todos</button></div>
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">COMUNICADOS</p>
+              <h2>Enviar mensaje</h2>
+              <p>
+                Envía un aviso individual o comunícalo a todos los estudiantes
+                registrados.
+              </p>
+            </div>
+          </div>
+          <div
+            class="notification-mode-toggle"
+            role="group"
+            aria-label="Destinatarios"
+          >
+            <button class="active" data-notification-mode="all" type="button">
+              Todos los estudiantes</button
+            ><button data-notification-mode="individual" type="button">
+              Un estudiante
+            </button>
+          </div>
+          <label
+            id="notification-recipient-wrap"
+            class="notification-recipient hidden"
+            >Destinatario<select id="notification-recipient"></select
+          ></label>
+          <label
+            class="notification-content-label"
+            for="admin-notification-content"
+            >Mensaje<textarea
+              id="admin-notification-content"
+              maxlength="1000"
+              placeholder="Escribe un comunicado claro y útil para la comunidad."
+            ></textarea>
+          </label>
+          <div class="notification-composer-footer">
+            <p id="notification-composer-status" aria-live="polite"></p>
+            <button
+              id="send-admin-notification"
+              class="primary-button"
+              type="button"
+            >
+              Enviar a todos
+            </button>
+          </div>
         </section>
         <section class="admin-section sent-notifications-section">
-          <div class="section-heading"><div><p class="eyebrow">HISTORIAL</p><h2>Mensajes enviados</h2><p>Elimina un aviso para retirarlo de la bandeja del estudiante.</p></div></div>
-          <p id="sent-notifications-status" class="table-message">Cargando mensajes…</p>
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">HISTORIAL</p>
+              <h2>Mensajes enviados</h2>
+              <p>
+                Elimina un aviso para retirarlo de la bandeja del estudiante.
+              </p>
+            </div>
+          </div>
+          <p id="sent-notifications-status" class="table-message">
+            Cargando mensajes…
+          </p>
           <div id="sent-notifications-list" class="admin-activity-list"></div>
         </section>
         <section class="admin-section">
@@ -152,8 +204,6 @@
           <div id="admin-contacts-list" class="admin-activity-list"></div>
         </section>
       </section>
-
-
     </main>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>

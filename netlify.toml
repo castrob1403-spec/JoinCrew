@@ -1,3 +1,10 @@
 [functions]
   directory = "backend/functions"
   node_bundler = "esbuild"
+  external_node_modules = ["express", "mongoose", "serverless-http"]
+
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/api/:splat"
+  status = 200
+  force = true

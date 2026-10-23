@@ -1,5 +1,7 @@
 const conversationList = document.querySelector("#conversation-list");
-const groupConversationList = document.querySelector("#group-conversation-list");
+const groupConversationList = document.querySelector(
+  "#group-conversation-list",
+);
 const chatMessages = document.querySelector("#chat-messages");
 const chatForm = document.querySelector("#chat-form");
 const chatInput = document.querySelector("#chat-input");
@@ -9,198 +11,112 @@ const callPanel = document.querySelector("#direct-call-panel");
 const callActions = document.querySelector("#direct-call-actions");
 
 let currentUser;
-let currentConversationId = new URLSearchParams(window.location.search).get("conversation");
-let messageChannel;
-let callChannel;
+let currentConversationId = new URLSearchParams(window.location.search).get(
+  "conversation",
+);
+let poller;
 
 function escapeHtml(value) {
-    const element = document.createElement("span");
-    element.textContent = value || "";
-    return element.innerHTML;
+  const element = document.createElement("span");
+  element.textContent = value || "";
+  return element.innerHTML;
 }
 
-function renderMessage(message, sender) {
-    const bubble = document.createElement("div");
-    bubble.className = `bubble ${message.sender_id === currentUser.id ? "me" : ""}`;
-    bubble.innerHTML = `${message.sender_id === currentUser.id ? "" : `<strong>${escapeHtml(sender?.full_name || "Estudiante")}</strong><br>`}${escapeHtml(message.content)}`;
-    chatMessages.append(bubble);
-}
-
-async function getProfiles(ids) {
-    if (!ids.length) return {};
-    const { data } = await window.joinCrewSupabase
-        .from("profiles")
-        .select("id, full_name")
-        .in("id", ids);
-    return Object.fromEntries((data || []).map((profile) => [profile.id, profile]));
+function renderMessage(message) {
+  const bubble = document.createElement("div");
+  bubble.className = `bubble ${String(message.senderId) === String(currentUser.id) ? "me" : ""}`;
+  bubble.innerHTML = `${String(message.senderId) === String(currentUser.id) ? "" : `<strong>${escapeHtml(message.senderName || "Estudiante")}</strong><br>`}${escapeHtml(message.content)}`;
+  chatMessages.append(bubble);
 }
 
 async function loadMessages() {
-    if (!currentConversationId) return;
-    const { data: messages, error } = await window.joinCrewSupabase
-        .from("direct_messages")
-        .select("id, sender_id, content, created_at")
-        .eq("conversation_id", currentConversationId)
-        .order("created_at");
-    if (error) {
-        chatMessages.innerHTML = '<p class="message">No se pudieron cargar los mensajes.</p>';
-        return;
-    }
-    const profiles = await getProfiles([...new Set((messages || []).map((message) => message.sender_id))]);
+  if (!currentConversationId) return;
+  try {
+    const { messages } = await window.joinCrewApi.get(
+      `/conversations/${encodeURIComponent(currentConversationId)}/messages`,
+    );
     chatMessages.innerHTML = "";
-    (messages || []).forEach((message) => renderMessage(message, profiles[message.sender_id]));
+    messages.forEach(renderMessage);
     chatMessages.scrollTop = chatMessages.scrollHeight;
-}
-
-function subscribeToMessages() {
-    messageChannel?.unsubscribe();
-    if (!currentConversationId) return;
-    messageChannel = window.joinCrewSupabase
-        .channel(`direct-messages-${currentConversationId}`)
-        .on("postgres_changes", { event: "INSERT", schema: "public", table: "direct_messages", filter: `conversation_id=eq.${currentConversationId}` }, async (payload) => {
-            if (payload.new.sender_id === currentUser.id) return;
-            const profiles = await getProfiles([payload.new.sender_id]);
-            renderMessage(payload.new, profiles[payload.new.sender_id]);
-            chatMessages.scrollTop = chatMessages.scrollHeight;
-        })
-        .subscribe();
-}
-
-function renderCallPanel(call) {
-    callPanel.hidden = !call;
-    if (!call) {
-        callPanel.innerHTML = "";
-        return;
-    }
-    const typeLabel = call.call_type === "audio" ? "Llamada en curso" : "Videollamada en curso";
-    const startedByMe = call.started_by === currentUser.id;
-    callPanel.innerHTML = `<div><strong>${typeLabel}</strong><span>${startedByMe ? "La iniciaste tú." : "Tu compañero/a te está esperando."}</span></div><div><a class="primary" href="sala.html?call=${encodeURIComponent(call.id)}">${startedByMe ? "Volver a la llamada" : "Unirme"}</a><button id="end-direct-call" class="end-call" type="button">Finalizar</button></div>`;
-    document.querySelector("#end-direct-call")?.addEventListener("click", () => endDirectCall(call.id));
-}
-
-async function loadActiveCall() {
-    if (!currentConversationId) return;
-    const { data, error } = await window.joinCrewSupabase
-        .from("direct_calls")
-        .select("id, started_by, call_type, status, expires_at")
-        .eq("conversation_id", currentConversationId)
-        .eq("status", "active")
-        .gt("expires_at", new Date().toISOString())
-        .order("created_at", { ascending: false })
-        .limit(1)
-        .maybeSingle();
-    if (error) return;
-    renderCallPanel(data);
-}
-
-function subscribeToCalls() {
-    callChannel?.unsubscribe();
-    if (!currentConversationId) return;
-    callChannel = window.joinCrewSupabase
-        .channel(`direct-calls-${currentConversationId}`)
-        .on("postgres_changes", { event: "*", schema: "public", table: "direct_calls", filter: `conversation_id=eq.${currentConversationId}` }, loadActiveCall)
-        .subscribe();
-}
-
-async function startDirectCall(callType) {
-    if (!currentConversationId) return;
-    const { data, error } = await window.joinCrewSupabase.rpc("start_direct_call", {
-        target_conversation_id: currentConversationId,
-        requested_call_type: callType,
-    });
-    if (error) {
-        chatSubtitle.textContent = "No se pudo iniciar la llamada.";
-        return;
-    }
-    window.location.href = `sala.html?call=${encodeURIComponent(data.id)}`;
-}
-
-async function endDirectCall(callId) {
-    const { error } = await window.joinCrewSupabase.rpc("end_direct_call", { target_call_id: callId });
-    if (error) {
-        chatSubtitle.textContent = "No se pudo finalizar la llamada.";
-        return;
-    }
-    await loadActiveCall();
+  } catch (error) {
+    chatMessages.innerHTML = `<p class="message">${escapeHtml(error.message || "No se pudieron cargar los mensajes.")}</p>`;
+  }
 }
 
 async function loadConversations() {
-    const { data: conversations, error } = await window.joinCrewSupabase
-        .from("direct_conversations")
-        .select("id, user_one, user_two, created_at")
-        .order("created_at", { ascending: false });
-    if (error) {
-        conversationList.textContent = "No se pudieron cargar las conversaciones.";
-        return;
-    }
-    const otherIds = (conversations || []).map((conversation) => conversation.user_one === currentUser.id ? conversation.user_two : conversation.user_one);
-    const profiles = await getProfiles(otherIds);
-    conversationList.innerHTML = (conversations || []).map((conversation) => {
-        const otherId = conversation.user_one === currentUser.id ? conversation.user_two : conversation.user_one;
-        return `<a class="conversation-link ${conversation.id === currentConversationId ? "selected" : ""}" href="chat.html?conversation=${conversation.id}">${escapeHtml(profiles[otherId]?.full_name || "Estudiante")}</a>`;
-    }).join("") || "Aún no tienes conversaciones.";
+  try {
+    const { conversations } = await window.joinCrewApi.get("/conversations");
+    conversationList.innerHTML =
+      conversations
+        .map((conversation) => {
+          const other = conversation.participants.find(
+            (participant) => String(participant.id) !== String(currentUser.id),
+          );
+          return `<a class="conversation-link ${String(conversation.id) === String(currentConversationId) ? "selected" : ""}" href="chat.html?conversation=${encodeURIComponent(conversation.id)}">${escapeHtml(other?.fullName || "Estudiante")}</a>`;
+        })
+        .join("") || "Aún no tienes conversaciones.";
 
-    if (!currentConversationId) return;
-    const active = conversations?.find((conversation) => conversation.id === currentConversationId);
-    if (!active) {
-        currentConversationId = null;
-        return;
-    }
-    const otherId = active.user_one === currentUser.id ? active.user_two : active.user_one;
-    chatTitle.textContent = profiles[otherId]?.full_name || "Conversación";
-    chatSubtitle.textContent = "Chat privado para coordinar su sesión de estudio.";
+    const active = conversations.find(
+      (conversation) =>
+        String(conversation.id) === String(currentConversationId),
+    );
+    if (!active) return;
+    const other = active.participants.find(
+      (participant) => String(participant.id) !== String(currentUser.id),
+    );
+    chatTitle.textContent = other?.fullName || "Conversación";
+    chatSubtitle.textContent =
+      "Chat privado para coordinar su sesión de estudio.";
     chatForm.hidden = false;
-    callActions.hidden = false;
-    await Promise.all([loadMessages(), loadActiveCall()]);
-    subscribeToMessages();
-    subscribeToCalls();
-}
-
-async function loadGroupConversations() {
-    const { data: memberships, error } = await window.joinCrewSupabase
-        .from("group_members")
-        .select("group_id")
-        .eq("user_id", currentUser.id);
-    if (error) {
-        groupConversationList.textContent = "No se pudieron cargar los grupos.";
-        return;
-    }
-    const ids = (memberships || []).map((membership) => membership.group_id);
-    if (!ids.length) {
-        groupConversationList.textContent = "Aún no te has unido a un grupo.";
-        return;
-    }
-    const { data: groups } = await window.joinCrewSupabase.from("study_groups").select("id, name").in("id", ids);
-    groupConversationList.innerHTML = (groups || []).map((group) => `<a class="conversation-link" href="grupo-chat.html?group=${group.id}">${escapeHtml(group.name)}</a>`).join("") || "Aún no tienes chats de grupo.";
+    await loadMessages();
+  } catch (error) {
+    conversationList.textContent =
+      error.message || "No se pudieron cargar las conversaciones.";
+  }
 }
 
 chatForm.addEventListener("submit", async (event) => {
-    event.preventDefault();
-    const content = chatInput.value.trim();
-    if (!content || !currentConversationId) return;
-    const { data, error } = await window.joinCrewSupabase
-        .from("direct_messages")
-        .insert({ conversation_id: currentConversationId, sender_id: currentUser.id, content })
-        .select("id, sender_id, content, created_at")
-        .single();
-    if (error) {
-        chatSubtitle.textContent = "No se pudo enviar el mensaje.";
-        return;
-    }
-    renderMessage(data, { full_name: "Tú" });
+  event.preventDefault();
+  const content = chatInput.value.trim();
+  if (!content || !currentConversationId) return;
+  const submitButton = chatForm.querySelector("button");
+  submitButton.disabled = true;
+  try {
+    await window.joinCrewApi.post(
+      `/conversations/${encodeURIComponent(currentConversationId)}/messages`,
+      { content },
+    );
     chatInput.value = "";
-    chatMessages.scrollTop = chatMessages.scrollHeight;
-});
-
-callActions.querySelectorAll("[data-start-call]").forEach((button) => {
-    button.addEventListener("click", () => startDirectCall(button.dataset.startCall));
+    await loadMessages();
+  } catch (error) {
+    chatSubtitle.textContent = error.message || "No se pudo enviar el mensaje.";
+  } finally {
+    submitButton.disabled = false;
+  }
 });
 
 async function startChat() {
-    const member = await protectMemberPage();
-    if (!member) return;
-    currentUser = member.user;
-    await Promise.all([loadConversations(), loadGroupConversations()]);
+  const member = await protectMemberPage();
+  if (!member) return;
+  currentUser = member.user;
+  callPanel.hidden = true;
+  callActions.hidden = true;
+  try {
+    const { groups } = await window.joinCrewApi.get("/groups/mine");
+    groupConversationList.innerHTML = groups
+      .map(
+        (group) =>
+          `<a class="conversation-link" href="grupo-chat.html?group=${encodeURIComponent(group.id)}">${escapeHtml(group.name)}</a>`,
+      )
+      .join("");
+    if (!groups.length)
+      groupConversationList.textContent = "Aún no te has unido a un grupo.";
+  } catch {
+    groupConversationList.textContent = "No se pudieron cargar los grupos.";
+  }
+  await loadConversations();
+  if (currentConversationId) poller = window.setInterval(loadMessages, 8000);
 }
 
+window.addEventListener("beforeunload", () => window.clearInterval(poller));
 startChat();

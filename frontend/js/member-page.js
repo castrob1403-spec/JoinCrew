@@ -1,36 +1,27 @@
 async function protectMemberPage() {
-    const { data: { user } } = await window.joinCrewSupabase.auth.getUser();
-    if (!user) {
-        window.location.href = "login.html";
-        return null;
+  try {
+    const { user } = await window.joinCrewApi.get("/users/me");
+    if (user.role === "admin") {
+      window.location.href = "admin.html";
+      return null;
     }
-
-    const { data: profile } = await window.joinCrewSupabase
-        .from("profiles")
-        .select("full_name, role, account_status")
-        .eq("id", user.id)
-        .single();
-
-    if (profile?.role === "admin") {
-        window.location.href = "admin.html";
-        return null;
+    if (user.accountStatus === "banned") {
+      window.joinCrewApi.clearSession();
+      window.location.href = "login.html";
+      return null;
     }
-
-    if (profile?.account_status === "banned") {
-        await window.joinCrewSupabase.auth.signOut();
-        alert("Tu cuenta fue suspendida. Contacta a JoinCrew si crees que es un error.");
-        window.location.href = "login.html";
-        return null;
-    }
-
     document.querySelectorAll("[data-user-name]").forEach((element) => {
-        element.textContent = profile?.full_name?.split(" ")[0] || "Estudiante";
+      element.textContent = user.fullName?.split(" ")[0] || "Estudiante";
     });
-
-    return { user, profile };
+    return { user, profile: user };
+  } catch {
+    window.joinCrewApi.clearSession();
+    window.location.href = "login.html";
+    return null;
+  }
 }
 
-document.querySelector("#logout-button")?.addEventListener("click", async () => {
-    await window.joinCrewSupabase.auth.signOut();
-    window.location.href = "login.html";
+document.querySelector("#logout-button")?.addEventListener("click", () => {
+  window.joinCrewApi.clearSession();
+  window.location.href = "login.html";
 });

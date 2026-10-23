@@ -1,91 +1,80 @@
 const form = document.querySelector("#registration-form");
 const button = document.querySelector("#registration-button");
 const message = document.querySelector("#registration-message");
-const verificationState = document.querySelector("#verification-state");
-const verificationEmail = document.querySelector("#verification-email");
-const checkVerificationButton = document.querySelector("#check-verification-button");
+const gmailUsername = document.querySelector("#gmail-username");
 
 function showMessage(text, type = "error") {
-    message.textContent = text;
-    message.dataset.type = type;
+  message.textContent = text;
+  message.dataset.type = type;
 }
 
-function showVerificationState(email) {
-    form.hidden = true;
-    message.hidden = true;
-    document.querySelector(".login-prompt").hidden = true;
-    verificationEmail.textContent = email;
-    verificationState.hidden = false;
+function validGmailUsername(value) {
+  return (
+    /^[a-z0-9.]{6,30}$/i.test(value) &&
+    !value.startsWith(".") &&
+    !value.endsWith(".") &&
+    !value.includes("..")
+  );
 }
 
-async function redirectIfVerified() {
-    const { data: { user } } = await window.joinCrewSupabase.auth.getUser();
-
-    if (user?.email_confirmed_at) {
-        window.location.href = "app.html";
-        return true;
-    }
-
-    return false;
-}
+gmailUsername.addEventListener("input", () => {
+  gmailUsername.value = gmailUsername.value
+    .toLowerCase()
+    .replace(/[^a-z0-9.]/g, "");
+});
 
 form.addEventListener("submit", async (event) => {
-    event.preventDefault();
-    const data = new FormData(form);
-    const subjects = data.get("subjects")
-        .split(",")
-        .map((subject) => subject.trim())
-        .filter(Boolean);
+  event.preventDefault();
+  const data = new FormData(form);
+  const subjects = String(data.get("subjects") || "")
+    .split(",")
+    .map((subject) => subject.trim())
+    .filter(Boolean);
+  const fullName = String(data.get("fullName") || "").trim();
+  const username = String(data.get("gmailUsername") || "")
+    .trim()
+    .toLowerCase();
+  const password = String(data.get("password") || "");
 
-    button.disabled = true;
-    button.textContent = "Creando cuenta...";
-    showMessage("");
+  if (fullName.split(/\s+/).length < 2) {
+    return showMessage("Escribe tu nombre y al menos un apellido.");
+  }
+  if (!validGmailUsername(username)) {
+    return showMessage(
+      "El usuario de Gmail debe tener entre 6 y 30 caracteres; usa letras, números y puntos.",
+    );
+  }
+  if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/.test(password)) {
+    return showMessage(
+      "La contraseña debe tener 8 caracteres e incluir mayúscula, minúscula y número.",
+    );
+  }
 
-    try {
-        const email = data.get("email").trim();
-        const { error } = await window.joinCrewSupabase.auth.signUp({
-            email,
-            password: data.get("password"),
-            options: {
-                data: {
-                    full_name: data.get("fullName").trim(),
-                    university: data.get("university").trim(),
-                    country: data.get("country"),
-                    career: data.get("career").trim(),
-                    subjects,
-                    availability: data.get("availability"),
-                    study_preference: data.get("studyPreference"),
-                },
-                emailRedirectTo: new URL("registro.html", window.location.href).href,
-            },
-        });
+  button.disabled = true;
+  button.textContent = "Creando cuenta…";
+  showMessage("");
 
-        if (error) throw error;
-        showVerificationState(email);
-    } catch (error) {
-        showMessage(error.message || "No pudimos crear la cuenta. Inténtalo nuevamente.");
-    } finally {
-        button.disabled = false;
-        button.textContent = "Crear mi cuenta";
-    }
+  try {
+    const result = await window.joinCrewApi.post("/auth/register", {
+      fullName,
+      email: `${username}@gmail.com`,
+      password,
+      university: String(data.get("university") || "").trim(),
+      country: data.get("country"),
+      career: String(data.get("career") || "").trim(),
+      subjects,
+      availability: data.get("availability"),
+      studyPreference: data.get("studyPreference"),
+    });
+    window.joinCrewApi.saveSession(result);
+    showMessage("Cuenta creada. Te llevamos a tu espacio…", "success");
+    window.location.href = "app.html";
+  } catch (error) {
+    showMessage(
+      error.message || "No pudimos crear tu cuenta. Inténtalo nuevamente.",
+    );
+  } finally {
+    button.disabled = false;
+    button.textContent = "Crear mi cuenta";
+  }
 });
-
-checkVerificationButton.addEventListener("click", async () => {
-    checkVerificationButton.disabled = true;
-    checkVerificationButton.textContent = "Verificando…";
-
-    const verified = await redirectIfVerified();
-    if (!verified) {
-        checkVerificationButton.disabled = false;
-        checkVerificationButton.textContent = "Ya confirmé mi correo";
-        alert("Aún no detectamos la confirmación. Abre el enlace recibido en tu correo y vuelve a intentarlo.");
-    }
-});
-
-window.joinCrewSupabase.auth.onAuthStateChange((_event, session) => {
-    if (session?.user?.email_confirmed_at) {
-        window.location.href = "app.html";
-    }
-});
-
-redirectIfVerified();
