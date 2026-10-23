@@ -8,6 +8,7 @@ const groupRoutes = require("./routes/groups");
 const roomRoutes = require("./routes/rooms");
 const contactRoutes = require("./routes/contact");
 const meetingRoutes = require("./routes/meetings");
+const adminRoutes = require("./routes/admin");
 
 const app = express();
 
@@ -21,6 +22,7 @@ app.use("/api/groups", groupRoutes);
 app.use("/api/rooms", roomRoutes);
 app.use("/api/contact", contactRoutes);
 app.use("/api/meetings", meetingRoutes);
+app.use("/api/admin", adminRoutes);
 
 app.use(errorHandler);
 

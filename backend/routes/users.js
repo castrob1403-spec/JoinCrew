@@ -1,5 +1,6 @@
 const express = require("express");
 const User = require("../models/User");
+const AdminNotification = require("../models/AdminNotification");
 const { requireAuth } = require("./auth");
 const { safeUser } = require("../utils/safe-user");
 
@@ -73,5 +74,45 @@ router.get("/matches", requireAuth, async (request, response, next) => {
     next(error);
   }
 });
+
+router.get(
+  "/me/notifications",
+  requireAuth,
+  async (request, response, next) => {
+    try {
+      const notifications = await AdminNotification.find({
+        recipient: request.auth.userId,
+      })
+        .sort({ createdAt: -1 })
+        .limit(100);
+      response.json({
+        notifications: notifications.map((notification) => ({
+          id: notification._id,
+          content: notification.content,
+          readAt: notification.readAt,
+          createdAt: notification.createdAt,
+        })),
+      });
+    } catch (error) {
+      next(error);
+    }
+  },
+);
+
+router.patch(
+  "/me/notifications/read",
+  requireAuth,
+  async (request, response, next) => {
+    try {
+      await AdminNotification.updateMany(
+        { recipient: request.auth.userId, readAt: null },
+        { readAt: new Date() },
+      );
+      response.json({ message: "Notificaciones marcadas como leídas." });
+    } catch (error) {
+      next(error);
+    }
+  },
+);
 
 module.exports = router;
