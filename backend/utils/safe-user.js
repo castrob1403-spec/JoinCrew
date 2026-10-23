@@ -3,6 +3,7 @@ function safeUser(user) {
     id: user._id,
     fullName: user.fullName,
     email: user.email,
+    emailVerified: Boolean(user.emailVerifiedAt),
     country: user.country,
     university: user.university,
     career: user.career,

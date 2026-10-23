@@ -16,8 +16,13 @@ async function request(path, options = {}) {
     },
   });
   const payload = await response.json().catch(() => ({}));
-  if (!response.ok)
-    throw new Error(payload.error || "No se pudo comunicar con JoinCrew.");
+  if (!response.ok) {
+    const error = new Error(
+      payload.error || "No se pudo comunicar con JoinCrew.",
+    );
+    error.data = payload;
+    throw error;
+  }
   return payload;
 }
 

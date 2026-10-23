@@ -12,7 +12,13 @@ function errorHandler(error, _request, response, _next) {
       .json({ error: "El identificador recibido no es válido." });
   }
 
-  response.status(500).json({ error: "Ocurrió un error en el servidor." });
+  const statusCode = error.statusCode || 500;
+  response.status(statusCode).json({
+    error:
+      statusCode >= 500
+        ? "Ocurrió un error en el servidor."
+        : error.message || "No se pudo completar la solicitud.",
+  });
 }
 
 module.exports = { errorHandler };

@@ -66,9 +66,9 @@ form.addEventListener("submit", async (event) => {
       availability: data.get("availability"),
       studyPreference: data.get("studyPreference"),
     });
-    window.joinCrewApi.saveSession(result);
-    showMessage("Cuenta creada. Te llevamos a tu espacio…", "success");
-    window.location.href = "app.html";
+    sessionStorage.setItem("joincrew_pending_verification", result.email);
+    showMessage("Te enviamos un código a tu Gmail…", "success");
+    window.location.href = "verificar-correo.html";
   } catch (error) {
     showMessage(
       error.message || "No pudimos crear tu cuenta. Inténtalo nuevamente.",

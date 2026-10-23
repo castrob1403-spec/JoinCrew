@@ -164,6 +164,13 @@ button:hover {
   background: var(--primary-dark);
   transform: translateY(-1px);
 }
+
+.secondary-button {
+  margin-top: 10px;
+  border: 1px solid var(--primary);
+  background: transparent;
+  color: var(--primary);
+}
 button:disabled {
   cursor: wait;
   opacity: 0.7;

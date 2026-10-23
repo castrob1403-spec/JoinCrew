@@ -22,6 +22,14 @@ form.addEventListener("submit", async (event) => {
     window.location.href =
       result.user.role === "admin" ? "admin.html" : "app.html";
   } catch (error) {
+    if (error.data?.requiresVerification) {
+      sessionStorage.setItem(
+        "joincrew_pending_verification",
+        error.data.email || form.email.value.trim(),
+      );
+      window.location.href = "verificar-correo.html";
+      return;
+    }
     showMessage(error.message || "Ocurrió un error. Inténtalo nuevamente.");
   } finally {
     submitButton.disabled = false;

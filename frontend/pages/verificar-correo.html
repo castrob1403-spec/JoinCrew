@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Verifica tu correo | JoinCrew</title>
+    <link rel="stylesheet" href="../css/RegistroStyle.css" />
+  </head>
+  <body>
+    <main class="registration-container">
+      <a class="back-link" href="login.html">← Volver a iniciar sesión</a>
+      <section class="registration-card">
+        <h1>Verifica tu Gmail</h1>
+        <p>
+          Te enviamos un código de 6 dígitos. Ingresa el código para activar tu
+          cuenta.
+        </p>
+        <form id="verification-form">
+          <label for="verification-email">Correo de Gmail</label>
+          <input
+            id="verification-email"
+            name="email"
+            type="email"
+            autocomplete="email"
+            placeholder="usuario@gmail.com"
+            required
+          />
+          <label for="verification-code">Código</label>
+          <input
+            id="verification-code"
+            name="code"
+            type="text"
+            inputmode="numeric"
+            autocomplete="one-time-code"
+            pattern="[0-9]{6}"
+            minlength="6"
+            maxlength="6"
+            placeholder="000000"
+            required
+          />
+          <button id="verify-button" type="submit">Confirmar correo</button>
+          <button id="resend-button" class="secondary-button" type="button">
+            Reenviar código
+          </button>
+          <p
+            id="verification-message"
+            class="registration-message"
+            role="alert"
+            aria-live="polite"
+          ></p>
+        </form>
+      </section>
+    </main>
+    <script src="../js/api-client.js"></script>
+    <script src="../js/verificar-correo.js"></script>
+  </body>
+</html>
