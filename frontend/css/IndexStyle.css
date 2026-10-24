@@ -186,14 +186,6 @@ button {
   transition: 0.25s ease;
 }
 
-/*
-   Por ahora el menú aparece al pasar
-   el cursor.
-
-   Más adelante JavaScript hará que
-   funcione mediante click.
-*/
-
 .language-selector:hover .language-menu {
   opacity: 1;
   visibility: visible;
