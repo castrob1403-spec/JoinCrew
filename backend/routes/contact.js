@@ -38,11 +38,9 @@ async function requireAdmin(request, response, next) {
         "role accountStatus",
       );
       if (!user || user.role !== "admin" || user.accountStatus === "banned") {
-        return response
-          .status(403)
-          .json({
-            error: "Solo la administradora puede realizar esta acción.",
-          });
+        return response.status(403).json({
+          error: "Solo la administradora puede realizar esta acción.",
+        });
       }
       request.admin = user;
       next();
