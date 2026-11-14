@@ -1,7 +1,8 @@
 import { createRoot } from "react-dom/client";
-import { createBrowserRouter, Navigate } from "react-router";
+import { createBrowserRouter, Navigate, Outlet } from "react-router";
 import { RouterProvider } from "react-router/dom";
 import MarcoAcceso from "./components/MarcoAcceso";
+import EstilosRuta from "./components/EstilosRuta";
 import Administracion from "./pages/Administracion";
 import Calendario from "./pages/Calendario";
 import Chat from "./pages/Chat";
@@ -20,30 +21,44 @@ import Registro from "./pages/Registro";
 import Sala from "./pages/Sala";
 import VerificarCorreo from "./pages/VerificarCorreo";
 
+function MarcoPagina() {
+  return (
+    <>
+      <EstilosRuta />
+      <Outlet />
+    </>
+  );
+}
+
 const router = createBrowserRouter([
-  { path: "/", element: <Inicio /> },
-  { path: "/contacto", element: <Contacto /> },
   {
-    element: <MarcoAcceso />,
+    element: <MarcoPagina />,
     children: [
-      { path: "/login", element: <Ingreso /> },
-      { path: "/registro", element: <Registro /> },
-      { path: "/verificar", element: <VerificarCorreo /> },
+      { path: "/", element: <Inicio /> },
+      { path: "/contacto", element: <Contacto /> },
+      {
+        element: <MarcoAcceso />,
+        children: [
+          { path: "/login", element: <Ingreso /> },
+          { path: "/registro", element: <Registro /> },
+          { path: "/verificar", element: <VerificarCorreo /> },
+        ],
+      },
+      { path: "/app", element: <Panel /> },
+      { path: "/calendario", element: <Calendario /> },
+      { path: "/chat", element: <Chat /> },
+      { path: "/grupos", element: <Grupos /> },
+      { path: "/grupo", element: <DetalleGrupo /> },
+      { path: "/grupo-chat", element: <ChatGrupo /> },
+      { path: "/matches", element: <Coincidencias /> },
+      { path: "/notificaciones", element: <Avisos /> },
+      { path: "/perfil", element: <Perfil /> },
+      { path: "/premium", element: <Premium /> },
+      { path: "/sala", element: <Sala /> },
+      { path: "/admin", element: <Administracion /> },
       { path: "*", element: <Navigate to="/" replace /> },
     ],
   },
-  { path: "/app", element: <Panel /> },
-  { path: "/calendario", element: <Calendario /> },
-  { path: "/chat", element: <Chat /> },
-  { path: "/grupos", element: <Grupos /> },
-  { path: "/grupo", element: <DetalleGrupo /> },
-  { path: "/grupo-chat", element: <ChatGrupo /> },
-  { path: "/matches", element: <Coincidencias /> },
-  { path: "/notificaciones", element: <Avisos /> },
-  { path: "/perfil", element: <Perfil /> },
-  { path: "/premium", element: <Premium /> },
-  { path: "/sala", element: <Sala /> },
-  { path: "/admin", element: <Administracion /> },
 ]);
 
 createRoot(document.getElementById("root")).render(
