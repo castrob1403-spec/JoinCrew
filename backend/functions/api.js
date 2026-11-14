@@ -1,6 +1,9 @@
 const serverless = require("serverless-http");
-const app = require("../app");
-const { connectDatabase, isDatabaseConnected } = require("../config/database");
+const app = require("../src/app");
+const {
+  connectDatabase,
+  isDatabaseConnected,
+} = require("../src/config/database");
 
 app.get("/api/health", (_request, response) => {
   response.json({

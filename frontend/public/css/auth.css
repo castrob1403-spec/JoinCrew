@@ -1,0 +1,261 @@
+:root {
+  --auth-background: #f7f9fc;
+  --auth-surface: #ffffff;
+  --auth-primary: #536dfe;
+  --auth-primary-dark: #4055d6;
+  --auth-primary-light: #eef1ff;
+  --auth-text: #172033;
+  --auth-muted: #667085;
+  --auth-light: #98a2b3;
+  --auth-border: #e7eaf0;
+  --auth-radius: 10px;
+  --auth-card-radius: 28px;
+  --auth-shadow: 0 15px 40px rgba(20, 30, 50, 0.1);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--auth-background);
+}
+
+button,
+input,
+select {
+  font: inherit;
+}
+
+.pagina-acceso {
+  min-height: 100vh;
+  padding: 34px 20px;
+  color: var(--auth-text);
+  font-family: "Segoe UI", Arial, sans-serif;
+}
+
+.tarjeta-acceso {
+  width: 100%;
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 42px;
+  border: 1px solid var(--auth-border);
+  border-radius: var(--auth-card-radius);
+  background: var(--auth-surface);
+  box-shadow: var(--auth-shadow);
+}
+
+.tarjeta-acceso--chica {
+  max-width: 430px;
+}
+
+.enlace-volver,
+.enlace-acceso a,
+.enlace-principal {
+  color: var(--auth-primary);
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.enlace-volver {
+  display: inline-block;
+  margin-bottom: 26px;
+}
+
+.enlace-volver:hover,
+.enlace-acceso a:hover,
+.enlace-principal:hover {
+  color: var(--auth-primary-dark);
+  text-decoration: underline;
+}
+
+.encabezado-acceso h1 {
+  margin: 0;
+  font-size: 32px;
+  letter-spacing: -0.8px;
+  line-height: 1.2;
+}
+
+.encabezado-acceso p {
+  margin: 10px 0 30px;
+  color: var(--auth-muted);
+  font-size: 14px;
+}
+
+.formulario-acceso {
+  display: grid;
+  gap: 0;
+}
+
+.cuadricula-formulario {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.campo-formulario {
+  min-width: 0;
+}
+
+.ancho-completo {
+  grid-column: 1 / -1;
+}
+
+.formulario-acceso label {
+  display: block;
+  margin-bottom: 7px;
+  color: var(--auth-text);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.formulario-acceso input,
+.formulario-acceso select {
+  width: 100%;
+  margin-bottom: 20px;
+  padding: 13px 14px;
+  border: 1px solid var(--auth-border);
+  border-radius: var(--auth-radius);
+  outline: none;
+  background: #fff;
+  color: var(--auth-text);
+  font-size: 14px;
+}
+
+.cuadricula-formulario input,
+.cuadricula-formulario select {
+  margin-bottom: 0;
+}
+
+.formulario-acceso input::placeholder {
+  color: var(--auth-light);
+}
+
+.formulario-acceso input:focus,
+.formulario-acceso select:focus {
+  border-color: var(--auth-primary);
+  box-shadow: 0 0 0 3px var(--auth-primary-light);
+}
+
+.entrada-gmail {
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  border: 1px solid var(--auth-border);
+  border-radius: var(--auth-radius);
+  background: #fff;
+}
+
+.entrada-gmail input {
+  min-width: 0;
+  margin: 0;
+  border: 0;
+  border-radius: 0;
+}
+
+.entrada-gmail input:focus {
+  box-shadow: none;
+}
+
+.entrada-gmail span {
+  padding: 13px 14px 13px 0;
+  color: var(--auth-light);
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+.entrada-gmail:focus-within {
+  border-color: var(--auth-primary);
+  box-shadow: 0 0 0 3px var(--auth-primary-light);
+}
+
+.campo-formulario small {
+  display: block;
+  margin-top: 6px;
+  color: var(--auth-muted);
+  font-size: 12px;
+}
+
+.formulario-acceso button {
+  width: 100%;
+  margin-top: 26px;
+  padding: 13px 20px;
+  border: 0;
+  border-radius: var(--auth-radius);
+  background: var(--auth-primary);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.formulario-acceso button:hover:not(:disabled) {
+  transform: translateY(-1px);
+  background: var(--auth-primary-dark);
+}
+
+.formulario-acceso button:disabled {
+  cursor: wait;
+  opacity: 0.7;
+}
+
+.formulario-acceso .boton-secundario {
+  margin-top: 10px;
+  border: 1px solid var(--auth-primary);
+  background: transparent;
+  color: var(--auth-primary);
+}
+
+.formulario-acceso .boton-secundario:hover:not(:disabled) {
+  background: var(--auth-primary-light);
+}
+
+.mensaje-acceso {
+  min-height: 20px;
+  margin: 16px 0 0;
+  color: #c0392b;
+  font-size: 13px;
+  text-align: center;
+}
+
+.mensaje-acceso.exito {
+  color: #16803c;
+}
+
+.enlace-acceso {
+  margin: 25px 0 0;
+  color: var(--auth-muted);
+  font-size: 13px;
+  text-align: center;
+}
+
+.enlace-principal {
+  display: inline-block;
+  margin-top: 12px;
+}
+
+@media (max-width: 600px) {
+  .pagina-acceso {
+    padding: 20px;
+  }
+
+  .tarjeta-acceso {
+    padding: 32px 24px;
+    border-radius: 18px;
+  }
+
+  .cuadricula-formulario {
+    grid-template-columns: 1fr;
+  }
+
+  .ancho-completo {
+    grid-column: auto;
+  }
+
+  .encabezado-acceso h1 {
+    font-size: 28px;
+  }
+}

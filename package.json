@@ -1,18 +1,39 @@
 {
   "name": "joincrew-functions",
+  "version": "1.0.0",
+  "description": "Plataforma web para conectar estudiantes y organizar sesiones de estudio.",
+  "main": "backend/src/index.js",
   "private": true,
+  "scripts": {
+    "start": "node backend/src/index.js",
+    "create:admin": "node backend/src/scripts/create-admin.js",
+    "dev": "vite --config frontend/vite.config.mjs",
+    "build": "vite build --config frontend/vite.config.mjs",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "study",
+    "students",
+    "mongodb",
+    "joincrew"
+  ],
+  "author": "Britanny Castro",
+  "license": "ISC",
   "dependencies": {
     "bcryptjs": "^3.0.3",
     "cors": "^2.8.6",
     "dotenv": "^18.0.9",
-    "express": "^5.3.0",  
+    "express": "^5.3.0",
     "jsonwebtoken": "^9.0.3",
     "mongoose": "^9.11.3",
     "nodemailer": "^7.0.6",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "react-router": "^8.5.1",
     "serverless-http": "^4.0.0"
   },
-  "scripts": {
-    "start": "node backend/index.js",
-    "create:admin": "node backend/scripts/create-admin.js"
+  "devDependencies": {
+    "@vitejs/plugin-react": "^6.2.1",
+    "vite": "^8.3.6"
   }
 }
