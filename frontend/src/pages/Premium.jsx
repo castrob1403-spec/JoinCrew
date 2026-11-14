@@ -1,13 +1,11 @@
 import EncabezadoUsuario from "../components/EncabezadoUsuario";
 import { useUsuario } from "../components/Usuario";
-import EstiloPagina from "../components/EstiloPagina";
 
 export default function Premium() {
   const { user } = useUsuario();
   if (!user)
     return (
       <>
-        <EstiloPagina archivos={["MemberPages.css"]} />
         <main className="pagina">
           <p>Cargando…</p>
         </main>
@@ -15,7 +13,6 @@ export default function Premium() {
     );
   return (
     <>
-      <EstiloPagina archivos={["MemberPages.css"]} />
       <EncabezadoUsuario user={user} />
       <main className="pagina">
         <p className="etiqueta">JOINCREW PREMIUM</p>

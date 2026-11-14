@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import EncabezadoUsuario from "../components/EncabezadoUsuario";
 import { useUsuario } from "../components/Usuario";
-import EstiloPagina from "../components/EstiloPagina";
 import { api } from "../services/api";
 
 export default function Perfil() {
@@ -46,7 +45,6 @@ export default function Perfil() {
   if (!user || !form)
     return (
       <>
-        <EstiloPagina archivos={["MemberPages.css"]} />
         <main className="pagina">
           <p className="mensaje">Cargando…</p>
         </main>
@@ -54,7 +52,6 @@ export default function Perfil() {
     );
   return (
     <>
-      <EstiloPagina archivos={["MemberPages.css"]} />
       <EncabezadoUsuario user={user} />
       <main className="pagina">
         <p className="etiqueta">PERFIL ACADÉMICO</p>

@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router";
 import EncabezadoUsuario from "../components/EncabezadoUsuario";
 import { useUsuario } from "../components/Usuario";
-import EstiloPagina from "../components/EstiloPagina";
 import { api } from "../services/api";
 
 const groupFormInitial = {
@@ -90,7 +89,6 @@ export default function Grupos() {
   if (!user)
     return (
       <>
-        <EstiloPagina archivos={["MemberPages.css"]} />
         <main className="pagina">
           <p>Cargando…</p>
         </main>
@@ -98,7 +96,6 @@ export default function Grupos() {
     );
   return (
     <>
-      <EstiloPagina archivos={["MemberPages.css"]} />
       <EncabezadoUsuario user={user} active="groups" />
       <main className="pagina">
         <p className="etiqueta">SALAS Y GRUPOS</p>

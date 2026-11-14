@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router";
-import EstiloPagina from "../components/EstiloPagina";
 import { api, limpiarSesion } from "../services/api";
 
 export default function Administracion() {
@@ -154,7 +153,6 @@ export default function Administracion() {
   if (!admin)
     return (
       <>
-        <EstiloPagina archivos={["AdminStyle.css"]} />
         <main className="pagina-admin">
           <section className="tarjeta-estado">
             <p className="etiqueta">JOINCREW</p>
@@ -175,7 +173,6 @@ export default function Administracion() {
     );
   return (
     <>
-      <EstiloPagina archivos={["AdminStyle.css"]} />
       <main className="pagina-admin">
         <header className="encabezado-admin">
           <Link className="marca" to="/">

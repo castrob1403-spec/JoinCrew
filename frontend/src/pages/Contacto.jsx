@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { Link } from "react-router";
-import EstiloPagina from "../components/EstiloPagina";
 import { api } from "../services/api";
 
 const formularioInicial = { fullName: "", email: "", subject: "", message: "" };
@@ -32,7 +31,6 @@ export default function Contacto() {
   }
   return (
     <>
-      <EstiloPagina archivos={["ContactoStyle.css"]} />
       <main className="pagina-contacto">
         <Link className="enlace-volver" to="/">
           ← Volver a JoinCrew

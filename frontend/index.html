@@ -4,6 +4,42 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>JoinCrew</title>
+    <script>
+      const ruta = window.location.pathname;
+      let estilos = ["IndexStyle.css"];
+
+      if (["/login", "/registro", "/verificar"].includes(ruta)) {
+        estilos = ["auth.css"];
+      } else if (ruta === "/contacto") {
+        estilos = ["ContactoStyle.css"];
+      } else if (ruta === "/app") {
+        estilos = ["AppStyle.css"];
+      } else if (ruta === "/admin") {
+        estilos = ["AdminStyle.css"];
+      } else if (ruta === "/notificaciones") {
+        estilos = ["MemberPages.css", "NotificacionesStyle.css"];
+      } else if (
+        [
+          "/calendario",
+          "/chat",
+          "/grupos",
+          "/grupo",
+          "/grupo-chat",
+          "/matches",
+          "/perfil",
+          "/premium",
+          "/sala",
+        ].includes(ruta)
+      ) {
+        estilos = ["MemberPages.css"];
+      }
+
+      document.write(
+        estilos
+          .map((archivo) => `<link rel="stylesheet" href="/css/${archivo}" />`)
+          .join(""),
+      );
+    </script>
   </head>
   <body>
     <div id="root"></div>

@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import EncabezadoUsuario from "../components/EncabezadoUsuario";
 import { useUsuario } from "../components/Usuario";
-import EstiloPagina from "../components/EstiloPagina";
 import { api } from "../services/api";
 import { calcularAfinidad } from "../utilidades";
 
@@ -46,7 +45,6 @@ export default function Coincidencias() {
   if (!user)
     return (
       <>
-        <EstiloPagina archivos={["MemberPages.css"]} />
         <main className="pagina">
           <p className="mensaje">Cargando…</p>
         </main>
@@ -54,7 +52,6 @@ export default function Coincidencias() {
     );
   return (
     <>
-      <EstiloPagina archivos={["MemberPages.css"]} />
       <EncabezadoUsuario user={user} active="app" />
       <main className="pagina">
         <p className="etiqueta">COINCIDENCIAS REALES</p>

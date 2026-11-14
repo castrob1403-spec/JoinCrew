@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router";
-import EstiloPagina from "../components/EstiloPagina";
 
 const translations = {
   es: {
@@ -62,7 +61,6 @@ export default function Inicio() {
 
   return (
     <>
-      <EstiloPagina archivos={["IndexStyle.css"]} />
       <header className="encabezado">
         <Link to="/" className="enlace-logo">
           <div className="contenedor-logo">

@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import EncabezadoUsuario from "../components/EncabezadoUsuario";
 import { useUsuario } from "../components/Usuario";
-import EstiloPagina from "../components/EstiloPagina";
 import { api } from "../services/api";
 import { formatearFecha } from "../utilidades";
 
@@ -113,7 +112,6 @@ export default function Calendario() {
   if (!user)
     return (
       <>
-        <EstiloPagina archivos={["MemberPages.css"]} />
         <main className="pagina">
           <p className="mensaje">Cargando…</p>
         </main>
@@ -121,7 +119,6 @@ export default function Calendario() {
     );
   return (
     <>
-      <EstiloPagina archivos={["MemberPages.css"]} />
       <EncabezadoUsuario user={user} active="calendar" />
       <main className="pagina">
         <p className="etiqueta">PLANIFICACIÓN</p>

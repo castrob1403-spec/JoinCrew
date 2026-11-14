@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router";
 import EncabezadoUsuario from "../components/EncabezadoUsuario";
 import { useUsuario } from "../components/Usuario";
-import EstiloPagina from "../components/EstiloPagina";
 import TarjetaSalaGrupo from "../components/TarjetaSalaGrupo";
 import { api } from "../services/api";
 
@@ -72,7 +71,6 @@ export default function ChatGrupo() {
   if (!user)
     return (
       <>
-        <EstiloPagina archivos={["MemberPages.css"]} />
         <main className="pagina">
           <p>Cargando…</p>
         </main>
@@ -80,7 +78,6 @@ export default function ChatGrupo() {
     );
   return (
     <>
-      <EstiloPagina archivos={["MemberPages.css"]} />
       <EncabezadoUsuario user={user} active="groups" />
       <main className="pagina">
         <Link

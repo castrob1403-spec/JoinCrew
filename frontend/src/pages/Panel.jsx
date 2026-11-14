@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router";
-import EstiloPagina from "../components/EstiloPagina";
 import { useUsuario } from "../components/Usuario";
 import { api, limpiarSesion } from "../services/api";
 import { calcularAfinidad } from "../utilidades";
@@ -49,7 +48,6 @@ export default function Panel() {
   if (!user)
     return (
       <>
-        <EstiloPagina archivos={["AppStyle.css"]} />
         <main className="diseno-app">
           <p>{message}</p>
         </main>
@@ -58,7 +56,6 @@ export default function Panel() {
 
   return (
     <>
-      <EstiloPagina archivos={["AppStyle.css"]} />
       <header className="encabezado-app">
         <Link className="marca" to="/">
           <img src="/img/LOGOJC2.png" alt="JoinCrew" />

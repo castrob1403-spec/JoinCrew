@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router";
 import EncabezadoUsuario from "../components/EncabezadoUsuario";
 import { useUsuario } from "../components/Usuario";
-import EstiloPagina from "../components/EstiloPagina";
 import TarjetaSalaGrupo from "../components/TarjetaSalaGrupo";
 import { api } from "../services/api";
 
@@ -87,7 +86,6 @@ export default function DetalleGrupo() {
   if (!user)
     return (
       <>
-        <EstiloPagina archivos={["MemberPages.css"]} />
         <main className="pagina">
           <p>Cargando…</p>
         </main>
@@ -96,7 +94,6 @@ export default function DetalleGrupo() {
   if (!group)
     return (
       <>
-        <EstiloPagina archivos={["MemberPages.css"]} />
         <EncabezadoUsuario user={user} active="groups" />
         <main className="pagina">
           <Link className="volver-lista" to="/grupos">
@@ -113,7 +110,6 @@ export default function DetalleGrupo() {
   const leader = group.members.find((member) => member.role === "leader");
   return (
     <>
-      <EstiloPagina archivos={["MemberPages.css"]} />
       <EncabezadoUsuario user={user} active="groups" />
       <main className="pagina">
         <Link className="volver-lista" to="/grupos">

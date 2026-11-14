@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import EncabezadoUsuario from "../components/EncabezadoUsuario";
 import { useUsuario } from "../components/Usuario";
-import EstiloPagina from "../components/EstiloPagina";
 import { api } from "../services/api";
 import { formatearFecha } from "../utilidades";
 
@@ -23,9 +22,6 @@ export default function Avisos() {
   if (!user)
     return (
       <>
-        <EstiloPagina
-          archivos={["MemberPages.css", "NotificacionesStyle.css"]}
-        />
         <main className="pagina">
           <p>Cargando…</p>
         </main>
@@ -33,7 +29,6 @@ export default function Avisos() {
     );
   return (
     <>
-      <EstiloPagina archivos={["MemberPages.css", "NotificacionesStyle.css"]} />
       <EncabezadoUsuario user={user} />
       <main className="pagina-avisos">
         <section className="portada-avisos">
