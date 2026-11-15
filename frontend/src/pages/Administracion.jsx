@@ -75,6 +75,18 @@ export default function Administracion() {
     subjects: new Set(students.flatMap((item) => item.subjects || [])).size,
     premium: students.filter((item) => item.plan === "premium").length,
   };
+  const salasEnLinea = (activity.rooms || []).filter(
+    (room) => room.status === "live",
+  );
+  const salasCerradas = (activity.rooms || []).filter(
+    (room) => room.status === "closed",
+  );
+  const mensajesPendientes = contacts.filter(
+    (item) => !item.adminReply?.trim(),
+  );
+  const mensajesRespondidos = contacts.filter((item) =>
+    item.adminReply?.trim(),
+  );
   function cerrarSesion() {
     limpiarSesion();
     navigate("/login");
@@ -235,14 +247,14 @@ export default function Administracion() {
           </div>
           <div className="selector-destino-aviso" role="group">
             <button
-              className={mode === "all" ? "active" : ""}
+              className={mode === "all" ? "activo" : ""}
               type="button"
               onClick={() => setMode("all")}
             >
               Todos los estudiantes
             </button>
             <button
-              className={mode === "individual" ? "active" : ""}
+              className={mode === "individual" ? "activo" : ""}
               type="button"
               onClick={() => setMode("individual")}
             >
@@ -462,81 +474,74 @@ export default function Administracion() {
           </div>
         </section>
         <section className="seccion-admin seccion-actividad">
-          <TituloSeccion eyebrow="SALAS" title="Salas en curso" />
+          <TituloSeccion eyebrow="SALAS EN CURSO" title="Salas en línea" />
           <p className="mensaje-tabla">
-            {activity.rooms?.length || 0} sala(s) registradas.
+            {salasEnLinea.length} sala(s) en línea.
+          </p>
+          <ListaSalas salas={salasEnLinea} enLinea />
+        </section>
+        <section className="seccion-admin seccion-actividad">
+          <TituloSeccion eyebrow="HISTORIAL DE SALAS" title="Salas cerradas" />
+          <p className="mensaje-tabla">
+            {salasCerradas.length} sala(s) cerrada(s).
+          </p>
+          <ListaSalas salas={salasCerradas} />
+        </section>
+        <section className="seccion-admin seccion-actividad">
+          <TituloSeccion
+            eyebrow="CONTACTO"
+            title="Mensajes pendientes de responder"
+          />
+          <p className="mensaje-tabla">
+            {mensajesPendientes.length} mensaje(s) pendiente(s).
           </p>
           <div className="lista-actividad-admin">
-            {activity.rooms?.length
-              ? activity.rooms.map((room) => (
-                  <article key={room.id}>
-                    <strong>{room.name}</strong>
-                    <span>
-                      {room.status === "live" ? "En vivo" : "Cerrada"} ·{" "}
-                      {room.isPublic ? "Pública" : "Privada"} · máximo{" "}
-                      {room.maxParticipants}
-                    </span>
-                    {room.status === "live" && (
-                      <Link to={`/sala?room=${room.id}`}>Abrir sala</Link>
-                    )}
-                  </article>
+            {mensajesPendientes.length
+              ? mensajesPendientes.map((item) => (
+                  <TarjetaContacto
+                    key={item.id}
+                    item={item}
+                    respuesta={contactReplies[item.id] ?? ""}
+                    onChange={(respuesta) =>
+                      setContactReplies({
+                        ...contactReplies,
+                        [item.id]: respuesta,
+                      })
+                    }
+                    onSave={() => guardarRespuesta(item.id)}
+                    onSend={() => enviarRespuesta(item.id)}
+                  />
                 ))
-              : "Sin salas creadas todavía."}
+              : "No tienes mensajes pendientes de responder."}
           </div>
         </section>
         <section className="seccion-admin seccion-actividad">
-          <TituloSeccion eyebrow="CONTACTO" title="Mensajes recibidos" />
+          <TituloSeccion
+            eyebrow="RESPUESTAS GUARDADAS"
+            title="Mensajes ya respondidos"
+          />
           <p className="mensaje-tabla">
-            {contacts.length} mensaje(s) recibido(s).
+            {mensajesRespondidos.length} mensaje(s) con respuesta guardada.
           </p>
           <div className="lista-actividad-admin">
-            {contacts.length
-              ? contacts.map((item) => (
-                  <article className="tarjeta-mensaje-contacto" key={item.id}>
-                    <strong>{item.subject}</strong>
-                    <span>
-                      {item.fullName} · {item.email} ·{" "}
-                      {new Date(item.createdAt).toLocaleDateString("es-EC")}
-                    </span>
-                    <p className="cuerpo-mensaje-contacto">{item.message}</p>
-                    {item.adminReply && (
-                      <div className="respuesta-contacto-guardada">
-                        <b>Respuesta guardada</b>
-                        <p>{item.adminReply}</p>
-                      </div>
-                    )}
-                    <div className="editor-respuesta-contacto">
-                      <label>
-                        Respuesta para {item.fullName}
-                        <textarea
-                          maxLength="2000"
-                          value={
-                            contactReplies[item.id] ?? item.adminReply ?? ""
-                          }
-                          onChange={(event) =>
-                            setContactReplies({
-                              ...contactReplies,
-                              [item.id]: event.target.value,
-                            })
-                          }
-                        />
-                      </label>
-                      <button
-                        type="button"
-                        onClick={() => guardarRespuesta(item.id)}
-                      >
-                        Guardar borrador
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => enviarRespuesta(item.id)}
-                      >
-                        Enviar por Gmail
-                      </button>
-                    </div>
-                  </article>
+            {mensajesRespondidos.length
+              ? mensajesRespondidos.map((item) => (
+                  <TarjetaContacto
+                    key={item.id}
+                    item={item}
+                    respuesta={contactReplies[item.id] ?? item.adminReply}
+                    onChange={(respuesta) =>
+                      setContactReplies({
+                        ...contactReplies,
+                        [item.id]: respuesta,
+                      })
+                    }
+                    onSave={() => guardarRespuesta(item.id)}
+                    onSend={() => enviarRespuesta(item.id)}
+                    respondido
+                  />
                 ))
-              : "Aún no hay mensajes de contacto."}
+              : "Todavía no hay respuestas guardadas."}
           </div>
         </section>
       </main>
@@ -562,6 +567,77 @@ function TituloSeccion({ eyebrow, title, text }) {
         {text && <p>{text}</p>}
       </div>
     </div>
+  );
+}
+function ListaSalas({ salas, enLinea = false }) {
+  if (!salas.length) {
+    return (
+      <div className="lista-actividad-admin">
+        {enLinea ? "No hay salas en línea ahora." : "No hay salas cerradas."}
+      </div>
+    );
+  }
+
+  return (
+    <div className="lista-actividad-admin">
+      {salas.map((sala) => (
+        <article key={sala.id}>
+          <strong>{sala.name}</strong>
+          <span>
+            {sala.isPublic ? "Pública" : "Privada"} · máximo{" "}
+            {sala.maxParticipants}
+          </span>
+          {enLinea && <Link to={`/sala?room=${sala.id}`}>Abrir sala</Link>}
+        </article>
+      ))}
+    </div>
+  );
+}
+function TarjetaContacto({
+  item,
+  respuesta,
+  onChange,
+  onSave,
+  onSend,
+  respondido = false,
+}) {
+  const enviada = item.status === "resolved";
+
+  return (
+    <article className="tarjeta-mensaje-contacto">
+      <strong>{item.subject}</strong>
+      <span>
+        {item.fullName} · {item.email} ·{" "}
+        {new Date(item.createdAt).toLocaleDateString("es-EC")}
+      </span>
+      <p className="cuerpo-mensaje-contacto">{item.message}</p>
+      {respondido && (
+        <div className="respuesta-contacto-guardada">
+          <b>
+            {enviada ? "Respuesta enviada por Gmail" : "Respuesta guardada"}
+          </b>
+          <p>{item.adminReply}</p>
+        </div>
+      )}
+      <div className="editor-respuesta-contacto">
+        <label>
+          {respondido
+            ? `Actualizar respuesta para ${item.fullName}`
+            : `Respuesta para ${item.fullName}`}
+          <textarea
+            maxLength="2000"
+            value={respuesta}
+            onChange={(event) => onChange(event.target.value)}
+          />
+        </label>
+        <button type="button" onClick={onSave}>
+          {respondido ? "Guardar cambios" : "Guardar respuesta"}
+        </button>
+        <button type="button" onClick={onSend}>
+          {enviada ? "Enviar otra vez por Gmail" : "Enviar por Gmail"}
+        </button>
+      </div>
+    </article>
   );
 }
 function FichaEstudiante({ student, onClose, onSave }) {

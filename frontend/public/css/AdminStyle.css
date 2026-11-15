@@ -481,8 +481,10 @@ td strong {
   box-shadow: none;
   object-fit: contain;
 }
-.tarjeta-mensaje-contacto {
+.lista-actividad-admin .tarjeta-mensaje-contacto {
   display: grid;
+  grid-template-columns: 1fr;
+  align-items: stretch;
   gap: 8px;
 }
 .tarjeta-mensaje-contacto > p {
