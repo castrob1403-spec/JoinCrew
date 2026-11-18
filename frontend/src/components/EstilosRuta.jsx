@@ -7,7 +7,7 @@ const estilosPorRuta = {
   "/registro": ["auth.css"],
   "/verificar": ["auth.css"],
   "/contacto": ["ContactoStyle.css"],
-  "/app": ["AppStyle.css"],
+  "/app": ["AppStyle.css", "AsistenteIA.css"],
   "/admin": ["AdminStyle.css"],
   "/notificaciones": ["MemberPages.css", "NotificacionesStyle.css"],
 };
@@ -26,7 +26,7 @@ const rutasMiembro = [
 
 function obtenerEstilos(ruta) {
   if (rutasMiembro.includes(ruta)) {
-    return ["MemberPages.css"];
+    return ["MemberPages.css", "AsistenteIA.css"];
   }
 
   return estilosPorRuta[ruta] || ["IndexStyle.css"];

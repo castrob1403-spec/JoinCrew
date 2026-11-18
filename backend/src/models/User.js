@@ -93,6 +93,14 @@ const userSchema = new Schema(
       enum: ["active", "banned"],
       default: "active",
     },
+    consultasIA: {
+      type: Number,
+      default: 0,
+    },
+    inicioConsultasIA: {
+      type: Date,
+      default: null,
+    },
   },
   { timestamps: true },
 );

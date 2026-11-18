@@ -1,6 +1,7 @@
 import { createRoot } from "react-dom/client";
 import { createBrowserRouter, Navigate, Outlet } from "react-router";
 import { RouterProvider } from "react-router/dom";
+import AsistenteIA from "./components/AsistenteIA";
 import MarcoAcceso from "./components/MarcoAcceso";
 import EstilosRuta from "./components/EstilosRuta";
 import Administracion from "./pages/Administracion";
@@ -30,6 +31,15 @@ function MarcoPagina() {
   );
 }
 
+function MarcoUsuario() {
+  return (
+    <>
+      <Outlet />
+      <AsistenteIA />
+    </>
+  );
+}
+
 const router = createBrowserRouter([
   {
     element: <MarcoPagina />,
@@ -44,17 +54,22 @@ const router = createBrowserRouter([
           { path: "/verificar", element: <VerificarCorreo /> },
         ],
       },
-      { path: "/app", element: <Panel /> },
-      { path: "/calendario", element: <Calendario /> },
-      { path: "/chat", element: <Chat /> },
-      { path: "/grupos", element: <Grupos /> },
-      { path: "/grupo", element: <DetalleGrupo /> },
-      { path: "/grupo-chat", element: <ChatGrupo /> },
-      { path: "/matches", element: <Coincidencias /> },
-      { path: "/notificaciones", element: <Avisos /> },
-      { path: "/perfil", element: <Perfil /> },
-      { path: "/premium", element: <Premium /> },
-      { path: "/sala", element: <Sala /> },
+      {
+        element: <MarcoUsuario />,
+        children: [
+          { path: "/app", element: <Panel /> },
+          { path: "/calendario", element: <Calendario /> },
+          { path: "/chat", element: <Chat /> },
+          { path: "/grupos", element: <Grupos /> },
+          { path: "/grupo", element: <DetalleGrupo /> },
+          { path: "/grupo-chat", element: <ChatGrupo /> },
+          { path: "/matches", element: <Coincidencias /> },
+          { path: "/notificaciones", element: <Avisos /> },
+          { path: "/perfil", element: <Perfil /> },
+          { path: "/premium", element: <Premium /> },
+          { path: "/sala", element: <Sala /> },
+        ],
+      },
       { path: "/admin", element: <Administracion /> },
       { path: "*", element: <Navigate to="/" replace /> },
     ],

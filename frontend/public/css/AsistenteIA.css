@@ -1,0 +1,191 @@
+.asistente-ia {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  z-index: 60;
+}
+
+.boton-asistente {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 46px;
+  padding: 0 17px;
+  border: 0;
+  border-radius: 999px;
+  background: #536dfe;
+  box-shadow: 0 12px 28px rgba(64, 85, 214, 0.28);
+  color: #fff;
+  cursor: pointer;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.boton-asistente:hover {
+  background: #4055d6;
+  transform: translateY(-1px);
+}
+
+.boton-asistente img {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+}
+
+.ventana-asistente {
+  display: grid;
+  grid-template-rows: auto minmax(180px, 1fr) auto;
+  width: min(360px, calc(100vw - 32px));
+  height: 430px;
+  margin-bottom: 12px;
+  overflow: hidden;
+  border: 1px solid #dce2f4;
+  border-radius: 18px;
+  background: #fff;
+  box-shadow: 0 22px 55px rgba(23, 32, 51, 0.2);
+}
+
+.encabezado-asistente {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 15px;
+  border-bottom: 1px solid #e7eaf0;
+  background: #f7f8ff;
+}
+
+.encabezado-asistente > div {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.encabezado-asistente .avatar-lumi {
+  display: grid;
+  width: 42px;
+  height: 42px;
+  place-items: center;
+  overflow: hidden;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #eef1ff, #f7f2ff);
+}
+
+.avatar-lumi img {
+  width: 52px;
+  height: 52px;
+  object-fit: contain;
+}
+
+.encabezado-asistente strong,
+.encabezado-asistente small {
+  display: block;
+}
+
+.encabezado-asistente strong {
+  color: #172033;
+  font-size: 14px;
+}
+
+.encabezado-asistente small {
+  margin-top: 2px;
+  color: #667085;
+  font-size: 11px;
+}
+
+.encabezado-asistente button {
+  width: 30px;
+  height: 30px;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: #667085;
+  cursor: pointer;
+  font-size: 24px;
+  line-height: 1;
+}
+
+.mensajes-asistente {
+  display: grid;
+  align-content: start;
+  gap: 9px;
+  padding: 14px;
+  overflow-y: auto;
+  background: #fbfcff;
+}
+
+.mensaje-asistente {
+  width: fit-content;
+  max-width: 88%;
+  margin: 0;
+  padding: 10px 12px;
+  border-radius: 12px;
+  font-size: 13px;
+  line-height: 1.42;
+  white-space: pre-wrap;
+}
+
+.mensaje-asistente.ia {
+  background: #eef1ff;
+  color: #33459d;
+}
+
+.mensaje-asistente.usuario {
+  justify-self: end;
+  background: #536dfe;
+  color: #fff;
+}
+
+.formulario-asistente {
+  display: flex;
+  gap: 8px;
+  padding: 12px;
+  border-top: 1px solid #e7eaf0;
+  background: #fff;
+}
+
+.formulario-asistente input {
+  min-width: 0;
+  flex: 1;
+  padding: 10px;
+  border: 1px solid #dce2f4;
+  border-radius: 9px;
+  color: #172033;
+  font: inherit;
+  font-size: 12px;
+  outline: none;
+}
+
+.formulario-asistente input:focus {
+  border-color: #536dfe;
+  box-shadow: 0 0 0 3px #eef1ff;
+}
+
+.formulario-asistente button {
+  padding: 0 12px;
+  border: 0;
+  border-radius: 9px;
+  background: #536dfe;
+  color: #fff;
+  cursor: pointer;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.formulario-asistente button:disabled,
+.formulario-asistente input:disabled {
+  cursor: wait;
+  opacity: 0.7;
+}
+
+@media (max-width: 560px) {
+  .asistente-ia {
+    right: 16px;
+    bottom: 16px;
+  }
+
+  .ventana-asistente {
+    height: min(430px, calc(100vh - 100px));
+  }
+}

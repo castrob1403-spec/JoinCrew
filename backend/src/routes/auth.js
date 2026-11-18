@@ -5,6 +5,7 @@ const jwt = require("jsonwebtoken");
 const nodemailer = require("nodemailer");
 const User = require("../models/User");
 const { usuarioSeguro } = require("../utils/safe-user");
+const { revisarRegistro } = require("../services/ia");
 
 const router = express.Router();
 
@@ -34,9 +35,7 @@ const AVAILABLE_CAREERS = new Set([
 ]);
 
 function nombreValido(value) {
-  return (
-    /^[\p{L}][\p{L}' -]{1,98}$/u.test(value) && value.split(/\s+/).length >= 2
-  );
+  return /^[\p{L}][\p{L}' -]{1,98}$/u.test(value);
 }
 
 function gmailValido(value) {
@@ -147,7 +146,7 @@ router.post("/register", async (request, response, next) => {
     if (!nombreValido(normalizedName)) {
       return response
         .status(400)
-        .json({ error: "Ingresa tu nombre y al menos un apellido válidos." });
+        .json({ error: "Ingresa un nombre de usuario válido." });
     }
     if (!gmailValido(normalizedEmail)) {
       return response
@@ -181,19 +180,44 @@ router.post("/register", async (request, response, next) => {
         .json({ error: "Ya existe una cuenta con ese correo." });
     }
 
-    const user = await User.create({
-      fullName: normalizedName,
-      email: normalizedEmail,
-      passwordHash: await bcrypt.hash(password, 12),
-      country,
-      university: normalizedUniversity,
-      career: normalizedCareer,
-      subjects: normalizedSubjects,
-      availability,
-      studyPreference,
-    });
+    try {
+      const revision = await revisarRegistro({
+        nombre: normalizedName,
+        universidad: normalizedUniversity,
+        materias: normalizedSubjects,
+      });
+      if (!revision.aceptar) {
+        return response.status(400).json({ error: revision.mensaje });
+      }
+    } catch (error) {
+      console.error("La revisión de IA no estuvo disponible:", error.message);
+      return response.status(503).json({
+        error:
+          "No pudimos revisar tus datos ahora. Inténtalo nuevamente en unos minutos.",
+      });
+    }
 
-    await enviarCorreoVerificacion(user);
+    let user;
+    try {
+      user = await User.create({
+        fullName: normalizedName,
+        email: normalizedEmail,
+        passwordHash: await bcrypt.hash(password, 12),
+        country,
+        university: normalizedUniversity,
+        career: normalizedCareer,
+        subjects: normalizedSubjects,
+        availability,
+        studyPreference,
+      });
+
+      await enviarCorreoVerificacion(user);
+    } catch (error) {
+      if (user) {
+        await User.findByIdAndDelete(user._id);
+      }
+      throw error;
+    }
 
     response.status(201).json({
       message: "Te enviamos un código de verificación a tu Gmail.",

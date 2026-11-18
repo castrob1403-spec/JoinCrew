@@ -10,6 +10,7 @@ const contactRoutes = require("./routes/contact");
 const meetingRoutes = require("./routes/meetings");
 const adminRoutes = require("./routes/admin");
 const calendarRoutes = require("./routes/calendar");
+const iaRoutes = require("./routes/ia");
 
 const app = express();
 
@@ -25,6 +26,7 @@ app.use("/api/contact", contactRoutes);
 app.use("/api/meetings", meetingRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/calendar", calendarRoutes);
+app.use("/api/ia", iaRoutes);
 
 app.use(manejarError);
 

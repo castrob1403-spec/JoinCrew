@@ -60,9 +60,9 @@ export default function Registro() {
       .map((subject) => subject.trim())
       .filter(Boolean);
 
-    if (fullName.split(/\s+/).length < 2) {
+    if (!/^[\p{L}][\p{L}' -]{1,98}$/u.test(fullName)) {
       setMessage({
-        text: "Escribe tu nombre y al menos un apellido.",
+        text: "Escribe un nombre de usuario válido.",
         type: "error",
       });
       return;
@@ -125,14 +125,14 @@ export default function Registro() {
       <form className="formulario-acceso" onSubmit={registrar}>
         <div className="cuadricula-formulario">
           <div className="campo-formulario ancho-completo">
-            <label htmlFor="fullName">Nombre completo</label>
+            <label htmlFor="fullName">Nombre de usuario</label>
             <input
               id="fullName"
               name="fullName"
               type="text"
               value={form.fullName}
               onChange={cambiarCampo}
-              placeholder="Nombre y apellido"
+              placeholder="Elige un nombre de usuario"
               autoComplete="name"
               minLength="3"
               maxLength="100"
