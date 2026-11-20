@@ -624,12 +624,12 @@ button {
   border-bottom: 1px solid var(--border);
 }
 
-/* ESTADÍSTICAS */
+/* PROBLEMAS DE ESTUDIO */
 
-.estadisticas {
+.problemas-estudio {
   max-width: var(--max-width);
 
-  margin: 65px auto 50px;
+  margin: 65px auto 0;
 
   display: grid;
 
@@ -638,7 +638,7 @@ button {
   gap: 20px;
 }
 
-.tarjeta-dato {
+.tarjeta-problema {
   padding: 35px;
 
   border-radius: var(--radius-medium);
@@ -650,90 +650,34 @@ button {
   transition: 0.25s ease;
 }
 
-.tarjeta-dato:hover {
+.tarjeta-problema:hover {
   transform: translateY(-5px);
 
   box-shadow: var(--shadow-small);
 }
 
-.tarjeta-dato strong {
+.icono-problema {
   display: block;
 
-  font-size: 42px;
+  font-size: 32px;
 
-  color: var(--primary);
-
-  margin-bottom: 8px;
+  margin-bottom: 12px;
 }
 
-.tarjeta-dato p {
+.tarjeta-problema h3 {
+  margin: 0 0 10px;
+
+  color: var(--text-main);
+
+  font-size: 18px;
+}
+
+.tarjeta-problema p {
+  margin: 0;
+
   font-size: 14px;
 
   color: var(--text-secondary);
-}
-
-/* ================= TESTIMONIOS ================= */
-
-.contenedor-citas {
-  max-width: 1000px;
-
-  min-height: 220px;
-
-  margin: auto;
-
-  position: relative;
-}
-
-.cita {
-  position: absolute;
-
-  max-width: 300px;
-
-  padding: 17px 20px;
-
-  background: white;
-
-  box-shadow: var(--shadow-small);
-
-  font-size: 13px;
-
-  color: var(--text-secondary);
-
-  animation: quoteFloat 5s ease-in-out infinite;
-}
-
-.cita span {
-  margin-right: 5px;
-}
-
-.cita-uno {
-  left: 5%;
-  top: 20px;
-}
-
-.cita-dos {
-  right: 5%;
-  top: 60px;
-
-  animation-delay: 1.5s;
-}
-
-.cita-tres {
-  left: 35%;
-  bottom: 0;
-
-  animation-delay: 3s;
-}
-
-@keyframes quoteFloat {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-
-  50% {
-    transform: translateY(-8px);
-  }
 }
 
 /* ================= SOLUCIÓN ================= */
@@ -1060,7 +1004,7 @@ button {
     grid-template-columns: repeat(2, 1fr);
   }
 
-  .estadisticas {
+  .problemas-estudio {
     grid-template-columns: 1fr;
   }
 
@@ -1162,24 +1106,6 @@ button {
     padding: 80px 20px;
   }
 
-  .contenedor-citas {
-    min-height: 400px;
-  }
-
-  .cita-uno {
-    left: 0;
-  }
-
-  .cita-dos {
-    right: 0;
-    top: 140px;
-  }
-
-  .cita-tres {
-    left: 15%;
-    bottom: 20px;
-  }
-
   .cuadricula-caracteristicas {
     grid-template-columns: 1fr;
   }
@@ -1198,14 +1124,10 @@ button {
 .boton-secundario,
 .tarjeta-afinidad,
 .tarjeta-flotante,
-.tarjeta-dato,
-.cita,
+.tarjeta-problema,
 .tarjeta-paso,
 .tarjeta-caracteristica {
   border: 1px solid var(--border);
-}
-.cita {
-  border-radius: 16px;
 }
 .encabezado {
   height: 100px;

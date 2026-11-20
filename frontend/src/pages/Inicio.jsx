@@ -159,36 +159,41 @@ export default function Inicio() {
               Estudiar acompañado no siempre significa encontrar compañía.
             </h2>
             <p>
-              Muchos estudiantes quieren estudiar junto a otras personas, pero
-              encontrar compañeros compatibles puede ser complicado.
+              Encontrar un espacio de estudio útil implica coincidir en más que
+              solo tener ganas de estudiar.
             </p>
           </div>
-          <div className="estadisticas">
-            <article className="tarjeta-dato">
-              <strong>--%</strong>
-              <p>Tiene dificultades para encontrar compañeros de estudio.</p>
+          <div className="problemas-estudio">
+            <article className="tarjeta-problema">
+              <span className="icono-problema" aria-hidden="true">
+                📚
+              </span>
+              <h3>Materias diferentes</h3>
+              <p>
+                Encontrar personas que estén repasando los mismos temas no
+                siempre es sencillo.
+              </p>
             </article>
-            <article className="tarjeta-dato">
-              <strong>--%</strong>
-              <p>Tiene problemas para coincidir en horarios.</p>
+            <article className="tarjeta-problema">
+              <span className="icono-problema" aria-hidden="true">
+                🕐
+              </span>
+              <h3>Horarios que no coinciden</h3>
+              <p>
+                Incluso entre amigos, la disponibilidad para estudiar puede ser
+                distinta.
+              </p>
             </article>
-            <article className="tarjeta-dato">
-              <strong>--%</strong>
-              <p>Considera importante estudiar con personas compatibles.</p>
+            <article className="tarjeta-problema">
+              <span className="icono-problema" aria-hidden="true">
+                💬
+              </span>
+              <h3>Falta de coordinación</h3>
+              <p>
+                Sin un espacio común, organizar un grupo, conversar y acordar
+                una sesión toma más tiempo.
+              </p>
             </article>
-          </div>
-          <div className="contenedor-citas">
-            <div className="cita cita-uno">
-              <span>💬</span>"Me cuesta encontrar personas que estudien lo mismo
-              que yo."
-            </div>
-            <div className="cita cita-dos">
-              <span>💬</span>"Mis amigos casi nunca tienen el mismo horario."
-            </div>
-            <div className="cita cita-tres">
-              <span>💬</span>"Me gustaría encontrar un grupo para estudiar
-              acompañado."
-            </div>
           </div>
         </section>
         <section id="funcionamiento" className="seccion-solucion">

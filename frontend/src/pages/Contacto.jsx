@@ -81,7 +81,7 @@ export default function Contacto() {
                 onChange={(event) =>
                   setForm({ ...form, email: event.target.value })
                 }
-                placeholder="correo@ejemplo.com"
+                placeholder="correo@gmail.com"
               />
               <label htmlFor="contact-subject">Asunto</label>
               <select
