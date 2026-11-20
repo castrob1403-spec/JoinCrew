@@ -467,7 +467,7 @@ export default function Administracion() {
                       {group.subject} · {group.modality} · {group.memberCount}/
                       {group.maxMembers} miembros
                     </span>
-                    <Link to={`/grupo?id=${group.id}`}>Ver</Link>
+                    <Link to={`/admin/grupo?id=${group.id}`}>Ver</Link>
                   </article>
                 ))
               : "Sin grupos creados todavía."}

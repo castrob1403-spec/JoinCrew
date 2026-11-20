@@ -666,3 +666,153 @@ td strong {
   color: var(--text-secondary);
   font-size: 13px;
 }
+
+.cuadricula-ficha-grupo {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+
+.cuadricula-ficha-grupo p {
+  display: grid;
+  gap: 4px;
+  margin: 0;
+  padding: 12px;
+  border-radius: 10px;
+  background: var(--bg-main);
+  color: var(--text-secondary);
+  font-size: 13px;
+}
+
+.cuadricula-ficha-grupo strong {
+  color: var(--text-main);
+}
+
+.tarjeta-lider-grupo,
+.integrante-admin {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 12px;
+  padding: 14px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
+
+.tarjeta-lider-grupo {
+  margin-top: 18px;
+  background: #f4f6ff;
+}
+
+.avatar-admin {
+  display: grid;
+  width: 38px;
+  height: 38px;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--primary);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.tarjeta-lider-grupo div:nth-child(2),
+.integrante-admin div:nth-child(2) {
+  display: grid;
+  gap: 3px;
+}
+
+.tarjeta-lider-grupo span,
+.integrante-admin span,
+.tarjeta-lider-grupo small,
+.integrante-admin small {
+  color: var(--text-secondary);
+  font-size: 12px;
+}
+
+.lista-integrantes-admin {
+  display: grid;
+  gap: 8px;
+  margin-top: 18px;
+}
+
+.rol-lider {
+  background: #e9e4ff;
+  color: #5b42bf;
+}
+
+.panel-eliminar-grupo {
+  display: grid;
+  gap: 14px;
+  margin-bottom: 48px;
+}
+
+.panel-eliminar-grupo > div > p:last-child {
+  margin: 6px 0 0;
+  color: var(--text-secondary);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.panel-eliminar-grupo label {
+  display: grid;
+  gap: 7px;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.panel-eliminar-grupo textarea {
+  min-height: 112px;
+  padding: 11px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font: inherit;
+  resize: vertical;
+}
+
+.mensaje-error-admin {
+  margin: 0;
+  color: #b53c3c;
+  font-size: 13px;
+}
+
+.boton-eliminar-grupo {
+  justify-self: start;
+  padding: 11px 15px;
+  border: 1px solid #e3a7a7;
+  border-radius: 8px;
+  background: #fff4f4;
+  color: #b53c3c;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.boton-eliminar-grupo:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+@media (max-width: 800px) {
+  .cuadricula-ficha-grupo {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 560px) {
+  .cuadricula-ficha-grupo {
+    grid-template-columns: 1fr;
+  }
+
+  .tarjeta-lider-grupo,
+  .integrante-admin {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  .tarjeta-lider-grupo .etiqueta-rol,
+  .integrante-admin .etiqueta-rol {
+    grid-column: 2;
+    justify-self: start;
+  }
+}

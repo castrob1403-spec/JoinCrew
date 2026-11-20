@@ -9,6 +9,7 @@ const estilosPorRuta = {
   "/contacto": ["ContactoStyle.css"],
   "/app": ["AppStyle.css", "AsistenteIA.css"],
   "/admin": ["AdminStyle.css"],
+  "/admin/grupo": ["AdminStyle.css"],
   "/notificaciones": ["MemberPages.css", "NotificacionesStyle.css"],
 };
 

@@ -5,6 +5,7 @@ import AsistenteIA from "./components/AsistenteIA";
 import MarcoAcceso from "./components/MarcoAcceso";
 import EstilosRuta from "./components/EstilosRuta";
 import Administracion from "./pages/Administracion";
+import DetalleGrupoAdmin from "./pages/DetalleGrupoAdmin";
 import Calendario from "./pages/Calendario";
 import Chat from "./pages/Chat";
 import Contacto from "./pages/Contacto";
@@ -71,6 +72,7 @@ const router = createBrowserRouter([
         ],
       },
       { path: "/admin", element: <Administracion /> },
+      { path: "/admin/grupo", element: <DetalleGrupoAdmin /> },
       { path: "*", element: <Navigate to="/" replace /> },
     ],
   },

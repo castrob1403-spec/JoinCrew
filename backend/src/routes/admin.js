@@ -1,6 +1,7 @@
 const express = require("express");
 const AdminNotification = require("../models/AdminNotification");
 const ContactMessage = require("../models/ContactMessage");
+const GroupMessage = require("../models/GroupMessage");
 const StudyGroup = require("../models/StudyGroup");
 const StudyRoom = require("../models/StudyRoom");
 const User = require("../models/User");
@@ -57,6 +58,45 @@ function avisoSeguro(notification) {
     readAt: notification.readAt,
     createdAt: notification.createdAt,
   };
+}
+
+function integranteSeguro(member) {
+  const user = member.user;
+  return {
+    id: user?._id || user,
+    fullName: user?.fullName || "Usuario no disponible",
+    email: user?.email || "",
+    university: user?.university || "",
+    career: user?.career || "",
+    accountStatus: user?.accountStatus || "unknown",
+    role: member.role,
+    joinedAt: member.joinedAt,
+  };
+}
+
+function grupoSeguro(group) {
+  const members = (group.members || []).map(integranteSeguro);
+  const leader =
+    members.find((member) => member.role === "leader") ||
+    integranteSeguro({ user: group.createdBy, role: "leader" });
+
+  return {
+    id: group._id,
+    name: group.name,
+    description: group.description || "",
+    subject: group.subject,
+    modality: group.modality,
+    maxMembers: group.maxMembers,
+    createdAt: group.createdAt,
+    members,
+    leader,
+  };
+}
+
+async function buscarGrupoDetallado(groupId) {
+  return StudyGroup.findById(groupId)
+    .populate("createdBy", "fullName email university career accountStatus")
+    .populate("members.user", "fullName email university career accountStatus");
 }
 
 router.use(exigirAdmin);
@@ -123,6 +163,60 @@ router.get("/activity", async (_request, response, next) => {
         maxParticipants: room.maxParticipants,
       })),
       contactCount: contacts,
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.get("/groups/:groupId", async (request, response, next) => {
+  try {
+    const group = await buscarGrupoDetallado(request.params.groupId);
+    if (!group) {
+      return response.status(404).json({ error: "No encontramos ese grupo." });
+    }
+
+    response.json({ group: grupoSeguro(group) });
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.delete("/groups/:groupId", async (request, response, next) => {
+  try {
+    const reason = String(request.body.reason || "").trim();
+    if (reason.length < 3 || reason.length > 1000) {
+      return response.status(400).json({
+        error: "Escribe un motivo de entre 3 y 1000 caracteres.",
+      });
+    }
+
+    const group = await buscarGrupoDetallado(request.params.groupId);
+    if (!group) {
+      return response.status(404).json({ error: "No encontramos ese grupo." });
+    }
+
+    const detalle = grupoSeguro(group);
+    if (!detalle.leader.id) {
+      return response.status(400).json({
+        error: "No encontramos al líder para enviarle el aviso.",
+      });
+    }
+
+    await AdminNotification.create({
+      recipient: detalle.leader.id,
+      sender: request.admin._id,
+      content: `Tu grupo “${group.name}” fue eliminado por la administración. Motivo: ${reason}`,
+    });
+    await GroupMessage.deleteMany({ group: group._id });
+    await StudyRoom.updateMany(
+      { group: group._id, status: "live" },
+      { status: "closed", endedAt: new Date() },
+    );
+    await group.deleteOne();
+
+    response.json({
+      message: "Grupo eliminado y aviso enviado al líder.",
     });
   } catch (error) {
     next(error);

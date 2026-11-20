@@ -30,7 +30,11 @@ export const api = {
     solicitar(path, { method: "POST", body: JSON.stringify(body) }),
   patch: (path, body) =>
     solicitar(path, { method: "PATCH", body: JSON.stringify(body) }),
-  delete: (path) => solicitar(path, { method: "DELETE" }),
+  delete: (path, body) =>
+    solicitar(path, {
+      method: "DELETE",
+      ...(body ? { body: JSON.stringify(body) } : {}),
+    }),
 };
 
 export function guardarSesion({ token, user }) {
