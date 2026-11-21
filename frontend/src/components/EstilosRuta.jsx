@@ -10,7 +10,11 @@ const estilosPorRuta = {
   "/app": ["AppStyle.css", "AsistenteIA.css"],
   "/admin": ["AdminStyle.css"],
   "/admin/grupo": ["AdminStyle.css"],
-  "/notificaciones": ["MemberPages.css", "NotificacionesStyle.css"],
+  "/notificaciones": [
+    "MemberPages.css",
+    "NotificacionesStyle.css",
+    "AsistenteIA.css",
+  ],
 };
 
 const rutasMiembro = [
