@@ -293,6 +293,11 @@ td strong {
   color: #b72e2e;
 }
 
+.estado-pendiente {
+  background: #fff1cf;
+  color: #956400;
+}
+
 .celda-acciones {
   display: flex;
   flex-wrap: wrap;
@@ -665,6 +670,17 @@ td strong {
   margin: 6px 0 0;
   color: var(--text-secondary);
   font-size: 13px;
+}
+
+.seccion-registros-pendientes .encabezado-seccion p:last-child {
+  margin: 6px 0 0;
+  color: var(--text-secondary);
+  font-size: 13px;
+}
+
+.boton-eliminar-registro {
+  border-color: #f1c9c9 !important;
+  color: #b53c3c !important;
 }
 
 .cuadricula-ficha-grupo {

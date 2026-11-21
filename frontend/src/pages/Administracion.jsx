@@ -6,6 +6,7 @@ export default function Administracion() {
   const navigate = useNavigate();
   const [admin, setAdmin] = useState(null);
   const [students, setStudents] = useState([]);
+  const [registrosPendientes, setRegistrosPendientes] = useState([]);
   const [activity, setActivity] = useState({ groups: [], rooms: [] });
   const [contacts, setContacts] = useState([]);
   const [notifications, setNotifications] = useState([]);
@@ -18,14 +19,21 @@ export default function Administracion() {
   const [contactReplies, setContactReplies] = useState({});
   async function cargarDatos() {
     try {
-      const [studentResult, activityResult, contactResult, notificationResult] =
-        await Promise.all([
-          api.get("/admin/students"),
-          api.get("/admin/activity"),
-          api.get("/contact"),
-          api.get("/admin/notifications"),
-        ]);
+      const [
+        studentResult,
+        pendingResult,
+        activityResult,
+        contactResult,
+        notificationResult,
+      ] = await Promise.all([
+        api.get("/admin/students"),
+        api.get("/admin/pending-students"),
+        api.get("/admin/activity"),
+        api.get("/contact"),
+        api.get("/admin/notifications"),
+      ]);
       setStudents(studentResult.students || []);
+      setRegistrosPendientes(pendingResult.students || []);
       setActivity(activityResult);
       setContacts(contactResult.messages || []);
       setNotifications(notificationResult.notifications || []);
@@ -137,6 +145,21 @@ export default function Administracion() {
       cargarDatos();
     } catch (error) {
       window.alert(error.message);
+    }
+  }
+  async function eliminarRegistroPendiente(student) {
+    if (
+      !window.confirm(
+        `¿Eliminar el registro de ${student.fullName}? No podrá recuperar esta cuenta ni verificar ese correo.`,
+      )
+    )
+      return;
+    try {
+      await api.delete(`/admin/pending-students/${student.id}`);
+      setMessage("Registro pendiente eliminado.");
+      await cargarDatos();
+    } catch (error) {
+      window.alert(error.message || "No se pudo eliminar el registro.");
     }
   }
   async function guardarRespuesta(id) {
@@ -450,6 +473,68 @@ export default function Administracion() {
             }
           />
         )}
+        <section className="seccion-admin seccion-registros-pendientes">
+          <TituloSeccion
+            eyebrow="VERIFICACIÓN DE CORREO"
+            title="Registros pendientes de verificación"
+            text="Estas cuentas no pueden iniciar sesión ni aparecer como coincidencias hasta confirmar su correo."
+          />
+          <p className="mensaje-tabla">
+            {registrosPendientes.length} registro(s) pendiente(s).
+          </p>
+          <div className="contenedor-tabla">
+            <table>
+              <thead>
+                <tr>
+                  <th>Usuario</th>
+                  <th>Correo</th>
+                  <th>Universidad</th>
+                  <th>Registro</th>
+                  <th>Estado</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                {registrosPendientes.length ? (
+                  registrosPendientes.map((student) => (
+                    <tr key={student.id}>
+                      <td>
+                        <strong>{student.fullName}</strong>
+                      </td>
+                      <td>{student.email}</td>
+                      <td>{student.university || "—"}</td>
+                      <td>
+                        {new Date(student.createdAt).toLocaleDateString(
+                          "es-EC",
+                        )}
+                      </td>
+                      <td>
+                        <span className="etiqueta-rol estado-pendiente">
+                          Sin verificar
+                        </span>
+                      </td>
+                      <td className="celda-acciones">
+                        <button
+                          className="boton-eliminar-registro"
+                          type="button"
+                          onClick={() => eliminarRegistroPendiente(student)}
+                        >
+                          Eliminar registro
+                        </button>
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td className="celda-vacia" colSpan="6">
+                      No hay registros pendientes de verificar.
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+        </section>
         <section className="seccion-admin seccion-actividad">
           <TituloSeccion
             eyebrow="ACTIVIDAD EN TIEMPO REAL"

@@ -64,6 +64,7 @@ router.get("/matches", exigirSesion, async (request, response, next) => {
       _id: { $ne: request.auth.userId },
       role: "user",
       accountStatus: "active",
+      emailVerifiedAt: { $ne: null },
     })
       .select(
         "fullName university career subjects availability studyPreference country",

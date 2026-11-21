@@ -48,6 +48,17 @@ function estudianteSeguro(user) {
   };
 }
 
+function registroPendienteSeguro(user) {
+  return {
+    id: user._id,
+    fullName: user.fullName,
+    email: user.email,
+    university: user.university || "",
+    career: user.career || "",
+    createdAt: user.createdAt,
+  };
+}
+
 function avisoSeguro(notification) {
   const recipient = notification.recipient;
   return {
@@ -103,8 +114,23 @@ router.use(exigirAdmin);
 
 router.get("/students", async (_request, response, next) => {
   try {
-    const students = await User.find({ role: "user" }).sort({ createdAt: -1 });
+    const students = await User.find({
+      role: "user",
+      emailVerifiedAt: { $ne: null },
+    }).sort({ createdAt: -1 });
     response.json({ students: students.map(estudianteSeguro) });
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.get("/pending-students", async (_request, response, next) => {
+  try {
+    const students = await User.find({
+      role: "user",
+      emailVerifiedAt: null,
+    }).sort({ createdAt: -1 });
+    response.json({ students: students.map(registroPendienteSeguro) });
   } catch (error) {
     next(error);
   }
@@ -124,7 +150,11 @@ router.patch("/students/:studentId", async (request, response, next) => {
     }
 
     const student = await User.findOneAndUpdate(
-      { _id: request.params.studentId, role: "user" },
+      {
+        _id: request.params.studentId,
+        role: "user",
+        emailVerifiedAt: { $ne: null },
+      },
       updates,
       { new: true, runValidators: true },
     );
@@ -138,6 +168,29 @@ router.patch("/students/:studentId", async (request, response, next) => {
     next(error);
   }
 });
+
+router.delete(
+  "/pending-students/:studentId",
+  async (request, response, next) => {
+    try {
+      const student = await User.findOneAndDelete({
+        _id: request.params.studentId,
+        role: "user",
+        emailVerifiedAt: null,
+      });
+      if (!student) {
+        return response.status(404).json({
+          error: "No encontramos un registro pendiente con ese identificador.",
+        });
+      }
+
+      await AdminNotification.deleteMany({ recipient: student._id });
+      response.json({ message: "Registro pendiente eliminado." });
+    } catch (error) {
+      next(error);
+    }
+  },
+);
 
 router.get("/activity", async (_request, response, next) => {
   try {
@@ -266,10 +319,13 @@ router.post("/notifications", async (request, response, next) => {
           _id: recipientId,
           role: "user",
           accountStatus: "active",
+          emailVerifiedAt: { $ne: null },
         }).select("_id")
-      : await User.find({ role: "user", accountStatus: "active" }).select(
-          "_id",
-        );
+      : await User.find({
+          role: "user",
+          accountStatus: "active",
+          emailVerifiedAt: { $ne: null },
+        }).select("_id");
     if (!recipients.length) {
       return response.status(404).json({
         error: "No hay estudiantes disponibles para recibir el mensaje.",
